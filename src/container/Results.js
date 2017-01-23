@@ -1,4 +1,4 @@
-/**
+http://huli.logdown.com/posts/314393-teaching-react-native-for-android-1/**
  * Sample React Native App
  * https://github.com/facebook/react-native
  * @flow

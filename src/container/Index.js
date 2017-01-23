@@ -16,21 +16,35 @@ import {
 } from 'react-native';
 
 import Filter from './Filter.js';
+import LandloadSignin from './LandloadSignin.js';
 
 export default class Index extends Component {
 
   _pressButton() {
-        const { navigator } = this.props;
-        //为什么这里可以取得 props.navigator?请看上文:
-        //<Component {...route.params} navigator={navigator} />
-        //这里传递了navigator作为props
-        if(navigator) {
-            navigator.push({
-                name: 'Filter',
-                component: Filter,
-            })
-        }
+    const { navigator } = this.props;
+    //为什么这里可以取得 props.navigator?请看上文:
+    //<Component {...route.params} navigator={navigator} />
+    //这里传递了navigator作为props
+    if(navigator) {
+        navigator.push({
+            name: 'Filter',
+            component: Filter,
+        })
     }
+  }
+
+  _pressButton2() {
+    const { navigator } = this.props;
+    //为什么这里可以取得 props.navigator?请看上文:
+    //<Component {...route.params} navigator={navigator} />
+    //这里传递了navigator作为props
+    if(navigator) {
+        navigator.push({
+            name: 'LandloadSignin',
+            component: LandloadSignin,
+        })
+    }
+  }
 
   render() {
     // const { region } = this.props;
@@ -45,7 +59,9 @@ export default class Index extends Component {
           </TouchableOpacity>
         </View>
         <View style={[styles.center, { backgroundColor: 'darksalmon' }]}>
-          <Text style={{ color: '#fff', fontSize: 30 }}> React Native </Text>
+          <TouchableOpacity onPress={this._pressButton2.bind(this)}>
+            <Text style={{ color: '#fff', fontSize: 30 }}> React Native </Text>
+          </TouchableOpacity>
         </View>
       </View>
    );

@@ -13,6 +13,18 @@ import {
   View
 } from 'react-native';
 
+import {
+  Item,
+  Header,
+  Button,
+  Icon,
+  Title,
+  List,
+  ListItem,
+  InputGroup,
+  Input,
+} from 'native-base';
+
 export default class Filter extends Component {
   render() {
     // const { region } = this.props;
@@ -20,7 +32,7 @@ export default class Filter extends Component {
 
    return (
      <View>
-        <Text style={{fontSize: 30 }}>OKOK</Text>
+
      </View>
    );
   }
