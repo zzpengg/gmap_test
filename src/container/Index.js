@@ -55,12 +55,12 @@ export default class Index extends Component {
      <View style={{ flex: 1 }}>
         <View style={[styles.center, { backgroundColor: 'cadetblue' }]}>
           <TouchableOpacity onPress={this._pressButton.bind(this)}>
-            <Text style={{ color: '#fff', fontSize: 30 }}> Hellow!! </Text>
+            <Text style={{ color: '#fff', fontSize: 30 }}> 學生 </Text>
           </TouchableOpacity>
         </View>
         <View style={[styles.center, { backgroundColor: 'darksalmon' }]}>
           <TouchableOpacity onPress={this._pressButton2.bind(this)}>
-            <Text style={{ color: '#fff', fontSize: 30 }}> React Native </Text>
+            <Text style={{ color: '#fff', fontSize: 30 }}> 房東 </Text>
           </TouchableOpacity>
         </View>
       </View>

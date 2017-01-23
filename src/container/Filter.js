@@ -12,6 +12,20 @@ import {
   Text,
   View
 } from 'react-native';
+import {
+  Container,
+  Content,
+  Picker,
+  Item,
+  Header,
+  Button,
+  Icon,
+  Title,
+  List,
+  ListItem,
+  InputGroup,
+  Input,
+} from 'native-base';
 
 export default class Filter extends Component {
   render() {
@@ -19,21 +33,58 @@ export default class Filter extends Component {
     //console.log(region);
 
    return (
-     <View>
-        <Text style={{fontSize: 30 }}>OKOK</Text>
-     </View>
+     <Container style={styles.container}>
+        <Header searchBar rounded>
+          <InputGroup>
+            <Icon name="ios-search" />
+            <Input placeholder="Search" />
+            <Icon name="ios-people" />
+          </InputGroup>
+          <Button transparent>
+            Search
+          </Button>
+        </Header>
+
+        <Content padder>
+          <InputGroup borderType="regular" style={styles.mb}>
+            <Input placeholder="Regular Textbox" />
+          </InputGroup>
+          <InputGroup borderType="underline" style={styles.mb}>
+            <Input placeholder="Underlined Textbox" />
+          </InputGroup>
+          <InputGroup borderType="rounded" style={styles.mb}>
+            <Input placeholder="Rounded Textbox" />
+          </InputGroup>
+          <InputGroup style={styles.mb}>
+            <Icon name="ios-home" style={{ color: '#00C497' }} />
+            <Input placeholder="Icon Textbox" />
+          </InputGroup>
+          <InputGroup iconRight style={styles.mb}>
+            <Icon name="ios-swap" style={{ color: '#00C497' }} />
+            <Input placeholder="Icon Alignment in Textbox" />
+          </InputGroup>
+          <InputGroup iconRight success style={styles.mb}>
+            <Icon name="ios-checkmark-circle" style={{ color: '#00C497' }} />
+            <Input placeholder="Textbox with Success Input" />
+          </InputGroup>
+          <InputGroup iconRight error style={styles.mb}>
+            <Icon name="ios-close-circle" style={{ color: 'red' }} />
+            <Input placeholder="Textbox with Error Input" />
+          </InputGroup>
+          <InputGroup iconRight disabled style={styles.mb}>
+            <Icon name="ios-information-circle" style={{ color: '#384850' }} />
+            <Input placeholder="Disabled Textbox" />
+          </InputGroup>
+        </Content>
+      </Container>
    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-   ...StyleSheet.absoluteFillObject,
-   height: 400,
-   width: 400,
-   justifyContent: 'flex-end',
-   alignItems: 'center',
- },
+    backgroundColor: '#FBFAFA',
+  },
  map: {
    ...StyleSheet.absoluteFillObject,
  },
@@ -41,5 +92,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  mb: {
+    marginBottom: 15,
   },
 });
