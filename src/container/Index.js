@@ -1,0 +1,71 @@
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ * @flow
+ */
+
+import React, { Component } from 'react';
+import MapView from 'react-native-maps';
+import {
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Navigator
+} from 'react-native';
+
+import Filter from './Filter.js';
+
+export default class Index extends Component {
+
+  _pressButton() {
+        const { navigator } = this.props;
+        //为什么这里可以取得 props.navigator?请看上文:
+        //<Component {...route.params} navigator={navigator} />
+        //这里传递了navigator作为props
+        if(navigator) {
+            navigator.push({
+                name: 'Filter',
+                component: Filter,
+            })
+        }
+    }
+
+  render() {
+    // const { region } = this.props;
+    //console.log(region);
+
+
+   return (
+     <View style={{ flex: 1 }}>
+        <View style={[styles.center, { backgroundColor: 'cadetblue' }]}>
+          <TouchableOpacity onPress={this._pressButton.bind(this)}>
+            <Text style={{ color: '#fff', fontSize: 30 }}> Hellow!! </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={[styles.center, { backgroundColor: 'darksalmon' }]}>
+          <Text style={{ color: '#fff', fontSize: 30 }}> React Native </Text>
+        </View>
+      </View>
+   );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+   ...StyleSheet.absoluteFillObject,
+   height: 400,
+   width: 400,
+   justifyContent: 'flex-end',
+   alignItems: 'center',
+ },
+ map: {
+   ...StyleSheet.absoluteFillObject,
+ },
+ center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

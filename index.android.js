@@ -5,33 +5,36 @@
  */
 
 import React, { Component } from 'react';
-import MapView from 'react-native-maps';
+// import MapView from 'react-native-maps';
 import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  TouchableOpacity,
+  Navigator
 } from 'react-native';
+
+import Index from './src/container/Index.js';
 
 export default class test extends Component {
   render() {
-    const { region } = this.props;
-   console.log(region);
-
-   return (
-     <View style ={styles.container}>
-       <MapView
-         style={styles.map}
-         region={{
-           latitude: 37.78825,
-           longitude: -122.4324,
-           latitudeDelta: 0.015,
-           longitudeDelta: 0.0121,
-         }}
-       >
-       </MapView>
-     </View>
-   );
+    // const { region } = this.props;
+    //console.log(region);
+    
+    let defaultName = 'Index';
+    let defaultComponent = Index;
+    return (
+    <Navigator
+      initialRoute={{ name: defaultName, component: defaultComponent }}
+      configureScene={(route) => {
+        return Navigator.SceneConfigs.VerticalDownSwipeJump;
+      }}
+      renderScene={(route, navigator) => {
+        let Component = route.component;
+        return <Component {...route.params} navigator={navigator} />
+      }} />
+    );
   }
 }
 
@@ -46,6 +49,11 @@ const styles = StyleSheet.create({
  map: {
    ...StyleSheet.absoluteFillObject,
  },
+ center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 AppRegistry.registerComponent('test', () => test);
