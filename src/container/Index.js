@@ -7,7 +7,6 @@
 import React, { Component } from 'react';
 import MapView from 'react-native-maps';
 import {
-  AppRegistry,
   StyleSheet,
   Text,
   View,
@@ -16,8 +15,10 @@ import {
 } from 'react-native';
 
 import Filter from './Filter.js';
-import LandloadSignin from './LandloadSignin.js';
+import LandlordSignin from './LandlordSignin.js';
 import UpdateHouseData from './UpdateHouseData.js';
+import StudentRegister from './StudentRegister.js';
+import LandlordRegistion from './LandlordRegistion.js';
 
 export default class Index extends Component {
 
@@ -41,8 +42,8 @@ export default class Index extends Component {
     //这里传递了navigator作为props
     if(navigator) {
         navigator.push({
-            name: 'LandloadSignin',
-            component: LandloadSignin,
+            name: 'LandlordSignin',
+            component: LandlordSignin,
         })
     }
   }
@@ -59,6 +60,31 @@ export default class Index extends Component {
         })
     }
   }
+  _pressButton4() {
+    const { navigator } = this.props;
+    //为什么这里可以取得 props.navigator?请看上文:
+    //<Component {...route.params} navigator={navigator} />
+    //这里传递了navigator作为props
+    if(navigator) {
+        navigator.push({
+            name: 'LandlordRegistion',
+            component: LandlordRegistion,
+        })
+    }
+  }
+
+  _pressButton5() {
+    const { navigator } = this.props;
+    //为什么这里可以取得 props.navigator?请看上文:
+    //<Component {...route.params} navigator={navigator} />
+    //这里传递了navigator作为props
+    if(navigator) {
+        navigator.push({
+            name: 'StudentRegister',
+            component: StudentRegister,
+        })
+    }
+  }
 
   render() {
     // const { region } = this.props;
@@ -71,6 +97,9 @@ export default class Index extends Component {
           <TouchableOpacity onPress={this._pressButton.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30 }}> 學生 </Text>
           </TouchableOpacity>
+          <TouchableOpacity onPress={this._pressButton5.bind(this)}>
+            <Text style={{ color: '#fff', fontSize: 30 }}> 學生註冊 </Text>
+          </TouchableOpacity>
         </View>
         <View style={[styles.center, { backgroundColor: 'darksalmon' }]}>
           <TouchableOpacity onPress={this._pressButton2.bind(this)}>
@@ -78,6 +107,9 @@ export default class Index extends Component {
           </TouchableOpacity>
           <TouchableOpacity onPress={this._pressButton3.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30 }}> 修改房屋資訊 </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._pressButton4.bind(this)}>
+            <Text style={{ color: '#fff', fontSize: 30 }}> LandlordRegistion </Text>
           </TouchableOpacity>
         </View>
       </View>
