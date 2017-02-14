@@ -28,6 +28,18 @@ import {
 } from 'native-base';
 
 export default class Filter extends Component {
+  _pressButton() {
+    const { navigator } = this.props;
+    //为什么这里可以取得 props.navigator?请看上文:
+    //<Component {...route.params} navigator={navigator} />
+    //这里传递了navigator作为props
+    if(navigator) {
+        navigator.push({
+            name: 'Filter',
+            component: Filter,
+        })
+    }
+  }
   render() {
     // const { region } = this.props;
     //console.log(region);

@@ -18,6 +18,8 @@ import {
 import Filter from './Filter.js';
 import LandloadSignin from './LandloadSignin.js';
 import UpdateHouseData from './UpdateHouseData.js';
+import HouseDetail from './HouseDetail.js';
+
 
 export default class Index extends Component {
 
@@ -59,6 +61,18 @@ export default class Index extends Component {
         })
     }
   }
+  _pressButton4() {
+    const { navigator } = this.props;
+    //为什么这里可以取得 props.navigator?请看上文:
+    //<Component {...route.params} navigator={navigator} />
+    //这里传递了navigator作为props
+    if(navigator) {
+        navigator.push({
+            name: 'HouseDetail',
+            component: HouseDetail,
+        })
+    }
+  }
 
   render() {
     // const { region } = this.props;
@@ -76,7 +90,7 @@ export default class Index extends Component {
           <TouchableOpacity onPress={this._pressButton2.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30 }}> 房東 </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this._pressButton3.bind(this)}>
+          <TouchableOpacity onPress={this._pressButton4.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30 }}> 修改房屋資訊 </Text>
           </TouchableOpacity>
         </View>
