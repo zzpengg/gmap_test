@@ -17,6 +17,7 @@ import {
 import Filter from './Filter.js';
 import LandlordSignin from './LandlordSignin.js';
 import UpdateHouseData from './UpdateHouseData.js';
+import HouseDetail from './HouseDetail.js';
 import StudentRegister from './StudentRegister.js';
 import LandlordRegistion from './LandlordRegistion.js';
 import HouseDatas from './HouseDatas.js';
