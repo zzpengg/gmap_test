@@ -6,6 +6,10 @@ import {
   View,
 } from 'react-native';
 
+import {
+  Button,
+} from 'native-base';
+
 const defaultProps = {
   data: [],
 };
@@ -51,19 +55,47 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
   },
+  dataView: {
+    flexDirection: 'row',
+    marginLeft: 10,
+    marginTop: 10,
+    marginRight: 10,
+    borderRadius: 5,
+    borderColor: 'gray',
+    borderWidth: 5
+  },
+  imageText: {
+    textAlign: 'center'
+  },
+  detailText: {
+    marginTop: 5,
+  },
+  detailData: {
+    alignSelf:'flex-end',
+    flexDirection: 'row',
+    width: 220,
+    flex:1,
+    justifyContent: 'flex-end'
+  }
 });
 
 const Data = (props) => (
-  <View style={{flexDirection: 'row'}}>
+  <View style={styles.dataView}>
     <View>
-      <Image source={require('../assets/fuck_cat.jpg')} style={{width:100, height:100 }}/>
+      <Image source={require('../assets/fuck_cat.jpg')} style={{width:100, height:100, marginTop:5, marginLeft:5, marginBottom: 5 }} />
+      <Text style={styles.imageText}>更改圖片</Text>
     </View>
 
-    <View>
-      <Text>房屋名稱</Text>
-      <Text>所在區域</Text>
-      <Text>租金</Text>
-      <Text>{props.name}</Text>
+    <View style={{marginTop:10, marginLeft: 10}} >
+      <Text style={styles.detailText}>房屋名稱: {props.title}</Text>
+      <Text style={styles.detailText}>所在區域: {props.area}</Text>
+      <Text style={styles.detailText}>租金: {props.rent} /月</Text>
+      <Text style={styles.detailText}>評分: {props.score}</Text>
+      <View style={styles.detailData}>
+        <Button success bordered style={{height: 18}}>
+            <Text>詳細資料</Text>
+        </Button>
+      </View>
     </View>
   </View>
 );
