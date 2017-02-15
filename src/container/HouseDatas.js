@@ -12,17 +12,16 @@ import {
   Text,
   View
 } from 'react-native';
+import Data from '../component/Data.js';
 
-export default class Filter extends Component {
+export default class HouseDatas extends Component {
   render() {
     // const { region } = this.props;
     //console.log(region);
+    const tones = ['_', 'C', 'Db', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'];
+    return (    
 
-   return (
-     <View>
-        <Text style={{fontSize: 30 }}>OKOK</Text>
-     </View>
-   );
+    );
   }
 }
 
