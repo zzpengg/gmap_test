@@ -10,7 +10,8 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  ScrollView,
 } from 'react-native';
 import Data from '../component/Data.js';
 
@@ -25,13 +26,15 @@ export default class HouseDatas extends Component {
     ];
     return (
       <View>
-        <Data key={1} name={'uu'} />
-        <Data key={2} name={'kk'} />
-        {
-          tmp_array.map(function(val, index){
-            return (<Data key={index+2} title={val.title} rent={val.rent} area={val.area} />)
-          })
-        }
+        <ScrollView>
+          <Data key={1} name={'uu'} />
+          <Data key={2} name={'kk'} />
+          {
+            tmp_array.map(function(val, index){
+              return (<Data key={index+2} title={val.title} rent={val.rent} area={val.area} />)
+            })
+          }
+        </ScrollView>
       </View>
     );
   }
