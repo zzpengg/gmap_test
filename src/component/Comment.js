@@ -11,11 +11,11 @@ import {
 } from 'native-base';
 
 const defaultProps = {
-  data: [],
+  Comment: [],
 };
 
 const propTypes = {
-  data: PropTypes.array
+  Comment: PropTypes.array
 };
 
 const styles = StyleSheet.create({
@@ -76,32 +76,41 @@ const styles = StyleSheet.create({
     width: 220,
     flex:1,
     justifyContent: 'flex-end'
+  },
+  personImage: {
+    width: 20,
+    height: 20,
+    marginTop: 5,
+    marginLeft: 5,
+    marginBottom: 5,
+  },
+  commentView: {
+    marginTop: 5,
+    marginLeft: 5,
+    marginBottom: 5,
+    borderColor: 'red',
+    borderRadius: 2,
+    borderWidth: 5,
+    width: 350,
+    alignSelf: 'center'
   }
 });
 
-const Data = (props) => (
-  <View style={styles.dataView}>
-    <View>
-      <Image source={require('../assets/fuck_cat.jpg')} style={{width:100, height:100, marginTop:5, marginLeft:5, marginBottom: 5 }} />
-      <Text style={styles.imageText}>更改圖片</Text>
-    </View>
-
-    <View style={{marginTop:10, marginLeft: 10}} >
-      <Text style={styles.detailText}>房屋名稱: {props.title}</Text>
-      <Text style={styles.detailText}>所在區域: {props.area}</Text>
-      <Text style={styles.detailText}>租金: {props.rent} /月</Text>
-      <Text style={styles.detailText}>評分: {props.score}</Text>
-      <View style={styles.detailData}>
-        <Button success bordered style={{height: 18}}>
-            <Text>詳細資料</Text>
-        </Button>
+const Comment = (props) => (
+  <View style={styles.commentView}>
+    <View style={{flexDirection: 'row'}}>
+      <Image source={require('../assets/fuck_cat.jpg')} style={styles.personImage} />
+      <View>
+        <Text>{props.name}</Text>
+        <Text>評分: {props.score}</Text>
+        <Text>{props.content}</Text>
       </View>
     </View>
   </View>
 );
 
 
-Data.propTypes = propTypes;
-Data.defaultProps = defaultProps;
+Comment.propTypes = propTypes;
+Comment.defaultProps = defaultProps;
 
-export default Data;
+export default Comment;

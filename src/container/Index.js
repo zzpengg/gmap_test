@@ -20,6 +20,8 @@ import UpdateHouseData from './UpdateHouseData.js';
 import HouseDetail from './HouseDetail.js';
 import StudentRegister from './StudentRegister.js';
 import LandlordRegistion from './LandlordRegistion.js';
+import HouseDatas from './HouseDatas.js';
+import Comments from './Comments.js';
 
 export default class Index extends Component {
 
@@ -86,6 +88,10 @@ export default class Index extends Component {
         })
     }
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> upstream/master
   _pressButton6() {
     const { navigator } = this.props;
     //为什么这里可以取得 props.navigator?请看上文:
@@ -93,11 +99,26 @@ export default class Index extends Component {
     //这里传递了navigator作为props
     if(navigator) {
         navigator.push({
-            name: 'HouseDetail',
-            component: HouseDetail,
+
+            name: 'HouseDatas',
+            component: HouseDatas,
         })
     }
   }
+
+  _pressButton7() {
+    const { navigator } = this.props;
+    //为什么这里可以取得 props.navigator?请看上文:
+    //<Component {...route.params} navigator={navigator} />
+    //这里传递了navigator作为props
+    if(navigator) {
+        navigator.push({
+            name: 'Comments',
+            component: Comments,
+        })
+    }
+  }
+
   render() {
     // const { region } = this.props;
     //console.log(region);
@@ -111,6 +132,12 @@ export default class Index extends Component {
           </TouchableOpacity>
           <TouchableOpacity onPress={this._pressButton5.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30 }}> 學生註冊 </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._pressButton6.bind(this)}>
+            <Text style={{ color: '#fff', fontSize: 30 }}> HouseDatas </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._pressButton7.bind(this)}>
+            <Text style={{ color: '#fff', fontSize: 30 }}> Comments </Text>
           </TouchableOpacity>
         </View>
         <View style={[styles.center, { backgroundColor: 'darksalmon' }]}>
