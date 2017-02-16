@@ -144,7 +144,7 @@ export default class Index extends Component {
           <TouchableOpacity onPress={this._pressButton3.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30 }}> 修改房屋資訊 </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this._pressButton6.bind(this)}>
+          <TouchableOpacity onPress={this._pressButton4.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30 }}> LandlordRegistion </Text>
           </TouchableOpacity>
         </View>

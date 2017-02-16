@@ -43,7 +43,6 @@ export default class LandlordRegistion extends Component {
     try {
       let response = await fetch(`http://test-zzpengg.c9users.io:8080/user/create?name=${this.state.name}`);
       console.log(response);
-      })
     } catch (errors) {
       console.log(errors);
     }

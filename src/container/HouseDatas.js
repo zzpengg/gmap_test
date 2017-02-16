@@ -13,7 +13,7 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import Data from '../component/Data.js';
+import DataCard from '../component/DataCard.js';
 
 export default class HouseDatas extends Component {
   render() {
@@ -27,11 +27,11 @@ export default class HouseDatas extends Component {
     return (
       <View>
         <ScrollView>
-          <Data key={1} name={'uu'} />
-          <Data key={2} name={'kk'} />
+          <DataCard key={1} name={'uu'} />
+          <DataCard key={2} name={'kk'} />
           {
             tmp_array.map(function(val, index){
-              return (<Data key={index+2} title={val.title} rent={val.rent} area={val.area} />)
+              return (<DataCard key={index+2} title={val.title} rent={val.rent} area={val.area} />)
             })
           }
         </ScrollView>
