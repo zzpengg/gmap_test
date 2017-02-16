@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   Alert,
   Linking,
+  Button
 } from 'react-native';
 
 
@@ -21,24 +22,28 @@ export default class HouseDetail extends Component {
   constructor(props)
   {
     super(props)
-    this.state={
-        myLat: 24.0822996,
-        myLon: 120.558216,
-        lat: 0.00922,
-        lon: 0.00421,
-    }
+
   }
   navigate = () => {
-  Alert.alert('前往地圖','立即前往', [
-    { text: '確認', onPress: () => {
+  Alert.alert('選擇出發地點','進德校區,寶山校區', [
+    { text: '進德校區', onPress: () => {
       //const url = `http://maps.google.com/maps/?q=@${this.state.myLat},${this.state.myLon}`;
-      const url = `http://maps.google.com/maps/?daddr=國立彰化師範大學進德校區`;
+      const url = `http://maps.google.com/maps/?saddr=國立彰化師範大學進德校區&daddr=國立彰化師範大學寶山校區`;
       Linking.canOpenURL(url).then(supported => {
         if (supported) {
           Linking.openURL(url);
         }
       });
     } },
+    {
+      text: '寶山校區',onPress:()=>{
+        const url = `http://maps.google.com/maps/?saddr=國立彰化師範大學寶山校區`;
+        Linking.canOpenURL(url).then(supported => {
+          if (supported) {
+            Linking.openURL(url);
+          }
+        });
+      }},
     { text: '取消', onPress: () => {} },
   ]);
 }
@@ -49,14 +54,14 @@ export default class HouseDetail extends Component {
     //console.log(region);
 
    return (
-     <View>
-        <Text style={{fontSize: 30,alignItems: 'center',flexDirection:'row',backgroundColor:'lightgreen'}}>詳細資訊</Text>
-        <TouchableOpacity
-        onPress={this.navigate}>
-        <Text style={{fontSize: 30,color:'white',backgroundColor:'skyblue'}}>
-        查看地圖
+     <View style={{flexDirection:'column',flex:1,backgroundColor:'lightgreen'}}>
+        <Text style={{fontSize: 30,alignItems: 'center',textAlign:'center'}}>
+        詳細資訊
         </Text>
-        </TouchableOpacity>
+        <Button onPress={this.navigate}
+        title='查看地圖'
+        color="#841584"
+        />
 
      </View>
    );
