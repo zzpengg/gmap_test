@@ -88,10 +88,7 @@ export default class Index extends Component {
         })
     }
   }
-<<<<<<< HEAD
-=======
 
->>>>>>> upstream/master
   _pressButton6() {
     const { navigator } = this.props;
     //为什么这里可以取得 props.navigator?请看上文:
