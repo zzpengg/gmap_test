@@ -28,7 +28,8 @@ export default class LandlordRegistion extends Component {
         selected1: 'key1',
         results: {
             items: []
-        }
+        },
+        name: "",
     }
   }
 
@@ -37,6 +38,16 @@ export default class LandlordRegistion extends Component {
         selected1 : value
     });
   }
+
+  async onRegisterPressed () {
+    try {
+      let response = await fetch(`http://test-zzpengg.c9users.io:8080/user/create?name=${this.state.name}`);
+      console.log(response);
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
+
 
   render() {
     return (
@@ -57,7 +68,7 @@ export default class LandlordRegistion extends Component {
                 <Text style={{fontSize: 18}}>基本資料</Text>
                 <ListItem style={{ marginTop: 15 }}>
                   <InputGroup borderType="regular" style={{ borderRadius: 5}} >
-                    <Input placeholder="姓名" />
+                    <Input placeholder="姓名" onChangeText={ (val) => this.setState({name: val}) } />
                   </InputGroup>
                 </ListItem>
                 <ListItem style={{ marginTop: 10 }}>
@@ -100,7 +111,7 @@ export default class LandlordRegistion extends Component {
                  </InputGroup>
                </ListItem>
 
-               <Button style={styles.submitBtn} block warning> 確認送出 </Button>
+               <Button style={styles.submitBtn} onPress={this.onRegisterPressed.bind(this)} block warning> 確認送出 </Button>
              </List>
             </View>
         </Content>
