@@ -129,6 +129,18 @@ export default class Index extends Component {
         })
     }
   }
+  _pressButton9() {
+    const { navigator } = this.props;
+    //为什么这里可以取得 props.navigator?请看上文:
+    //<Component {...route.params} navigator={navigator} />
+    //这里传递了navigator作为props
+    if(navigator) {
+        navigator.push({
+            name: 'HouseDetail',
+            component: HouseDetail,
+        })
+    }
+  }
 
 
 
@@ -139,9 +151,9 @@ export default class Index extends Component {
 
    return (
      <View style={{ flex: 1 }}>
-        <View style={[styles.center, { backgroundColor: 'cadetblue' }]}>
+        <View style={[styles.center, { backgroundColor: 'cadetblue'}]}>
           <TouchableOpacity onPress={this._pressButton.bind(this)}>
-            <Text style={{ color: '#fff', fontSize: 30 }}> 學生 </Text>
+            <Text style={{ color: '#fff', fontSize: 30  }}> 學生 </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this._pressButton5.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30 }}> 學生註冊 </Text>
@@ -155,7 +167,9 @@ export default class Index extends Component {
           <TouchableOpacity onPress={this._pressButton8.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30 }}> Detail </Text>
           </TouchableOpacity>
-
+          <TouchableOpacity onPress={this._pressButton9.bind(this)}>
+            <Text style={{ color: '#fff', fontSize: 30 }}> HouseDetail </Text>
+          </TouchableOpacity>
         </View>
         <View style={[styles.center, { backgroundColor: 'darksalmon' }]}>
           <TouchableOpacity onPress={this._pressButton2.bind(this)}>
