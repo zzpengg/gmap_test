@@ -13,6 +13,7 @@ import {
   View,
   ScrollView,
 } from 'react-native';
+
 import DataCard from '../component/DataCard.js';
 
 export default class HouseDatas extends Component {
