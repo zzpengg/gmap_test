@@ -10,7 +10,8 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  Navigator
 } from 'react-native';
 import {
   Container,
@@ -27,8 +28,45 @@ import {
   Input,
 } from 'native-base';
 
+import HouseDatas from './HouseDatas.js';
+
 
 export default class LandlordSignin extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: "",
+    }
+  }
+
+  async onRegisterPressed () {
+    try {
+      let response = await fetch(`http://test-zzpengg.c9users.io:8080/user/findName/${this.state.name}`);
+      console.log("pressed");
+      // console.log(response);
+      let resJson = await response.json();
+      console.log(resJson);
+      if(response != null){
+        this.nextPage();
+      }
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
+
+  nextPage() {
+    const { navigator } = this.props;
+    //为什么这里可以取得 props.navigator?请看上文:
+    //<Component {...route.params} navigator={navigator} />
+    //这里传递了navigator作为props
+    if(navigator) {
+        navigator.push({
+            name: 'HouseDatas',
+            component: HouseDatas,
+        })
+    }
+  }
+
   render() {
     // const { region } = this.props;
     //console.log(region);
@@ -42,7 +80,7 @@ export default class LandlordSignin extends Component {
            <ListItem style={{ marginTop: 15 }}>
              <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
                <Icon name="ios-person" />
-               <Input onChangeText={(username) => {this.setState({username})}} placeholder="NAME" />
+               <Input onChangeText={(name) => {this.setState({name})}} placeholder="NAME" />
              </InputGroup>
            </ListItem>
            <ListItem style={{ marginTop: 10 }}>
@@ -59,9 +97,8 @@ export default class LandlordSignin extends Component {
              <View style={styles.hr} />
            </View>
 
-           <Button style={styles.submitBtn} block info> 登入 </Button>
+           <Button style={styles.submitBtn} onPress={this.onRegisterPressed.bind(this)} block info> 登入 </Button>
          </List>
-
       </View>
    );
   }

@@ -22,6 +22,7 @@ import StudentRegister from './StudentRegister.js';
 import LandlordRegistion from './LandlordRegistion.js';
 import HouseDatas from './HouseDatas.js';
 import Comments from './Comments.js';
+import Detail from './Detail.js';
 
 export default class Index extends Component {
 
@@ -129,6 +130,31 @@ export default class Index extends Component {
     }
   }
 
+  _pressButton8() {
+    const { navigator } = this.props;
+    //为什么这里可以取得 props.navigator?请看上文:
+    //<Component {...route.params} navigator={navigator} />
+    //这里传递了navigator作为props
+    if(navigator) {
+        navigator.push({
+            name: 'Detail',
+            component: Detail,
+        })
+    }
+  }
+  _pressButton9() {
+    const { navigator } = this.props;
+    //为什么这里可以取得 props.navigator?请看上文:
+    //<Component {...route.params} navigator={navigator} />
+    //这里传递了navigator作为props
+    if(navigator) {
+        navigator.push({
+            name: 'HouseDetail',
+            component: HouseDetail,
+        })
+    }
+  }
+
   render() {
     // const { region } = this.props;
     //console.log(region);
@@ -150,6 +176,9 @@ export default class Index extends Component {
             <Text style={{ color: '#fff', fontSize: 30 }}> Comments </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this._pressButton8.bind(this)}>
+            <Text style={{ color: '#fff', fontSize: 30 }}> Detail </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._pressButton9.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30 }}> HouseDetail </Text>
           </TouchableOpacity>
         </View>

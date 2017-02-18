@@ -14,9 +14,11 @@ import {
   TouchableOpacity,
   Alert,
   Linking,
-  Button
+  Button,
+  Image
 } from 'react-native';
-
+import Dimensions from 'Dimensions';
+const windowSize = Dimensions.get('window');;
 
 export default class HouseDetail extends Component {
   constructor(props)
@@ -48,7 +50,24 @@ export default class HouseDetail extends Component {
   ]);
 }
 
+gmap = () => {
+const imgWidth = windowSize.width/5*4;
+const imgHeight = parseInt(imgWidth / 16.0 * 9.0, 10);
 
+return (
+  <TouchableOpacity  style={{flex: 1, paddingTop: 20,alignItems:'center' }}>
+    <Image
+      resizeMode="cover"
+      source={{
+        uri: `https://maps.googleapis.com/maps/api/staticmap?center=彰化市旭光路26號&zoom=16.85&size=${imgWidth}x${imgHeight}&scale=8&language=zh-tw&markers=size:mid%7Ccolor:blue%7C彰化市旭光路26號&key=AIzaSyBiwSQUTr6brsJoPHcliZ3TVFYgYf7ulbw` }}
+      style={{
+        width: imgWidth,
+        height: imgHeight,
+      }}
+    />
+  </TouchableOpacity>
+);
+}
   render() {
     // const { region } = this.props;
     //console.log(region);
@@ -58,6 +77,7 @@ export default class HouseDetail extends Component {
         <Text style={{fontSize: 30,alignItems: 'center',textAlign:'center'}}>
         詳細資訊
         </Text>
+        {this.gmap()}
         <Button onPress={this.navigate}
         title='查看地圖'
         color="#841584"
