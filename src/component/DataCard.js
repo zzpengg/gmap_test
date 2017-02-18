@@ -11,11 +11,11 @@ import {
 } from 'native-base';
 
 const defaultProps = {
-  data: [],
+  DataCard: [],
 };
 
 const propTypes = {
-  data: PropTypes.array
+  DataCard: PropTypes.array
 };
 
 const styles = StyleSheet.create({
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const Data = (props) => (
+const DataCard = (props) => (
   <View style={styles.dataView}>
     <View>
       <Image source={require('../assets/fuck_cat.jpg')} style={{width:100, height:100, marginTop:5, marginLeft:5, marginBottom: 5 }} />
@@ -101,7 +101,7 @@ const Data = (props) => (
 );
 
 
-Data.propTypes = propTypes;
-Data.defaultProps = defaultProps;
+DataCard.propTypes = propTypes;
+DataCard.defaultProps = defaultProps;
 
-export default Data;
+export default DataCard;

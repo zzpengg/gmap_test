@@ -72,15 +72,14 @@ export default class UpdateHouseData extends Component {
               </View>
             </View>
             <List style={styles.form}>
-              <ListItem style={{ marginTop: 10 }}>
-                <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                  <Input inlineLabel label="房屋名稱" placeholder="" />
-                </InputGroup>
-              </ListItem>
+             <View style={{flexDirection: 'row'}}>
+               <Text style={{paddingTop:10, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>房屋名稱</Text>
+               <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}}></Input>
+             </View>
              <View style={{flexDirection:'row'}}>
-               <Text style={{paddingTop:20, paddingLeft: 30, fontSize: 18}}>所在區域</Text>
+               <Text style={{paddingTop:20, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>所在區域</Text>
                <Picker
-                  style={{ width: 120, marginLeft: 50, marginTop: 10}}
+                  style={{ width: 120, marginLeft: 50, marginTop: 6}}
                   iosHeader="Select one"
                   mode="dropdown"
                   selectedValue={this.state.selected1}
@@ -92,29 +91,29 @@ export default class UpdateHouseData extends Component {
                   <Item label="Net Banking" value="key4" />
                </Picker>
              </View>
-             <ListItem style={{ marginTop: 15, flexDirection: 'row' }}>
-                 <Text>地址</Text>
-                 <Text>彰化縣彰化市</Text>
-             </ListItem>
-             <ListItem style={{ marginTop: 15 }}>
-               <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                 <Input placeholder="地址" />
-               </InputGroup>
-             </ListItem>
-             <ListItem style={{ marginTop: 15 }}>
-               <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                 <Input inlineLabel label="剩餘空房" placeholder="" />
-               </InputGroup>
-             </ListItem>
-             <ListItem style={{ marginTop: 15 }}>
-               <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                 <Input inlineLabel label="租金" placeholder="" />
-               </InputGroup>
-             </ListItem>
+
+            <View style={{flexDirection: 'row'}}>
+              <Text style={{paddingTop:10, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}} >彰化縣彰化市</Text>
+              <Input style={{borderColor: 'red', borderWidth: 5}}></Input>
+            </View>
+
+            <View style={{flexDirection: 'row'}}>
+              <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>剩餘空房</Text>
+              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}}></Input>
+            </View>
+
+            <View style={{flexDirection: 'row'}}>
+              <Text style={{paddingTop:16, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>租金</Text>
+              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15, textAlign: 'right',marginRight: 5}}></Input>
+              <Text style={{paddingTop:10, fontSize: 15, color: '#7b7d85'}} >/月</Text>
+            </View>
+
+
+
              <View style={{flexDirection:'row'}}>
-               <Text style={{paddingTop:20, paddingLeft: 30, fontSize: 18}}>包水、包電</Text>
+               <Text style={{paddingTop:20, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>包水、包電</Text>
                <Picker
-                  style={{ width: 120, marginLeft: 50, marginTop: 10}}
+                  style={{ width: 120, marginLeft: 50, marginTop: 6}}
                   iosHeader="Select one"
                   mode="dropdown"
                   selectedValue={this.state.selected1}
@@ -127,9 +126,9 @@ export default class UpdateHouseData extends Component {
                </Picker>
              </View>
              <View style={{flexDirection:'row'}}>
-               <Text style={{paddingTop:20, paddingLeft: 30, fontSize: 18}}>類型</Text>
+               <Text style={{paddingTop:11, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>類型</Text>
                <Picker
-                  style={{ width: 120, marginLeft: 50, marginTop: 10}}
+                  style={{ width: 120, marginLeft: 50, height: 45}}
                   iosHeader="Select one"
                   mode="dropdown"
                   selectedValue={this.state.selected1}
