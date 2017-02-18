@@ -14,6 +14,12 @@ import {
   ScrollView,
   Image
 } from 'react-native';
+import {
+  Footer,
+  FooterTab,
+  Button,
+  Icon,
+} from 'native-base';
 import Comment from '../component/Comment.js';
 
 export default class Comments extends Component {
@@ -46,6 +52,18 @@ export default class Comments extends Component {
           }
 
         </ScrollView>
+        <Footer >
+          <FooterTab>
+              <Button active>
+                  <Icon name="ios-person" />
+                  <Text>Apps</Text>
+              </Button>
+              <Button>
+                  <Icon name="ios-person" />
+                  <Text>Camera</Text>
+              </Button>
+          </FooterTab>
+      </Footer>
       </View>
     );
   }

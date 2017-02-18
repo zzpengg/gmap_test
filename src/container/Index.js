@@ -130,6 +130,8 @@ export default class Index extends Component {
     }
   }
 
+
+
   render() {
     // const { region } = this.props;
     //console.log(region);
@@ -153,6 +155,7 @@ export default class Index extends Component {
           <TouchableOpacity onPress={this._pressButton8.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30 }}> Detail </Text>
           </TouchableOpacity>
+
         </View>
         <View style={[styles.center, { backgroundColor: 'darksalmon' }]}>
           <TouchableOpacity onPress={this._pressButton2.bind(this)}>
