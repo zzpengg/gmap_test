@@ -30,17 +30,15 @@ export default class HouseDatas extends Component {
 
   loadHouse = async () => {
     try {
-      const url = 'http://test-zzpengg.c9users.io:8080/house'
-      let res = await fetch(url,{
-      method: 'GET',
-    }).then((data) => data.json())
-      .catch((e) => console.log(e));
+      const url = 'http://test-zzpengg.c9users.io:8080/house/index'
+      let res = await fetch(url).then( (data) => data.json());
 
-      this.setState({
-        data: res,
-        loading: false,
-      }).bind(this);
       console.log(res);
+      this.setState({
+        data: res.data,
+        loading: false,
+      })
+
     } catch (errors) {
       console.log(errors);
     }

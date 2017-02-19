@@ -102,12 +102,12 @@ export default class LandlordRegistion extends Component {
                </ListItem>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="密碼" />
+                   <Input placeholder="密碼" secureTextEntry={true}/>
                  </InputGroup>
                </ListItem>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="確認密碼" />
+                   <Input placeholder="確認密碼" secureTextEntry={true}/>
                  </InputGroup>
                </ListItem>
 

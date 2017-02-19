@@ -133,29 +133,40 @@ export default class LandlordSignin extends Component {
     this.state = {
       name: "",
       status: "",
+      password: "",
     }
   }
 
-  onRegisterPressed = async() => {
-      let response = await fetch(`http://test-zzpengg.c9users.io:8080/user/findName/${this.state.name}`)
-        .then( (data) => data.json())
-        .catch( (e) => console.log(e))
-      console.log("pressed");
-      this.setState({
-        status: 'pressed'
+  onLoginPressed = async() => {
+    let url = 'http://test-zzpengg.c9users.io:8080/user/login';
+    let response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: this.state.name,
+        password: this.state.password,
       })
-      if(response){
-        const { navigator } = this.props;
-        //为什么这里可以取得 props.navigator?请看上文:
-        //<Component {...route.params} navigator={navigator} />
-        //这里传递了navigator作为props
-        if(navigator) {
-            navigator.push({
-                name: 'HouseDatas',
-                component: HouseDatas,
-            })
-        }
+    }).then( (data) => data.json() )
+    console.log("pressed");
+    console.log(response);
+    this.setState({
+      status: 'pressed'
+    })
+    if(response){
+      const { navigator } = this.props;
+      //为什么这里可以取得 props.navigator?请看上文:
+      //<Component {...route.params} navigator={navigator} />
+      //这里传递了navigator作为props
+      if(navigator) {
+          navigator.push({
+              name: 'HouseDatas',
+              component: HouseDatas,
+          })
       }
+    }
   }
 
   render() {
@@ -193,7 +204,7 @@ export default class LandlordSignin extends Component {
            </View>
            <Text>{this.state.status}</Text>
 
-           <Button style={styles.submitBtn} onPress={this.onRegisterPressed.bind(this)} block info> 登入 </Button>
+           <Button style={styles.submitBtn} onPress={this.onLoginPressed.bind(this)} block info> 登入 </Button>
          </List>
          </Content>
       </View>
