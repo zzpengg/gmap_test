@@ -18,7 +18,7 @@ import {
   Image
 } from 'react-native';
 import Dimensions from 'Dimensions';
-const windowSize = Dimensions.get('window');;
+const windowSize = Dimensions.get('window');
 
 export default class HouseDetail extends Component {
   constructor(props)

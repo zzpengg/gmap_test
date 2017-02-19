@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 
 import Filter from './Filter.js';
-import LandlordSignin from './LandlordSignin.js';
 import UpdateHouseData from './UpdateHouseData.js';
 import HouseDetail from './HouseDetail.js';
 import StudentRegister from './StudentRegister.js';
@@ -23,8 +22,15 @@ import LandlordRegistion from './LandlordRegistion.js';
 import HouseDatas from './HouseDatas.js';
 import Comments from './Comments.js';
 import Detail from './Detail.js';
+import StudentSignin from './StudentSignin.js';
+import LandlordSignin from './LandlordSignin.js';
 
 export default class Index extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
   _pressButton() {
     const { navigator } = this.props;
@@ -97,7 +103,6 @@ export default class Index extends Component {
     //这里传递了navigator作为props
     if(navigator) {
         navigator.push({
-
             name: 'HouseDatas',
             component: HouseDatas,
         })
@@ -142,12 +147,24 @@ export default class Index extends Component {
     }
   }
 
+  _pressButton10() {
+    const { navigator } = this.props;
+    //为什么这里可以取得 props.navigator?请看上文:
+    //<Component {...route.params} navigator={navigator} />
+    //这里传递了navigator作为props
+    if(navigator) {
+        navigator.push({
+            name: 'StudentSignin',
+            component: StudentSignin,
+        })
+    }
+  }
+
 
 
   render() {
     // const { region } = this.props;
     //console.log(region);
-
 
    return (
      <View style={{ flex: 1 }}>
@@ -180,6 +197,9 @@ export default class Index extends Component {
           </TouchableOpacity>
           <TouchableOpacity onPress={this._pressButton4.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30 }}> LandlordRegistion </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._pressButton10.bind(this)}>
+            <Text style={{ color: '#fff', fontSize: 30 }}> StudentSignin </Text>
           </TouchableOpacity>
         </View>
       </View>

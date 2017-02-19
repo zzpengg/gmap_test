@@ -12,7 +12,9 @@ import {
   Text,
   View,
   ScrollView,
-  Image
+  Image,
+  TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import {
   Footer,
@@ -23,6 +25,63 @@ import {
 import Comment from '../component/Comment.js';
 
 export default class Comments extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      houseId: 0,
+      userId: 0,
+      name: "develop",
+      content: "",
+      data: [],
+      loading: true,
+    }
+    this.loadComment = this.loadComment.bind(this);
+    this.loadComment();
+  }
+
+
+
+  loadComment = async () => {
+    try {
+      const url = 'http://test-zzpengg.c9users.io:8080/comment'
+      let res = await fetch(url,{
+      method: 'GET',
+    }).then((data) => data.json())
+      .catch((e) => console.log(e));
+
+      this.setState({
+        data: res,
+        loading: false,
+      });
+      console.log(res);
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
+
+  async onCommentPressed () {
+    try {
+      let url = 'http://test-zzpengg.c9users.io:8080/comment'
+      let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          houseId: this.state.houseId,
+          userId: this.state.userId,
+          name: this.state.name,
+          content: this.state.content,
+        })
+      });
+      console.log(response);
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
+
   render() {
     // const { region } = this.props;
     //console.log(region);
@@ -46,24 +105,36 @@ export default class Comments extends Component {
           <Text style={styles.houseTitle}>房屋名稱: </Text>
           <Image source={require('../assets/house.jpg')} style={styles.houseImage} />
           {
+            this.state.loading ?
+              <ActivityIndicator
+                animating={this.state.loading}
+                style={styles.spinner}
+                color="rgb(213, 179, 36)"
+              /> : null
+          }
+          {
             tmp_array.map(function(val, index){
               return (<Comment key={index+2} name={val.name} content={val.content} score={val.score}/>)
             })
           }
+          {
+            this.state.data.map(function(val, index){
+              return (<Comment key={index+2} name={val.name} content={val.content} score={val.score}/>)
+            })
+          }
+
+
+          <Text style={styles.houseTitle}>{this.state.userId}</Text>
+          <TextInput
+            onChangeText = { (content) => this.setState({content: content})}
+            editable = {true}
+            numberOfLines = {4}
+            multiline = {true}
+          />
+          <Text style={styles.houseTitle}>content:{this.state.content}</Text>
+          <Button style={styles.submitBtn} onPress={this.onCommentPressed.bind(this)} block warning> 確認送出 </Button>
 
         </ScrollView>
-        <Footer >
-          <FooterTab>
-              <Button active>
-                  <Icon name="ios-person" />
-                  <Text>Apps</Text>
-              </Button>
-              <Button>
-                  <Icon name="ios-person" />
-                  <Text>Camera</Text>
-              </Button>
-          </FooterTab>
-      </Footer>
       </View>
     );
   }
@@ -97,5 +168,11 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginBottom: 5,
     alignSelf: 'center'
+  },
+  submitBtn: {
+    elevation: 1,
+    marginLeft: 18,
+    marginRight: 0,
+    marginTop: 20,
   },
 });

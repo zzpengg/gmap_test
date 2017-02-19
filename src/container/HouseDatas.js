@@ -17,6 +17,35 @@ import {
 import DataCard from '../component/DataCard.js';
 
 export default class HouseDatas extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [],
+      loading: true,
+    }
+    this.loadHouse = this.loadHouse.bind(this);
+    this.loadHouse();
+  }
+
+  loadHouse = async () => {
+    try {
+      const url = 'http://test-zzpengg.c9users.io:8080/house'
+      let res = await fetch(url,{
+      method: 'GET',
+    }).then((data) => data.json())
+      .catch((e) => console.log(e));
+
+      this.setState({
+        data: res,
+        loading: false,
+      }).bind(this);
+      console.log(res);
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
+
   render() {
     // const { region } = this.props;
     //console.log(region);
@@ -32,6 +61,11 @@ export default class HouseDatas extends Component {
           <DataCard key={2} name={'kk'} />
           {
             tmp_array.map(function(val, index){
+              return (<DataCard key={index+2} title={val.title} rent={val.rent} area={val.area} />)
+            })
+          }
+          {
+            this.state.data.map(function(val, index){
               return (<DataCard key={index+2} title={val.title} rent={val.rent} area={val.area} />)
             })
           }

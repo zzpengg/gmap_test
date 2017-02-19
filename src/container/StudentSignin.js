@@ -25,15 +25,23 @@ import {
   Input,
 } from 'native-base';
 
-export default class Filter extends Component {
+import HouseDatas from './HouseDatas';
+
+export default class StudentSignin extends Component {
   render() {
     // const { region } = this.props;
     //console.log(region);
 
    return (
-     <View>
-
-     </View>
+      <Button onPress={ () => {
+        const { navigator } = this.props;
+        if(navigator){
+          navigator.push({
+            name: 'HouseDatas',
+            component: HouseDatas
+          })
+        }
+      }} >123</Button>
    );
   }
 }
