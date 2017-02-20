@@ -136,8 +136,19 @@ render() {
                   <InputGroup borderType="regular" style={{ borderRadius: 5}} >
                     <Input
                     placeholder="姓名"
-                    onChangeText={ (val) =>{this.setState({name:val}),this.checkname(val)}}
-                    maxLength={10}
+                    onChangeText={ (val) =>{
+                      if(val.length<=10){this.setState({name:val})}
+                      else{
+                      this.setState({name:""})
+                      Alert.alert(
+                        '帳號超過長度限制',
+                        '請輸入小於10個字的帳號',
+                       [
+                        {text:'我知道了',onPress:()=>{}}
+                       ]
+                      )
+                      }}}
+                    value={this.state.name}
                     />
                   </InputGroup>
                 </ListItem>
