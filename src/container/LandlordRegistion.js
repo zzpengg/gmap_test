@@ -41,12 +41,39 @@ export default class LandlordRegistion extends Component {
 
   async onRegisterPressed () {
     try {
-      let response = await fetch(`http://test-zzpengg.c9users.io:8080/user/create?name=${this.state.name}`);
-      console.log(response);
-    } catch (errors) {
-      console.log(errors);
+      let url = 'http://test-zzpengg.c9users.io:8080/user';
+      let response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: this.state.title,
+            area: this.state.area,
+            address: this.state.address,
+            vacancy: this.state.vacancy,
+            rent: this.state.rent,
+            waterandelec: this.state.waterandelec,
+            type: this.state.type,
+          })
+        }).then( (data) => data.json())
+          .catch( (e) => console.log(e) );
+        console.log(res);
+        console.log( (res != null) );
+        if(res != null){
+          console.log("in");
+          this.nextPage();
+        }
+        else{
+          console.log("out");
+          Alert.alert("something wrong");
+        }
+        console.log(res);
+      } catch (errors) {
+        console.log(errors);
+      }
     }
-  }
 
 
   render() {
