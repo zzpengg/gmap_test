@@ -177,7 +177,7 @@ render() {
                  </InputGroup>
                </ListItem>
                <ListItem style={{ marginTop: 15 }}>
-                 <InputGroup borderType="regular" style={{ borderRadius: 5 }}
+                 <InputGroup borderType="regular" style={{ borderRadius: 5 }}>
                    <Input placeholder="確認密碼" secureTextEntry={true}/>
                  </InputGroup>
                </ListItem>
