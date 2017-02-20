@@ -10,7 +10,6 @@
     "native-base": "^0.5.22",
     "react": "15.4.1",
     "react-native": "0.39.0",
-    "react-native-form-verify": "^1.0.3",
     "react-native-maps": "^0.12.1",
     "react-native-vector-icons": "^4.0.0"
   },

@@ -141,8 +141,8 @@ render() {
                       else{
                       this.setState({name:""})
                       Alert.alert(
-                        '帳號超過長度限制',
-                        '請輸入小於10個字的帳號',
+                        '名字超過長度限制',
+                        '請輸入小於10個字的名字',
                        [
                         {text:'我知道了',onPress:()=>{}}
                        ]
@@ -154,7 +154,18 @@ render() {
                 </ListItem>
                 <ListItem style={{ marginTop: 10 }}>
                   <InputGroup borderType="regular" style={{ borderRadius: 5}} >
-                    <Input placeholder="電話" onChangeText={ (val) => this.setState({phone: val}) }/>
+                    <Input placeholder="電話" onChangeText={ (val) =>{
+                      if(val.length<=10)
+                      this.setState({phone: val})
+                      else {
+                        Alert.alert(
+                          "電話長度不對",
+                          "電話長度應少於10個數字",
+                          [
+                            {text:'我知道了',onPress()=>{}}
+                          ]
+                        )
+                      }}}/>
                   </InputGroup>
                 </ListItem>
                <View style={{flexDirection:'row'}}>
@@ -178,7 +189,7 @@ render() {
                <Text style={{fontSize: 18, marginTop: 40}}>帳號密碼</Text>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="帳號" onChangeText={ (val) => this.setState({changhao: val}) }/>
+                   <Input placeholder="帳號" onChangeText={ (val) => {this.setState({changhao: val}) }}/>
                  </InputGroup>
                </ListItem>
                <ListItem style={{ marginTop: 15 }}>
