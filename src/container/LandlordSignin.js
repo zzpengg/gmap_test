@@ -11,7 +11,7 @@ import {
   StyleSheet,
   Text,
   View,
-  Navigator
+  Navigator,
 } from 'react-native';
 import {
   Container,
@@ -29,80 +29,6 @@ import {
 } from 'native-base';
 
 import HouseDatas from './HouseDatas.js';
-
-
-export default class LandlordSignin extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: "",
-    }
-  }
-
-  async onRegisterPressed () {
-    try {
-      let response = await fetch(`http://test-zzpengg.c9users.io:8080/user/findName/${this.state.name}`);
-      console.log("pressed");
-      // console.log(response);
-      let resJson = await response.json();
-      console.log(resJson);
-      if(response != null){
-        this.nextPage();
-      }
-    } catch (errors) {
-      console.log(errors);
-    }
-  }
-
-  nextPage() {
-    const { navigator } = this.props;
-    //为什么这里可以取得 props.navigator?请看上文:
-    //<Component {...route.params} navigator={navigator} />
-    //这里传递了navigator作为props
-    if(navigator) {
-        navigator.push({
-            name: 'HouseDatas',
-            component: HouseDatas,
-        })
-    }
-  }
-
-  render() {
-    // const { region } = this.props;
-    //console.log(region);
-
-   return (
-     <View style={styles.container}>
-         <View style={styles.title}>
-           <Text style={styles.titleText}>SignUp</Text>
-         </View>
-         <List style={styles.form}>
-           <ListItem style={{ marginTop: 15 }}>
-             <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-               <Icon name="ios-person" />
-               <Input onChangeText={(name) => {this.setState({name})}} placeholder="NAME" />
-             </InputGroup>
-           </ListItem>
-           <ListItem style={{ marginTop: 10 }}>
-             <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-               <Icon name="ios-unlock" />
-               <Input onChangeText={(password) => {this.setState({password})}} placeholder="PASSWORD" secureTextEntry={true}/>
-             </InputGroup>
-           </ListItem>
-           <Button onPress={this.register} style={styles.submitBtn} block warning> 註冊 </Button>
-           <View style={{ alignItems: 'center' }}>
-             <View style={styles.orWrapper}>
-               <Text style={styles.orText}>or</Text>
-             </View>
-             <View style={styles.hr} />
-           </View>
-
-           <Button style={styles.submitBtn} onPress={this.onRegisterPressed.bind(this)} block info> 登入 </Button>
-         </List>
-      </View>
-   );
-  }
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -138,6 +64,7 @@ const styles = StyleSheet.create({
     height: 58,
   },
   form: {
+    marginTop: 50,
     marginLeft: 20,
     marginRight: 20,
     padding: 20,
@@ -198,3 +125,89 @@ const styles = StyleSheet.create({
     left: 0,
   },
 });
+
+
+export default class LandlordSignin extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: "",
+      status: "",
+      password: "",
+    }
+  }
+
+  onLoginPressed = async() => {
+    let url = 'http://test-zzpengg.c9users.io:8080/user/login';
+    let response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: this.state.name,
+        password: this.state.password,
+      })
+    }).then( (data) => data.json() )
+    console.log("pressed");
+    console.log(response);
+    this.setState({
+      status: 'pressed'
+    })
+    if(response){
+      const { navigator } = this.props;
+      //为什么这里可以取得 props.navigator?请看上文:
+      //<Component {...route.params} navigator={navigator} />
+      //这里传递了navigator作为props
+      if(navigator) {
+          navigator.push({
+              name: 'HouseDatas',
+              component: HouseDatas,
+          })
+      }
+    }
+  }
+
+  render() {
+    // const { region } = this.props;
+    //console.log(region);
+
+   return (
+     <View style={styles.container}>
+       <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
+         <Button transparent >
+           <Icon name='ios-arrow-back' />
+         </Button>
+         <Title>房東登入</Title>
+       </Header>
+       <Content>
+         <List style={styles.form}>
+           <ListItem style={{ marginTop: 15 }}>
+             <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
+               <Icon name="ios-person" />
+               <Input onChangeText={(name) => {this.setState({name})}} placeholder="NAME" />
+             </InputGroup>
+           </ListItem>
+           <ListItem style={{ marginTop: 10 }}>
+             <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
+               <Icon name="ios-unlock" />
+               <Input onChangeText={(password) => {this.setState({password})}} placeholder="PASSWORD" secureTextEntry={true}/>
+             </InputGroup>
+           </ListItem>
+           <Button onPress={this.register} style={styles.submitBtn} block warning> 註冊 </Button>
+           <View style={{ alignItems: 'center' }}>
+             <View style={styles.orWrapper}>
+               <Text style={styles.orText}>or</Text>
+             </View>
+             <View style={styles.hr} />
+           </View>
+           <Text>{this.state.status}</Text>
+
+           <Button style={styles.submitBtn} onPress={this.onLoginPressed.bind(this)} block info> 登入 </Button>
+         </List>
+         </Content>
+      </View>
+   );
+  }
+}

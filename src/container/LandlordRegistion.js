@@ -172,12 +172,13 @@ render() {
                </ListItem>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="密碼" onChangeText={ (val) => this.setState({password: val}) }/>
+
+                   <Input placeholder="密碼" secureTextEntry={true}/>
                  </InputGroup>
                </ListItem>
                <ListItem style={{ marginTop: 15 }}>
-                 <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="確認密碼" onChangeText={ (val) => this.setState({password_comfirmed: val}) }/>
+                 <InputGroup borderType="regular" style={{ borderRadius: 5 }}
+                   <Input placeholder="確認密碼" secureTextEntry={true}/>
                  </InputGroup>
                </ListItem>
                <Text>{this.state.error}</Text>
