@@ -31,7 +31,7 @@ export default class LandlordRegistion extends Component {
         results: {
             items: []
         },
-        name: "0000",
+        name: "",
         phone: "",
         gender: "",
         address: "",
@@ -136,14 +136,48 @@ render() {
                   <InputGroup borderType="regular" style={{ borderRadius: 5}} >
                     <Input
                     placeholder="姓名"
-                    onChangeText={ (val) =>{this.setState({name:val}),this.checkname(val)}}
-                    maxLength={10}
+                    onChangeText={ (val) =>{
+                      if(val.length<=10){this.setState({name:val})}
+                      else{
+                      this.setState({name:""})
+                      Alert.alert(
+                        '名字超過長度限制',
+                        '請輸入小於10個字的名字',
+                       [
+                        {text:'我知道了',onPress:()=>{}}
+                       ]
+                      )
+                      }}}
+                    value={this.state.name}
                     />
                   </InputGroup>
                 </ListItem>
                 <ListItem style={{ marginTop: 10 }}>
                   <InputGroup borderType="regular" style={{ borderRadius: 5}} >
-                    <Input placeholder="電話" onChangeText={ (val) => this.setState({phone: val}) }/>
+                    <Input placeholder="電話" onChangeText={ (val) =>{
+                      if(isNaN(val)==true)
+                      {
+                        Alert.alert(
+                          "型態錯誤",
+                          "請輸入數字",
+                          [
+                            {text:'我知道了',onPress:()=>{}}
+                          ]
+                        )
+                      }
+                      else if(val.length<=10)
+                      this.setState({phone: val})
+                      else {
+                        Alert.alert(
+                          "電話長度不對",
+                          "電話長度應少於11個數字",
+                          [
+                            {text:'我知道了',onPress:()=>{}}
+                          ]
+                        )
+                        this.setState({phone:""})
+                      }}}
+                      value={this.state.phone}/>
                   </InputGroup>
                 </ListItem>
                <View style={{flexDirection:'row'}}>
@@ -167,7 +201,7 @@ render() {
                <Text style={{fontSize: 18, marginTop: 40}}>帳號密碼</Text>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="帳號" onChangeText={ (val) => this.setState({changhao: val}) }/>
+                   <Input placeholder="帳號" onChangeText={ (val) => {this.setState({changhao: val}) }}/>
                  </InputGroup>
                </ListItem>
                <ListItem style={{ marginTop: 15 }}>
@@ -191,7 +225,6 @@ render() {
 
   }
 }
-
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fffbe2',
