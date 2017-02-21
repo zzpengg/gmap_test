@@ -31,7 +31,7 @@ export default class LandlordRegistion extends Component {
         results: {
             items: []
         },
-        name: "0000",
+        name: "",
         phone: "",
         gender: "",
         address: "",
@@ -155,17 +155,29 @@ render() {
                 <ListItem style={{ marginTop: 10 }}>
                   <InputGroup borderType="regular" style={{ borderRadius: 5}} >
                     <Input placeholder="電話" onChangeText={ (val) =>{
-                      if(val.length<=10)
+                      if(isNaN(val)==true)
+                      {
+                        Alert.alert(
+                          "型態錯誤",
+                          "請輸入數字",
+                          [
+                            {text:'我知道了',onPress:()=>{}}
+                          ]
+                        )
+                      }
+                      else if(val.length<=10)
                       this.setState({phone: val})
                       else {
                         Alert.alert(
                           "電話長度不對",
-                          "電話長度應少於10個數字",
+                          "電話長度應少於11個數字",
                           [
-                            {text:'我知道了',onPress()=>{}}
+                            {text:'我知道了',onPress:()=>{}}
                           ]
                         )
-                      }}}/>
+                        this.setState({phone:""})
+                      }}}
+                      value={this.state.phone}/>
                   </InputGroup>
                 </ListItem>
                <View style={{flexDirection:'row'}}>
@@ -213,7 +225,6 @@ render() {
 
   }
 }
-
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fffbe2',
