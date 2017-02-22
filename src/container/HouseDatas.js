@@ -13,6 +13,10 @@ import {
   View,
   ScrollView,
 } from 'react-native';
+import {
+  Header,
+  Content
+} from 'native-base';
 
 import DataCard from '../component/DataCard.js';
 
@@ -23,6 +27,7 @@ export default class HouseDatas extends Component {
     this.state = {
       data: [],
       loading: true,
+      accessToken: this.props.accessToken,
     }
     this.loadHouse = this.loadHouse.bind(this);
     this.loadHouse();
@@ -31,7 +36,14 @@ export default class HouseDatas extends Component {
   loadHouse = async () => {
     try {
       const url = 'http://test-zzpengg.c9users.io:8080/house/index'
-      let res = await fetch(url).then( (data) => data.json());
+      let res = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'x-access-token': this.state.accessToken,
+        },
+      }).then((data) => data.json())
+        .catch((e) => console.log(e));
 
       console.log(res);
       this.setState({
@@ -55,18 +67,26 @@ export default class HouseDatas extends Component {
     return (
       <View>
         <ScrollView>
-          <DataCard key={1} name={'uu'} />
-          <DataCard key={2} name={'kk'} />
-          {
-            tmp_array.map(function(val, index){
-              return (<DataCard key={index+2} title={val.title} rent={val.rent} area={val.area} />)
-            })
-          }
-          {
-            this.state.data.map(function(val, index){
-              return (<DataCard key={index+2} title={val.title} rent={val.rent} area={val.area} />)
-            })
-          }
+          <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
+            <Button transparent >
+              <Icon name='ios-arrow-back' />
+            </Button>
+            <Title>房東登入{this.state.accessToken}</Title>
+          </Header>
+          <Content>
+            <DataCard key={1} name={'uu'} />
+            <DataCard key={2} name={'kk'} />
+            {
+              tmp_array.map(function(val, index){
+                return (<DataCard key={index+2} title={val.title} rent={val.rent} area={val.area} />)
+              })
+            }
+            {
+              this.state.data.map(function(val, index){
+                return (<DataCard key={index+2} title={val.title} rent={val.rent} area={val.area} />)
+              })
+            }
+          </Content>
         </ScrollView>
       </View>
     );

@@ -12,6 +12,7 @@ import {
   Text,
   View,
   Navigator,
+  AsyncStorage,
 } from 'react-native';
 import {
   Container,
@@ -126,6 +127,7 @@ const styles = StyleSheet.create({
   },
 });
 
+const ACCESS_TOKEN = 'access_token';
 
 export default class LandlordSignin extends Component {
   constructor(props) {
@@ -134,38 +136,98 @@ export default class LandlordSignin extends Component {
       name: "",
       status: "",
       password: "",
+      accessToken: "",
     }
   }
 
-  onLoginPressed = async() => {
-    let url = 'http://test-zzpengg.c9users.io:8080/user/login';
-    let response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: this.state.name,
-        password: this.state.password,
-      })
-    }).then( (data) => data.json() )
-    console.log("pressed");
-    console.log(response);
-    this.setState({
-      status: 'pressed'
-    })
-    if(response){
-      const { navigator } = this.props;
-      //为什么这里可以取得 props.navigator?请看上文:
-      //<Component {...route.params} navigator={navigator} />
-      //这里传递了navigator作为props
-      if(navigator) {
-          navigator.push({
-              name: 'HouseDatas',
-              component: HouseDatas,
-          })
+  componentWillMount() {
+    this.getToken();
+  }
+
+  async getToken() {
+    try {
+      let accessToken = await AsyncStorage.getItem(ACCESS_TOKEN);
+      if(!accessToken) {
+          console.log("not have token");
+      } else {
+          this.setState({accessToken: accessToken})
+          this.nextPage();
       }
+    } catch(error) {
+        console.log("catch error = " + error);
+    }
+  }
+
+  nextPage(){
+    const { navigator } = this.props;
+    navigator.push({
+      name: 'HouseDatas',
+      component: HouseDatas,
+      params: {
+        accessToken: this.props.accessToken
+      }
+    });
+  }
+
+  storeToken(responseData){
+    AsyncStorage.setItem(ACCESS_TOKEN, responseData, (err)=> {
+      if(err){
+        console.log("an error");
+        throw err;
+      }
+      console.log("success");
+    }).catch((err)=> {
+        console.log("error is: " + err);
+    });
+  }
+
+  async deleteToken() {
+    try {
+        await AsyncStorage.removeItem(ACCESS_TOKEN)
+        this.redirect('root');
+    } catch(error) {
+        console.log("Something went wrong");
+    }
+  }
+
+  onLogout(){
+    this.deleteToken();
+  }
+
+  onLoginPressed = async() => {
+    try {
+      let url = 'http://test-zzpengg.c9users.io:8080/user/login';
+      let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: this.state.name,
+          password: this.state.password,
+        })
+      }).then( (data) => data.json() )
+      console.log("pressed");
+      console.log(response);
+      this.setState({
+        status: 'pressed'
+      })
+      if(response.text === 'login success'){
+        //Handle success
+        let accessToken = response.token;
+        console.log(accessToken);
+        //On success we will store the access_token in the AsyncStorage
+        this.storeToken(accessToken);
+        this.nextPage();
+
+      } else {
+            //Handle error
+            let error = res;
+            throw error;
+      }
+    } catch(error){
+      console.log("error " + error);
     }
   }
 
@@ -179,7 +241,7 @@ export default class LandlordSignin extends Component {
          <Button transparent >
            <Icon name='ios-arrow-back' />
          </Button>
-         <Title>房東登入</Title>
+         <Title>房東登入{this.state.accessToken}</Title>
        </Header>
        <Content>
          <List style={styles.form}>

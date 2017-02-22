@@ -175,6 +175,7 @@ export default class UpdateHouseData extends Component {
       rent: 0,
       waterandelec: "都不包",
       type: "套房",
+      accessToken: this.props.accessToken
     }
   }
 
@@ -216,7 +217,7 @@ export default class UpdateHouseData extends Component {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json',
+          'x-access-token': this.state.accessToken,
         },
         body: JSON.stringify({
           title: this.state.title,

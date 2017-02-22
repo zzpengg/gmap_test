@@ -15,7 +15,8 @@ import {
   Alert,
   Linking,
   Button,
-  Image
+  Image,
+  ScrollView,
 } from 'react-native';
 import Dimensions from 'Dimensions';
 const windowSize = Dimensions.get('window');
@@ -73,9 +74,12 @@ return (
     //console.log(region);
 
    return (
-     <View style={{flexDirection:'column',flex:1,backgroundColor:'lightgreen'}}>
+     <ScrollView style={{flexDirection:'column',flex:1,backgroundColor:'lightgreen'}}>
         <Text style={{fontSize: 30,alignItems: 'center',textAlign:'center'}}>
         詳細資訊
+        </Text>
+        <Text style={{fontSize: 14,alignItems: 'center',textAlign:'center'}}>
+        地址:
         </Text>
         {this.gmap()}
         <Button onPress={this.navigate}
@@ -83,7 +87,7 @@ return (
         color="#841584"
         />
 
-     </View>
+     </ScrollView>
    );
   }
 }
