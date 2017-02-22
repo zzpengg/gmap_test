@@ -11,7 +11,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Navigator,
   AsyncStorage,
 } from 'react-native';
 import {
@@ -151,6 +150,7 @@ export default class LandlordSignin extends Component {
           console.log("not have token");
       } else {
           this.setState({accessToken: accessToken})
+          console.log("nextpage");
           this.nextPage();
       }
     } catch(error) {
@@ -169,6 +169,13 @@ export default class LandlordSignin extends Component {
     });
   }
 
+  prePage() {
+      const { navigator } = this.props;
+      if(navigator) {
+          navigator.pop();
+      }
+  }
+
   storeToken(responseData){
     AsyncStorage.setItem(ACCESS_TOKEN, responseData, (err)=> {
       if(err){
@@ -184,7 +191,6 @@ export default class LandlordSignin extends Component {
   async deleteToken() {
     try {
         await AsyncStorage.removeItem(ACCESS_TOKEN)
-        this.redirect('root');
     } catch(error) {
         console.log("Something went wrong");
     }
@@ -220,7 +226,6 @@ export default class LandlordSignin extends Component {
         //On success we will store the access_token in the AsyncStorage
         this.storeToken(accessToken);
         this.nextPage();
-
       } else {
             //Handle error
             let error = res;
@@ -238,10 +243,10 @@ export default class LandlordSignin extends Component {
    return (
      <View style={styles.container}>
        <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
-         <Button transparent >
+         <Button transparent onPress={this.prePage.bind(this)}>
            <Icon name='ios-arrow-back' />
          </Button>
-         <Title>房東登入{this.state.accessToken}</Title>
+         <Title>房東登入</Title>
        </Header>
        <Content>
          <List style={styles.form}>
@@ -264,9 +269,10 @@ export default class LandlordSignin extends Component {
              </View>
              <View style={styles.hr} />
            </View>
-           <Text>{this.state.status}</Text>
+           <Text>{this.state.accessToken}{this.state.status}</Text>
 
            <Button style={styles.submitBtn} onPress={this.onLoginPressed.bind(this)} block info> 登入 </Button>
+          <Button onPress={this.onLogout.bind(this)}>登出</Button>
          </List>
          </Content>
       </View>

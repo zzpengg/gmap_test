@@ -30,26 +30,10 @@ export default class Index extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      accessToken: "",
     }
   }
 
-  componentWillMount() {
-    this.getToken();
-  }
 
-  async getToken() {
-    try {
-      let accessToken = await AsyncStorage.getItem(ACCESS_TOKEN);
-      if(!accessToken) {
-          console.log("not have token");
-      } else {
-          this.setState({accessToken: accessToken})
-      }
-    } catch(error) {
-        console.log("Something went wrong");
-    }
-  }
 
   _pressButton() {
     const { navigator } = this.props;
@@ -73,9 +57,6 @@ export default class Index extends Component {
         navigator.push({
             name: 'LandlordSignin',
             component: LandlordSignin,
-            passProps: {
-              accessToken: this.state.accessToken
-            }
         })
     }
   }

@@ -210,6 +210,14 @@ export default class UpdateHouseData extends Component {
     }
   }
 
+  prePage() {
+    const { navigator } = this.props;
+
+    if(navigator) {
+      navigator.pop();
+    }
+  }
+
   onHousePressed = async() => {
     try {
       let url = 'http://test-zzpengg.c9users.io:8080/house'
@@ -255,7 +263,7 @@ export default class UpdateHouseData extends Component {
    return (
      <Container>
         <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
-          <Button transparent >
+          <Button transparent onPress={this.prePage.bind(this)}>
             <Icon name='ios-arrow-back' />
           </Button>
           <Title>修改房屋資訊</Title>

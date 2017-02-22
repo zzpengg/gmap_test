@@ -25,8 +25,7 @@ export default class LandlordRegistion extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        selectedItem: 'undefined'
-        ,
+        selectedItem: 'undefined',
         selected1: 'male',
         results: {
             items: []
@@ -47,12 +46,21 @@ export default class LandlordRegistion extends Component {
         selected1 : value
     });
   }
-isempty(val)
-{
-  if(val.length==0)
-  return 1;
-  else return 0;
-}
+
+  prePage() {
+      const { navigator } = this.props;
+      if(navigator) {
+          navigator.pop();
+      }
+  }
+
+  isempty(val)
+  {
+    if(val.length==0)
+    return 1;
+    else return 0;
+  }
+
   async onRegisterPressed () {
     try {
 
@@ -99,7 +107,7 @@ render() {
     return (
       <View style={styles.container}>
         <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
-          <Button transparent >
+          <Button transparent onPress={this.prePage.bind(this)} >
             <Icon name='ios-arrow-back' />
           </Button>
           <Title>房東註冊</Title>

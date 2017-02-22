@@ -15,7 +15,10 @@ import {
 } from 'react-native';
 import {
   Header,
-  Content
+  Content,
+  Button,
+  Icon,
+  Title
 } from 'native-base';
 
 import DataCard from '../component/DataCard.js';
@@ -31,6 +34,13 @@ export default class HouseDatas extends Component {
     }
     this.loadHouse = this.loadHouse.bind(this);
     this.loadHouse();
+  }
+
+  prePage() {
+      const { navigator } = this.props;
+      if(navigator) {
+          navigator.pop();
+      }
   }
 
   loadHouse = async () => {
@@ -68,10 +78,10 @@ export default class HouseDatas extends Component {
       <View>
         <ScrollView>
           <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
-            <Button transparent >
+            <Button transparent onPress={this.prePage.bind(this)}>
               <Icon name='ios-arrow-back' />
             </Button>
-            <Title>房東登入{this.state.accessToken}</Title>
+            <Title>房屋資訊</Title>
           </Header>
           <Content>
             <DataCard key={1} name={'uu'} />
