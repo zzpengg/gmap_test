@@ -41,61 +41,40 @@ export default class LandlordRegistion extends Component {
         error: "",
     }
   }
-  checkname(value)
-  {
-    if(this.state.name.length>10){
-      Alert.alert(
-        '帳號超過長度限制',
-        '請輸入小於10個字的帳號',
-       [
-        {text:'我知道了',onPress:()=>{}}
-       ]
-     )
-   }
-    //   this.setState({
-    //     name: 'gggggg',
-    //     phone: "號碼長度超過限制囉",
-    //     address: "地址長度超過限制囉",
-    //     changhao: "帳號長度超過限制囉",
-    //     password: "ggggggg",
-    //     password_comfirmed: "密碼不合",
-    //   }
-  }
+
   onValueChange (value: string) {
     this.setState({
         selected1 : value
     });
   }
-
+isempty(val)
+{
+  if(val.length==0)
+  return 1;
+  else return 0;
+}
   async onRegisterPressed () {
     try {
 
-      let namelength = this.state.name.length;
-      console.log(namelength);
-      var formcheck="";
-      //console.log(this.state.password.localeCompare(this.state.password_comfirmed));
-      //console.log(this.state.password == this.state.password_comfirmed);
-      // if(namelength > 10)
-      // {formcheck+="請輸入小於10個字的帳號";}
-      // if(this.state.password.localeCompare(this.state.password_comfirmed)==0)
-      if(namelength > 10){
-        Alert.alert(
-          '帳號超過長度限制',
-          '請輸入小於10個字的帳號',
-         [
-          {text:'我知道了',onPress:()=>{}}
-         ]
-       )
-      //   this.setState({
-      //     name: 'gggggg',
-      //     phone: "號碼長度超過限制囉",
-      //     address: "地址長度超過限制囉",
-      //     changhao: "帳號長度超過限制囉",
-      //     password: "ggggggg",
-      //     password_comfirmed: "密碼不合",
-      //   })
-       }
-        else if(this.state.password.localeCompare(this.state.password_comfirmed)==0){
+        if(this.isempty(this.state.name)||this.isempty(this.state.phone)||this.isempty(this.state.changhao)||this.isempty(this.state.address)||this.isempty(this.state.password)){
+          Alert.alert(
+            "錯誤訊息",
+            "欄位值不能為空",
+            [
+              {text:'我知道了',onPress:()=>{}}
+            ]
+          )
+        }
+        else if(this.state.password.localeCompare(this.state.password_comfirmed)!=0){
+          Alert.alert(
+            '密碼確認錯誤',
+            '請確認密碼',
+            [{
+              text:'我知道了',onPress:()=>{}
+            }]
+          )
+        }
+        else {
           await  fetch('http://test-zzpengg.c9users.io:8080/user', {
                   method: 'POST',
                   body: JSON.stringify({
@@ -164,6 +143,7 @@ render() {
                             {text:'我知道了',onPress:()=>{}}
                           ]
                         )
+                        this.setState({phone:""})
                       }
                       else if(val.length<=10)
                       this.setState({phone: val})
@@ -190,24 +170,79 @@ render() {
                     onValueChange={this.onValueChange.bind(this)}>
                     <Item label="男" value="male" />
                     <Item label="女" value="female" />
-                    <Item label="其他" value="others" />
                  </Picker>
                </View>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="住址" onChangeText={ (val) => this.setState({address: val}) } />
+                   <Input placeholder="住址" maxLength={50} onChangeText={ (val) => this.setState({address: val}) } />
                  </InputGroup>
                </ListItem>
                <Text style={{fontSize: 18, marginTop: 40}}>帳號密碼</Text>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="帳號" onChangeText={ (val) => {this.setState({changhao: val}) }}/>
+                   <Input placeholder="帳號"
+                      value={this.state.changhao}
+                      onBlur={()=>{
+                        if(this.state.changhao.length<4&&this.state.changhao.length!=0){
+                          Alert.alert(
+                            "長度不符",
+                            "帳號長度應為4~16個字",
+                            [{
+                              text:'我知道了',onPress:()=>{}
+                            }]
+                          )
+                          this.setState({changhao:""})
+                        }
+                      }}
+                   onChangeText={ (val) => {
+                     if(val.length<=16)
+                     this.setState({changhao: val})
+                     else {
+                       Alert.alert(
+                         "長度不符",
+                         "帳號長度應為4~16個字",
+                         [{
+                           text:'我知道了',onPress:()=>{}
+                         }]
+                       )
+                       this.setState({changhao:""})
+                     }
+                   }}/>
                  </InputGroup>
                </ListItem>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
+                   <Input placeholder="密碼"
+                   value={this.state.password}
+                   secureTextEntry={true}
+                   onBlur={()=>{
+                     if(this.state.password.length<6 &&this.state.password.length!=0){
+                       Alert.alert(
+                         "長度不符",
+                         "密碼長度應為6~20個字",
+                         [{
+                           text:'我知道了',onPress:()=>{}
+                         }]
+                       )
+                       this.setState({changhao:""})
+                     }
+                   }}
+                   onChangeText={(val)=>{
+                     if(val.length<=20 )
+                     this.setState({password:val})
+                     else {
+                       Alert.alert(
+                         '長度不符',
+                         '密碼長度為6~20個字母',
+                         [{
+                           text:'我知道了',onPress:()=>{}
+                         }]
+                       )
+                       this.setState({password:""})
+                     }
+                   }
 
-                   <Input placeholder="密碼" secureTextEntry={true}/>
+                   }/>
                  </InputGroup>
                </ListItem>
                <ListItem style={{ marginTop: 15 }}>
