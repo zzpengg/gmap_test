@@ -66,6 +66,7 @@ isempty(val)
           )
         }
         else if(this.state.password.localeCompare(this.state.password_comfirmed)!=0){
+          console.log(this.state.password + "+" + this.state.password_comfirmed);
           Alert.alert(
             '密碼確認錯誤',
             '請確認密碼',
@@ -224,7 +225,7 @@ render() {
                            text:'我知道了',onPress:()=>{}
                          }]
                        )
-                       this.setState({changhao:""})
+                       this.setState({password:""})
                      }
                    }}
                    onChangeText={(val)=>{
@@ -247,7 +248,36 @@ render() {
                </ListItem>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }}>
-                   <Input placeholder="確認密碼" secureTextEntry={true}/>
+                   <Input placeholder="確認密碼"
+                          secureTextEntry={true}
+                          value={this.state.password_comfirmed}
+                          onBlur={()=>{
+                            if(this.state.password_comfirmed.length<6 &&this.state.password_comfirmed.length!=0){
+                              Alert.alert(
+                                "長度不符",
+                                "密碼長度應為6~20個字",
+                                [{
+                                  text:'我知道了',onPress:()=>{}
+                                }]
+                              )
+                              this.setState({password_comfirmed:""})
+                            }
+                          }}
+                          onChangeText={(val)=>{
+                            if(val.length<=20 )
+                            this.setState({password_comfirmed:val})
+                            else {
+                              Alert.alert(
+                                '長度不符',
+                                '密碼長度為6~20個字母',
+                                [{
+                                  text:'我知道了',onPress:()=>{}
+                                }]
+                              )
+                              this.setState({password_comfirmed:""})
+                            }
+                          }
+                        }/>
                  </InputGroup>
                </ListItem>
                <Text>{this.state.error}</Text>
