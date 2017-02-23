@@ -175,7 +175,7 @@ export default class UpdateHouseData extends Component {
       rent: 0,
       waterandelec: "都不包",
       type: "套房",
-      accessToken: this.props.accessToken
+      accessToken: ' eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOjk1MDgsImV4cCI6MTQ4ODQ0Mjg1MDUxNn0.lGVprlf7DzsGE2jC5n4DXW1LHZ5yfDfhUUzw_g7XhjY'
     }
   }
 
@@ -220,7 +220,7 @@ export default class UpdateHouseData extends Component {
 
   onHousePressed = async() => {
     try {
-      let url = 'http://test-zzpengg.c9users.io:8080/house'
+      let url = 'http://test-zzpengg.c9users.io:8080/house/createMyHouse'
       let res = await fetch(url, {
         method: 'POST',
         headers: {

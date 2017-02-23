@@ -136,6 +136,7 @@ export default class LandlordSignin extends Component {
       status: "",
       password: "",
       accessToken: "",
+      error: "",
     }
   }
 
@@ -149,9 +150,18 @@ export default class LandlordSignin extends Component {
       if(!accessToken) {
           console.log("not have token");
       } else {
-          this.setState({accessToken: accessToken})
+          console.log("accessToken = " + accessToken);
+          let text = await this.checkAuth(accessToken);
+          console.log("TExt = " + text);
+          if(text==='check success'){
+            this.setState({accessToken: accessToken})
+            this.setState({error: 'success'});
+          }
+          else{
+            this.setState({error: text});
+          }
+
           console.log("nextpage");
-          this.nextPage();
       }
     } catch(error) {
         console.log("catch error = " + error);
@@ -164,7 +174,7 @@ export default class LandlordSignin extends Component {
       name: 'HouseDatas',
       component: HouseDatas,
       params: {
-        accessToken: this.props.accessToken
+        accessToken: this.state.accessToken
       }
     });
   }
@@ -198,6 +208,25 @@ export default class LandlordSignin extends Component {
 
   onLogout(){
     this.deleteToken();
+  }
+
+  async checkAuth(token) {
+    try{
+      let url = 'http://test-zzpengg.c9users.io:8080/user/islogin';
+      let response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'x-access-token': token,
+        }
+      }).then( (data) => data.json() )
+      console.log("checkAuth");
+      console.log("response = " + response);
+      return response.text;
+    }catch(error){
+      console.log("catch error = " + error);
+      return error;
+    }
   }
 
   onLoginPressed = async() => {
@@ -273,6 +302,7 @@ export default class LandlordSignin extends Component {
 
            <Button style={styles.submitBtn} onPress={this.onLoginPressed.bind(this)} block info> 登入 </Button>
           <Button onPress={this.onLogout.bind(this)}>登出</Button>
+          <Text>{this.state.error}</Text>
          </List>
          </Content>
       </View>
