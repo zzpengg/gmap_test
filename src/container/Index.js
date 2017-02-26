@@ -24,6 +24,7 @@ import Comments from './Comments.js';
 import Detail from './Detail.js';
 import StudentSignin from './StudentSignin.js';
 import LandlordSignin from './LandlordSignin.js';
+import Conditions from './Conditions.js';
 
 export default class Index extends Component {
 
@@ -163,6 +164,19 @@ export default class Index extends Component {
     }
   }
 
+  _pressButton11() {
+    const { navigator } = this.props;
+    //为什么这里可以取得 props.navigator?请看上文:
+    //<Component {...route.params} navigator={navigator} />
+    //这里传递了navigator作为props
+    if(navigator) {
+        navigator.push({
+            name: 'Conditions',
+            component: Conditions,
+        })
+    }
+  }
+
 
 
   render() {
@@ -189,6 +203,9 @@ export default class Index extends Component {
           </TouchableOpacity>
           <TouchableOpacity onPress={this._pressButton9.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30 }}> HouseDetail </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._pressButton11.bind(this)}>
+          <Text style={{ color: '#fff', fontSize: 30 }}> Conditions </Text>
           </TouchableOpacity>
         </View>
         <View style={[styles.center, { backgroundColor: 'darksalmon' }]}>
