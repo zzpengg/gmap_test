@@ -129,6 +129,9 @@ export default class HouseData extends Component {
                                 area: val.area,
                                 rent: val.rent,
                                 score: val.score,
+                                vacancy: val.vacancy,
+                                waterandelec: val.waterandelec,
+                                type: val.type,
                               }
                             })
                           }

@@ -177,6 +177,26 @@ export default class UpdateHouseData extends Component {
       type: "套房",
       accessToken: ' eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOjk1MDgsImV4cCI6MTQ4ODQ0Mjg1MDUxNn0.lGVprlf7DzsGE2jC5n4DXW1LHZ5yfDfhUUzw_g7XhjY'
     }
+
+  }
+
+  componentWillMount() {
+    this.loadData = this.loadData.bind(this);
+    this.loadData();
+  }
+
+  loadData = async() => {
+    console.log("loadData = " + this.props.title);
+    await this.setState({
+      title: this.props.title,
+      area: this.props.area,
+      address: this.props.address,
+      vacancy: this.props.vacancy,
+      rent: this.props.rent,
+      waterandelec: this.props.waterandelec,
+      type: this.props.type,
+    })
+    console.log("title: " + this.state.title);
   }
 
   onAreaChange (value: string) {
@@ -281,7 +301,7 @@ export default class UpdateHouseData extends Component {
             <List style={styles.form}>
              <View style={styles.viewFlexRow}>
                <Text style={styles.houseTitle}>房屋名稱</Text>
-               <Input style={styles.houseTitleInput} onChangeText={ (title) => this.setState({ title: title }) }></Input>
+               <Input style={styles.houseTitleInput} onChangeText={ (title) => this.setState({ title: title }) } value={this.state.title} ></Input>
              </View>
              <View style={styles.viewFlexRow}>
                <Text style={styles.areaText}>所在區域</Text>
@@ -299,17 +319,17 @@ export default class UpdateHouseData extends Component {
 
             <View style={styles.viewFlexRow}>
               <Text style={styles.addrText} >彰化縣彰化市</Text>
-              <Input style={{borderColor: 'red', borderWidth: 5}} onChangeText={ (address) => this.setState({ address: address }) }></Input>
+              <Input style={{borderColor: 'red', borderWidth: 5}} onChangeText={ (address) => this.setState({ address: address }) } value={this.state.address}></Input>
             </View>
 
             <View style={styles.viewFlexRow}>
               <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>剩餘空房</Text>
-              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (vacancy) => this.setState({ vacancy: vacancy }) }></Input>
+              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (vacancy) => this.setState({ vacancy: vacancy }) } value={this.state.vacancy}></Input>
             </View>
 
             <View style={styles.viewFlexRow}>
               <Text style={{paddingTop:16, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>租金</Text>
-              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15, textAlign: 'right',marginRight: 5}} onChangeText={ (rent) => this.setState({ rent: rent }) }></Input>
+              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15, textAlign: 'right',marginRight: 5}} onChangeText={ (rent) => this.setState({ rent: rent }) } value={this.state.rent}></Input>
               <Text style={{paddingTop:10, fontSize: 15, color: '#7b7d85'}} >/月</Text>
             </View>
 
