@@ -188,13 +188,13 @@ export default class UpdateHouseData extends Component {
   loadData = async() => {
     console.log("loadData = " + this.props.title);
     await this.setState({
-      title: this.props.title,
-      area: this.props.area,
-      address: this.props.address,
-      vacancy: this.props.vacancy,
-      rent: this.props.rent,
-      waterandelec: this.props.waterandelec,
-      type: this.props.type,
+      title: this.props.title || "",
+      area: this.props.area || "寶山",
+      address: this.props.address || "",
+      vacancy: this.props.vacancy || 0,
+      rent: this.props.rent || 0,
+      waterandelec: this.props.waterandelec || "都不包",
+      type: this.props.type || "套房",
     })
     console.log("title: " + this.state.title);
   }
