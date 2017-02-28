@@ -19,7 +19,7 @@ import UpdateHouseData from './UpdateHouseData.js';
 import HouseDetail from './HouseDetail.js';
 import StudentRegister from './StudentRegister.js';
 import LandlordRegistion from './LandlordRegistion.js';
-import HouseDatas from './HouseDatas.js';
+import HouseData from './HouseData.js';
 import Comments from './Comments.js';
 import Detail from './Detail.js';
 import StudentSignin from './StudentSignin.js';
@@ -106,8 +106,8 @@ export default class Index extends Component {
     //这里传递了navigator作为props
     if(navigator) {
         navigator.push({
-            name: 'HouseDatas',
-            component: HouseDatas,
+            name: 'HouseData',
+            component: HouseData,
         })
     }
   }
@@ -179,7 +179,7 @@ export default class Index extends Component {
             <Text style={{ color: '#fff', fontSize: 30 }}> 學生註冊 </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this._pressButton6.bind(this)}>
-            <Text style={{ color: '#fff', fontSize: 30 }}> HouseDatas </Text>
+            <Text style={{ color: '#fff', fontSize: 30 }}> HouseData </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this._pressButton7.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30 }}> Comments </Text>

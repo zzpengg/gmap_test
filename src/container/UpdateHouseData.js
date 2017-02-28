@@ -31,7 +31,7 @@ import {
   Right,
 } from 'native-base';
 
-import HouseDatas from './HouseDatas.js';
+import HouseData from './HouseData.js';
 
 const styles = StyleSheet.create({
   container: {

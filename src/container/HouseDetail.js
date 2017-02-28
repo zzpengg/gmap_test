@@ -14,10 +14,17 @@ import {
   TouchableOpacity,
   Alert,
   Linking,
-  Button,
   Image,
   ScrollView,
 } from 'react-native';
+import {
+  Header,
+  Content,
+  Title,
+  Icon,
+  Button,
+} from 'native-base';
+
 import Dimensions from 'Dimensions';
 const windowSize = Dimensions.get('window');
 
@@ -27,6 +34,14 @@ export default class HouseDetail extends Component {
     super(props)
 
   }
+
+  prePage() {
+      const { navigator } = this.props;
+      if(navigator) {
+          navigator.pop();
+      }
+  }
+
   navigate = () => {
   Alert.alert('選擇出發地點','進德校區,寶山校區', [
     { text: '進德校區', onPress: () => {
@@ -52,11 +67,11 @@ export default class HouseDetail extends Component {
 }
 
 gmap = () => {
-const imgWidth = windowSize.width/5*4;
+const imgWidth = parseInt(windowSize.width/5*4);
 const imgHeight = parseInt(imgWidth / 16.0 * 9.0, 10);
 
 return (
-  <TouchableOpacity  style={{flex: 1, paddingTop: 20,alignItems:'center' }}>
+  <TouchableOpacity  style={{flex: 1, paddingTop: 20,alignItems:'center' }} onPress={this.navigate}>
     <Image
       resizeMode="cover"
       source={{
@@ -74,18 +89,20 @@ return (
     //console.log(region);
 
    return (
-     <ScrollView style={{flexDirection:'column',flex:1,backgroundColor:'lightgreen'}}>
-        <Text style={{fontSize: 30,alignItems: 'center',textAlign:'center'}}>
-        詳細資訊
-        </Text>
-        <Text style={{fontSize: 14,alignItems: 'center',textAlign:'center'}}>
-        地址:
-        </Text>
+     <ScrollView style={{flexDirection:'column',flex:1}}>
+       <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
+         <Button transparent onPress={this.prePage.bind(this)}>
+           <Icon name='ios-arrow-back' />
+         </Button>
+         <Title>房屋資訊</Title>
+       </Header>
+        <Image source={require('../assets/house.jpg')} style={{width:300, height:100, marginTop: 10, alignSelf: 'center' }} />
+        <Text style={styles.detailText}>房屋名稱: {this.props.title}</Text>
+        <Text style={styles.detailText}>所在區域: {this.props.area}</Text>
+        <Text style={styles.detailText}>租金:  {this.props.rent}/月</Text>
         {this.gmap()}
-        <Button onPress={this.navigate}
-        title='查看地圖'
-        color="#841584"
-        />
+        <Text style={styles.detailText}>評價: {this.props.score}</Text>
+        <Text style={styles.detailText}>連絡房東: </Text>
 
      </ScrollView>
    );
@@ -107,5 +124,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  detailText: {
+    marginTop: 5,
+    marginLeft: 30,
   },
 });
