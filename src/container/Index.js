@@ -56,75 +56,6 @@ export default class Index extends Component {
     }
   }
 
-
-  _pressButton4() {
-    const { navigator } = this.props;
-    //为什么这里可以取得 props.navigator?请看上文:
-    //<Component {...route.params} navigator={navigator} />
-    //这里传递了navigator作为props
-    if(navigator) {
-        navigator.push({
-            name: 'LandlordRegistion',
-            component: LandlordRegistion,
-        })
-    }
-  }
-
-  _pressButton5() {
-    const { navigator } = this.props;
-    //为什么这里可以取得 props.navigator?请看上文:
-    //<Component {...route.params} navigator={navigator} />
-    //这里传递了navigator作为props
-    if(navigator) {
-        navigator.push({
-            name: 'StudentRegister',
-            component: StudentRegister,
-        })
-    }
-  }
-
-
-  _pressButton7() {
-    const { navigator } = this.props;
-    //为什么这里可以取得 props.navigator?请看上文:
-    //<Component {...route.params} navigator={navigator} />
-    //这里传递了navigator作为props
-    if(navigator) {
-        navigator.push({
-            name: 'Comments',
-            component: Comments,
-        })
-    }
-  }
-
-  _pressButton8() {
-    const { navigator } = this.props;
-    //为什么这里可以取得 props.navigator?请看上文:
-    //<Component {...route.params} navigator={navigator} />
-    //这里传递了navigator作为props
-    if(navigator) {
-        navigator.push({
-            name: 'Detail',
-            component: Detail,
-        })
-    }
-  }
-
-  _pressButton10() {
-    const { navigator } = this.props;
-    //为什么这里可以取得 props.navigator?请看上文:
-    //<Component {...route.params} navigator={navigator} />
-    //这里传递了navigator作为props
-    if(navigator) {
-        navigator.push({
-            name: 'StudentSignin',
-            component: StudentSignin,
-        })
-    }
-  }
-
-
-
   render() {
     // const { region } = this.props;
     //console.log(region);
@@ -135,25 +66,10 @@ export default class Index extends Component {
           <TouchableOpacity onPress={this._pressButton.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30  }}> 學生 </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this._pressButton5.bind(this)}>
-            <Text style={{ color: '#fff', fontSize: 30 }}> 學生註冊 </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._pressButton7.bind(this)}>
-            <Text style={{ color: '#fff', fontSize: 30 }}> Comments </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._pressButton8.bind(this)}>
-            <Text style={{ color: '#fff', fontSize: 30 }}> Detail </Text>
-          </TouchableOpacity>
         </View>
         <View style={[styles.center, { backgroundColor: 'darksalmon' }]}>
           <TouchableOpacity onPress={this._pressButton2.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30 }}> 房東 </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._pressButton4.bind(this)}>
-            <Text style={{ color: '#fff', fontSize: 30 }}> LandlordRegistion </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._pressButton10.bind(this)}>
-            <Text style={{ color: '#fff', fontSize: 30 }}> StudentSignin </Text>
           </TouchableOpacity>
         </View>
       </View>
