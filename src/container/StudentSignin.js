@@ -37,8 +37,8 @@ export default class StudentSignin extends Component {
         const { navigator } = this.props;
         if(navigator){
           navigator.push({
-            name: 'HouseDatas',
-            component: HouseDatas
+            name: 'HouseData',
+            component: HouseData
           })
         }
       }} >123</Button>

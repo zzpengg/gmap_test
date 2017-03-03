@@ -116,25 +116,7 @@ render() {
             ];
     return (
       <View style={styles.container}>
-      <Modal
-         animationType={"fade"}
-         transparent={false}
-         visible={this.state.modalVisible}
-         onRequestClose={() => {alert("Modal has been closed.")}}
-         >
-        <View style={{marginTop: 22,width:200 ,height:100, alignItems:'center'}}>
-         <View>
-           <Text>Hello World!</Text>
 
-           <TouchableHighlight onPress={() => {
-             this.setModalVisible(!this.state.modalVisible)
-           }}>
-             <Text>Hide Modal</Text>
-           </TouchableHighlight>
-
-         </View>
-        </View>
-       </Modal>
         <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
           <Button transparent onPress={this.prePage.bind(this)} >
             <Icon name='ios-arrow-back' />
