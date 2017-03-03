@@ -127,11 +127,13 @@ export default class HouseData extends Component {
                               params: {
                                 title: val.title,
                                 area: val.area,
+                                address: val.address,
                                 rent: val.rent,
                                 score: val.score,
                                 vacancy: val.vacancy,
                                 waterandelec: val.waterandelec,
                                 type: val.type,
+                                accessToken: this.props.accessToken,
                               }
                             })
                           }
