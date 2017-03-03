@@ -30,6 +30,7 @@ import {
 } from 'native-base';
 
 import HouseData from './HouseData.js';
+import LandlordRegistion from './LandlordRegistion.js';
 
 const styles = StyleSheet.create({
   container: {
@@ -333,6 +334,17 @@ export default class LandlordSignin extends Component {
     }
   }
 
+  nextPageRegister = () => {
+    const { navigator } = this.props;
+    navigator.push({
+      name: 'LandlordRegistion',
+      component: LandlordRegistion,
+      params: {
+        accessToken: this.state.accessToken
+      }
+    });
+  }
+
   render() {
     // const { region } = this.props;
     //console.log(region);
@@ -361,7 +373,7 @@ export default class LandlordSignin extends Component {
                <Input onChangeText={(password) => {this.setState({password})}} placeholder="PASSWORD" secureTextEntry={true}/>
              </InputGroup>
            </ListItem>
-           <Button onPress={this.register} style={styles.submitBtn} block warning> 註冊 </Button>
+           <Button onPress={this.nextPageRegister.bind(this)} style={styles.submitBtn} block warning> 註冊 </Button>
            <View style={{ alignItems: 'center' }}>
              <View style={styles.orWrapper}>
                <Text style={styles.orText}>or</Text>
