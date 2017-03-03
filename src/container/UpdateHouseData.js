@@ -8,10 +8,10 @@ import React, { Component } from 'react';
 // import MapView from 'react-native-maps';
 import {
   StyleSheet,
-  Text,
   View,
   ScrollView,
   Image,
+  Text,
   Navigator,
 } from 'react-native';
 import {
@@ -24,13 +24,16 @@ import {
   Icon,
   Title,
   List,
+  Body,
   ListItem,
   InputGroup,
+  CheckBox,
   Input,
   Left,
   Right,
 } from 'native-base';
-
+import NB from 'native-base';
+const NBText = NB.Text;
 import HouseDatas from './HouseDatas.js';
 
 const styles = StyleSheet.create({
@@ -260,6 +263,7 @@ export default class UpdateHouseData extends Component {
           <Title>修改房屋資訊</Title>
         </Header>
         <Content>
+
           <ScrollView>
             <View style={styles.viewFlexRow} >
               <Image source={require('../assets/fuck_cat.jpg')} style={styles.bgImg} />
@@ -306,20 +310,18 @@ export default class UpdateHouseData extends Component {
 
 
 
-             <View style={styles.viewFlexRow}>
-               <Text style={{paddingTop:20, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>包水、包電</Text>
-               <Picker
-                  style={{ width: 120, marginLeft: 50, marginTop: 6}}
-                  iosHeader="Select one"
-                  mode="dropdown"
-                  selectedValue={this.state.waterandelec}
-                  onValueChange={this.onWaterAndElecChange.bind(this)}>
-                  <Item label="只包水" value="只包水" />
-                  <Item label="只包電" value="只包電" />
-                  <Item label="全包" value="全包" />
-                  <Item label="都不包" value="都不包" />
-               </Picker>
-             </View>
+            <ListItem>
+              <CheckBox checked={true} />
+                  <Text>包水</Text>
+              </ListItem>
+              <ListItem>
+                <CheckBox checked={true} />
+                    <Text>包電</Text>
+                </ListItem>
+            <ListItem>
+              <CheckBox checked={true} />
+                    <Text>網路</Text>
+            </ListItem>
              <View style={styles.viewFlexRow}>
                <Text style={{paddingTop:11, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>類型</Text>
                <Picker

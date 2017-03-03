@@ -4,7 +4,9 @@ import {
   View,
   Text,
   Image,
-  Alert
+  Alert,
+  Modal,
+  TouchableHighlight
 } from 'react-native';
 import {
   Header,
@@ -39,6 +41,7 @@ export default class LandlordRegistion extends Component {
         password: "",
         password_comfirmed: "",
         error: "",
+        modalVisible:true
     }
   }
 
@@ -92,11 +95,37 @@ isempty(val)
       console.log(errors);
     }
   }
+  setModalVisible(visible) {
+     this.setState({modalVisible: visible});
+   }
 
 
 render() {
+    var data= [
+              { sex:"男", type:"male"},
+              { sex:"女",type:"female"}
+            ];
     return (
       <View style={styles.container}>
+      <Modal
+         animationType={"fade"}
+         transparent={false}
+         visible={this.state.modalVisible}
+         onRequestClose={() => {alert("Modal has been closed.")}}
+         >
+        <View style={{marginTop: 22,width:200 ,height:100, alignItems:'center'}}>
+         <View>
+           <Text>Hello World!</Text>
+
+           <TouchableHighlight onPress={() => {
+             this.setModalVisible(!this.state.modalVisible)
+           }}>
+             <Text>Hide Modal</Text>
+           </TouchableHighlight>
+
+         </View>
+        </View>
+       </Modal>
         <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
           <Button transparent >
             <Icon name='ios-arrow-back' />
@@ -168,8 +197,10 @@ render() {
                     mode="dropdown"
                     selectedValue={this.state.selected1}
                     onValueChange={this.onValueChange.bind(this)}>
-                    <Item label="男" value="male" />
-                    <Item label="女" value="female" />
+                    {data.map(function(val, index)  {
+                        return (<Item key={index} label={val.sex} value={val.type}/>)
+                    })}
+
                  </Picker>
                </View>
                <ListItem style={{ marginTop: 15 }}>
