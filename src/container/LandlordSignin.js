@@ -11,7 +11,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Navigator,
+  AsyncStorage,
+  Image,
 } from 'react-native';
 import {
   Container,
@@ -28,7 +29,7 @@ import {
   Input,
 } from 'native-base';
 
-import HouseDatas from './HouseDatas.js';
+import HouseData from './HouseData.js';
 
 const styles = StyleSheet.create({
   container: {
@@ -75,6 +76,18 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     elevation: 2,
   },
+  loginform: {
+    marginTop: 20,
+    marginLeft: 20,
+    marginRight: 20,
+    padding: 20,
+    paddingTop: 30,
+    paddingRight: 33,
+    paddingBottom: 28,
+    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    borderRadius: 5,
+    elevation: 2,
+  },
   title: {
     height: 40,
   },
@@ -90,7 +103,7 @@ const styles = StyleSheet.create({
   submitBtn: {
     elevation: 1,
     marginLeft: 18,
-    marginRight: 0,
+    marginRight: 18,
     marginTop: 20,
   },
   hr: {
@@ -124,8 +137,55 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
   },
+  dataView: {
+    flexDirection: 'row',
+    marginLeft: 10,
+    marginTop: 10,
+    marginRight: 10,
+    borderRadius: 5,
+    borderColor: 'gray',
+    borderWidth: 5
+  },
+  imageText: {
+    textAlign: 'center'
+  },
+  detailText: {
+    marginTop: 5,
+  },
+  detailData: {
+    alignSelf:'flex-end',
+    flexDirection: 'row',
+    width: 220,
+    flex:1,
+    justifyContent: 'flex-end'
+  },
+  personImage: {
+    width: 200,
+    height: 180,
+    marginTop: 5,
+    marginLeft: 5,
+    marginBottom: 5,
+    alignSelf: 'center',
+  },
+  commentView: {
+    marginTop: 30,
+    marginLeft: 5,
+    marginBottom: 5,
+    borderColor: 'red',
+    borderRadius: 2,
+    borderWidth: 5,
+    width: 350,
+    alignSelf: 'center'
+  },
+  logoutBtn: {
+    marginLeft: 10,
+    marginTop: 10,
+    alignSelf: 'center',
+    width: 300,
+  }
 });
 
+const ACCESS_TOKEN = 'access_token';
 
 export default class LandlordSignin extends Component {
   constructor(props) {
@@ -134,38 +194,142 @@ export default class LandlordSignin extends Component {
       name: "",
       status: "",
       password: "",
+      accessToken: "",
+      error: "",
+    }
+  }
+
+  componentWillMount() {
+    this.getToken();
+  }
+
+  async getToken() {
+    try {
+      let accessToken = await AsyncStorage.getItem(ACCESS_TOKEN);
+      if(!accessToken) {
+          console.log("not have token");
+      } else {
+          console.log("accessToken = " + accessToken);
+          let text = await this.checkAuth(accessToken);
+          console.log("TExt = " + text);
+          if(text==='check success'){
+            this.setState({accessToken: accessToken})
+            this.setState({error: 'success'});
+          }
+          else{
+            this.setState({error: text});
+          }
+
+          console.log("nextpage");
+      }
+    } catch(error) {
+        console.log("catch error = " + error);
+    }
+  }
+
+  nextPage(){
+    const { navigator } = this.props;
+    navigator.push({
+      name: 'HouseData',
+      component: HouseData,
+      params: {
+        accessToken: this.state.accessToken
+      }
+    });
+  }
+
+  prePage() {
+      const { navigator } = this.props;
+      if(navigator) {
+          navigator.pop();
+      }
+  }
+
+  storeToken(responseData){
+    AsyncStorage.setItem(ACCESS_TOKEN, responseData, (err)=> {
+      if(err){
+        console.log("an error");
+        throw err;
+      }
+      console.log("success");
+    }).catch((err)=> {
+        console.log("error is: " + err);
+    });
+  }
+
+  async deleteToken() {
+    try {
+        await AsyncStorage.removeItem(ACCESS_TOKEN)
+    } catch(error) {
+        console.log("Something went wrong");
+    }
+  }
+
+  onLogout(){
+    this.deleteToken();
+    this.setState({
+      error: 'logout'
+    })
+  }
+
+  async checkAuth(token) {
+    try{
+      let url = 'http://test-zzpengg.c9users.io:8080/user/islogin';
+      let response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'x-access-token': token,
+        }
+      }).then( (data) => data.json() )
+      console.log("checkAuth");
+      console.log("response = " + response);
+      console.log("name = " + response.name);
+      this.setState({
+        name: response.name
+      })
+      return response.text;
+    }catch(error){
+      console.log("catch error = " + error);
+      return error;
     }
   }
 
   onLoginPressed = async() => {
-    let url = 'http://test-zzpengg.c9users.io:8080/user/login';
-    let response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: this.state.name,
-        password: this.state.password,
+    try {
+      let url = 'http://test-zzpengg.c9users.io:8080/user/login';
+      let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: this.state.name,
+          password: this.state.password,
+        })
+      }).then( (data) => data.json() )
+      console.log("pressed");
+      console.log(response);
+      this.setState({
+        status: 'pressed'
       })
-    }).then( (data) => data.json() )
-    console.log("pressed");
-    console.log(response);
-    this.setState({
-      status: 'pressed'
-    })
-    if(response){
-      const { navigator } = this.props;
-      //为什么这里可以取得 props.navigator?请看上文:
-      //<Component {...route.params} navigator={navigator} />
-      //这里传递了navigator作为props
-      if(navigator) {
-          navigator.push({
-              name: 'HouseDatas',
-              component: HouseDatas,
-          })
+      if(response.text === 'login success'){
+        //Handle success
+        let accessToken = response.token;
+        console.log(accessToken);
+        //On success we will store the access_token in the AsyncStorage
+        this.storeToken(accessToken);
+        this.setState({accessToken: accessToken})
+        this.setState({error: 'success'});
+        this.nextPage();
+      } else {
+            //Handle error
+            let error = res;
+            throw error;
       }
+    } catch(error){
+      console.log("error " + error);
     }
   }
 
@@ -176,13 +340,15 @@ export default class LandlordSignin extends Component {
    return (
      <View style={styles.container}>
        <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
-         <Button transparent >
+         <Button transparent onPress={this.prePage.bind(this)}>
            <Icon name='ios-arrow-back' />
          </Button>
          <Title>房東登入</Title>
        </Header>
-       <Content>
-         <List style={styles.form}>
+       {
+          (this.state.error != 'success') ?
+          <Content>
+          <List style={styles.form}>
            <ListItem style={{ marginTop: 15 }}>
              <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
                <Icon name="ios-person" />
@@ -202,11 +368,30 @@ export default class LandlordSignin extends Component {
              </View>
              <View style={styles.hr} />
            </View>
-           <Text>{this.state.status}</Text>
-
            <Button style={styles.submitBtn} onPress={this.onLoginPressed.bind(this)} block info> 登入 </Button>
          </List>
          </Content>
+         :
+         <Content>
+         <View style={styles.loginform}>
+           <View>
+             <Image source={require('../assets/fuck_cat.jpg')} style={styles.personImage} />
+             <View style={{alignSelf: 'center'}}>
+               <Text style={{fontSize: 32,}}>{this.state.name}</Text>
+             </View>
+             <Button onPress={this.nextPage.bind(this)} style={styles.submitBtn} block warning> 登入 </Button>
+             <View style={{ alignItems: 'center' }}>
+               <View style={styles.orWrapper}>
+                 <Text style={styles.orText}>or</Text>
+               </View>
+               <View style={styles.hr} />
+             </View>
+             <Button style={styles.submitBtn} onPress={this.onLogout.bind(this)} block info> 登出 </Button>
+            </View>
+          </View>
+
+         </Content>
+      }
       </View>
    );
   }

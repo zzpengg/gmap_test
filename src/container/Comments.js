@@ -21,6 +21,9 @@ import {
   FooterTab,
   Button,
   Icon,
+  Header,
+  Content,
+  Title,
 } from 'native-base';
 import Comment from '../component/Comment.js';
 
@@ -40,7 +43,12 @@ export default class Comments extends Component {
     this.loadComment();
   }
 
-
+  prePage() {
+      const { navigator } = this.props;
+      if(navigator) {
+          navigator.pop();
+      }
+  }
 
   loadComment = async () => {
     try {
@@ -102,38 +110,45 @@ export default class Comments extends Component {
     return (
       <View>
         <ScrollView>
-          <Text style={styles.houseTitle}>房屋名稱: </Text>
-          <Image source={require('../assets/house.jpg')} style={styles.houseImage} />
-          {
-            this.state.loading ?
-              <ActivityIndicator
-                animating={this.state.loading}
-                style={styles.spinner}
-                color="rgb(213, 179, 36)"
-              /> : null
-          }
-          {
-            tmp_array.map(function(val, index){
-              return (<Comment key={index+2} name={val.name} content={val.content} score={val.score}/>)
-            })
-          }
-          {
-            this.state.data.map(function(val, index){
-              return (<Comment key={index+2} name={val.name} content={val.content} score={val.score}/>)
-            })
-          }
+          <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
+            <Button transparent onPress={this.prePage.bind(this)}>
+              <Icon name='ios-arrow-back' />
+            </Button>
+            <Title>房東註冊</Title>
+          </Header>
+          <Content>
+            <Text style={styles.houseTitle}>房屋名稱: </Text>
+            <Image source={require('../assets/house.jpg')} style={styles.houseImage} />
+            {
+              this.state.loading ?
+                <ActivityIndicator
+                  animating={this.state.loading}
+                  style={styles.spinner}
+                  color="rgb(213, 179, 36)"
+                /> : null
+            }
+            {
+              tmp_array.map(function(val, index){
+                return (<Comment key={index+2} name={val.name} content={val.content} score={val.score}/>)
+              })
+            }
+            {
+              this.state.data.map(function(val, index){
+                return (<Comment key={index+2} name={val.name} content={val.content} score={val.score}/>)
+              })
+            }
 
 
-          <Text style={styles.houseTitle}>{this.state.userId}</Text>
-          <TextInput
-            onChangeText = { (content) => this.setState({content: content})}
-            editable = {true}
-            numberOfLines = {4}
-            multiline = {true}
-          />
-          <Text style={styles.houseTitle}>content:{this.state.content}</Text>
-          <Button style={styles.submitBtn} onPress={this.onCommentPressed.bind(this)} block warning> 確認送出 </Button>
-
+            <Text style={styles.houseTitle}>{this.state.userId}</Text>
+            <TextInput
+              onChangeText = { (content) => this.setState({content: content})}
+              editable = {true}
+              numberOfLines = {4}
+              multiline = {true}
+            />
+            <Text style={styles.houseTitle}>content:{this.state.content}</Text>
+            <Button style={styles.submitBtn} onPress={this.onCommentPressed.bind(this)} block warning> 確認送出 </Button>
+          </Content>
         </ScrollView>
       </View>
     );

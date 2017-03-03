@@ -25,7 +25,7 @@ import {
   Input,
 } from 'native-base';
 
-import HouseDatas from './HouseDatas';
+import HouseData from './HouseData';
 
 export default class StudentSignin extends Component {
   render() {

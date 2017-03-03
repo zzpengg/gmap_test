@@ -38,12 +38,19 @@ export default class StudentRegister extends Component {
     });
   }
 
+  prePage() {
+      const { navigator } = this.props;
+      if(navigator) {
+          navigator.pop();
+      }
+  }
+
   render() {
     var data = ["男","女","其他"];
     return (
       <View style={styles.container}>
         <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
-          <Button transparent >
+          <Button transparent onPress={this.prePage.bind(this)}>
             <Icon name='ios-arrow-back' />
           </Button>
           <Title>學生註冊</Title>
