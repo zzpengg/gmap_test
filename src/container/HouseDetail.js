@@ -171,7 +171,7 @@ export default class HouseDetail extends Component {
     Alert.alert('選擇出發地點','進德校區,寶山校區', [
       { text: '進德校區', onPress: () => {
         //const url = `http://maps.google.com/maps/?q=@${this.state.myLat},${this.state.myLon}`;
-        const url = `http://maps.google.com/maps/?saddr=國立彰化師範大學進德校區&daddr=國立彰化師範大學寶山校區`;
+        const url = `http://maps.google.com/maps/?saddr=國立彰化師範大學進德校區&daddr=${this.state.address}`;
         Linking.canOpenURL(url).then(supported => {
           if (supported) {
             Linking.openURL(url);
@@ -180,7 +180,7 @@ export default class HouseDetail extends Component {
       } },
       {
         text: '寶山校區',onPress:()=>{
-          const url = `http://maps.google.com/maps/?saddr=國立彰化師範大學寶山校區`;
+          const url = `http://maps.google.com/maps/?saddr=國立彰化師範大學寶山校區&daddr=${this.state.address}`;
           Linking.canOpenURL(url).then(supported => {
             if (supported) {
               Linking.openURL(url);
@@ -200,7 +200,7 @@ export default class HouseDetail extends Component {
         <Image
           resizeMode="cover"
           source={{
-            uri: `https://maps.googleapis.com/maps/api/staticmap?center=彰化市旭光路26號&zoom=16.85&size=${imgWidth}x${imgHeight}&scale=8&language=zh-tw&markers=size:mid%7Ccolor:blue%7C彰化市旭光路26號&key=AIzaSyBiwSQUTr6brsJoPHcliZ3TVFYgYf7ulbw` }}
+            uri: `https://maps.googleapis.com/maps/api/staticmap?center=${this.state.address}&zoom=16.85&size=${imgWidth}x${imgHeight}&scale=8&language=zh-tw&markers=size:mid%7Ccolor:blue%7C${this.state.address}&key=AIzaSyBiwSQUTr6brsJoPHcliZ3TVFYgYf7ulbw` }}
           style={{
             width: imgWidth,
             height: imgHeight,
