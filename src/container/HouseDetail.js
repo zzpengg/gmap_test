@@ -150,6 +150,7 @@ export default class HouseDetail extends Component {
       console.log( (res != null) );
       if(res != null){
         console.log("in");
+        this.
         this.setState({
           tab: 1
         })
@@ -222,11 +223,11 @@ export default class HouseDetail extends Component {
           source={require('../assets/house.jpg')}
           style={{width:300, height:100, marginTop: 10, alignSelf: 'center' }}
         />
-        <Text style={styles.detailText}>房屋名稱: {this.props.title}</Text>
-        <Text style={styles.detailText}>所在區域: {this.props.area}</Text>
-        <Text style={styles.detailText}>租金:  {this.props.rent}/月</Text>
+        <Text style={styles.detailText}>房屋名稱: {this.state.title}</Text>
+        <Text style={styles.detailText}>所在區域: {this.state.area}</Text>
+        <Text style={styles.detailText}>租金:  {this.state.rent}/月</Text>
         {this.gmap()}
-        <Text style={styles.detailText}>評價: {this.props.score}</Text>
+        <Text style={styles.detailText}>評價: {this.state.score}</Text>
         <Text style={styles.detailText}>連絡房東: </Text>
         </View>
       );
