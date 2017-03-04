@@ -278,8 +278,6 @@ export default class HouseDetail extends Component {
             <Text style={{paddingTop:10, fontSize: 15, color: '#7b7d85'}} >/月</Text>
           </View>
 
-
-
            <View style={styles.viewFlexRow}>
              <Text style={{paddingTop:20, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>包水、包電</Text>
              <Picker
