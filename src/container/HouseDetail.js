@@ -29,6 +29,7 @@ import {
   Input,
   Picker,
   Item,
+  CheckBox
 } from 'native-base';
 
 import Dimensions from 'Dimensions';
@@ -53,9 +54,11 @@ export default class HouseDetail extends Component {
       address: this.props.address,
       vacancy: this.props.vacancy,
       rent: this.props.rent,
-      waterandelec: this.props.waterandelec,
       type: this.props.type,
       accessToken: this.props.accessToken,
+      checkwater:this.props.checkwater,
+      checkele:this.props.checkele,
+      checknet:this.props.checknet,
       houseId: 0,
       userId: 0,
       name: "develop",
@@ -141,7 +144,9 @@ export default class HouseDetail extends Component {
           address: `彰化縣彰化市${this.state.address}`,
           vacancy: this.state.vacancy,
           rent: this.state.rent,
-          waterandelec: this.state.waterandelec,
+          checkwater:this.state.checkwater,
+          checknet:this.state.checknet,
+          checkele:this.state.checkele,
           type: this.state.type,
         })
       }).then( (data) => data.json())
@@ -191,6 +196,15 @@ export default class HouseDetail extends Component {
             }
           });
         }},
+        {
+          text: '目前位置',onPress:()=>{
+            const url = `http://maps.google.com/maps/?daddr=${this.state.address}`;
+            Linking.canOpenURL(url).then(supported => {
+              if (supported) {
+                Linking.openURL(url);
+              }
+            });
+          }},
       { text: '取消', onPress: () => {} },
     ]);
   }
@@ -214,7 +228,15 @@ export default class HouseDetail extends Component {
     );
   }
 
-
+  checkWater=()=>{
+    this.setState({checkwater:!this.state.checkwater});
+}
+checkEle=()=>{
+  this.setState({checkele:!this.state.checkele});
+}
+checkNet=()=>{
+  this.setState({checknet:!this.state.checknet});
+}
   dataContent = tab => {
     if(tab==1){
       return (
@@ -278,22 +300,6 @@ export default class HouseDetail extends Component {
             <Text style={{paddingTop:10, fontSize: 15, color: '#7b7d85'}} >/月</Text>
           </View>
 
-
-
-           <View style={styles.viewFlexRow}>
-             <Text style={{paddingTop:20, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>包水、包電</Text>
-             <Picker
-                style={{ width: 120, marginLeft: 50, marginTop: 6}}
-                iosHeader="Select one"
-                mode="dropdown"
-                selectedValue={this.state.waterandelec}
-                onValueChange={this.onWaterAndElecChange.bind(this)}>
-                <Item label="只包水" value="只包水" />
-                <Item label="只包電" value="只包電" />
-                <Item label="全包" value="全包" />
-                <Item label="都不包" value="都不包" />
-             </Picker>
-           </View>
            <View style={styles.viewFlexRow}>
              <Text style={{paddingTop:11, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>類型</Text>
              <Picker
@@ -306,6 +312,21 @@ export default class HouseDetail extends Component {
                 <Item label="套房" value="套房" />
              </Picker>
            </View>
+           <View>
+            <ListItem onPress={this.checkWater}>
+              <CheckBox  checked={this.state.checkwater} />
+                  <Text>包水</Text>
+              </ListItem>
+              <ListItem onPress={this.checkEle}>
+                <CheckBox checked={this.state.checkele} />
+                    <Text>包電</Text>
+                </ListItem>
+            <ListItem onPress={this.checkNet}>
+              <CheckBox checked={this.state.checknet} />
+                    <Text>網路</Text>
+            </ListItem>
+           </View>
+
 
            <Button style={styles.submitBtn} block warning onPress={this.updateHousePressed.bind(this)}> 送出修改 </Button>
          </List>
