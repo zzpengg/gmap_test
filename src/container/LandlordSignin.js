@@ -13,6 +13,7 @@ import {
   View,
   AsyncStorage,
   Image,
+  Modal,
 } from 'react-native';
 import {
   Container,
@@ -27,6 +28,7 @@ import {
   ListItem,
   InputGroup,
   Input,
+  Spinner,
 } from 'native-base';
 
 import HouseData from './HouseData.js';
@@ -197,6 +199,7 @@ export default class LandlordSignin extends Component {
       password: "",
       accessToken: "",
       error: "",
+      visiable:true,
     }
   }
 
@@ -346,13 +349,28 @@ export default class LandlordSignin extends Component {
       }
     });
   }
-
+  time=(sec)=>{
+    setTimeout(()=>{this.setState({visible:false});},1100);
+  }
   render() {
     // const { region } = this.props;
     //console.log(region);
 
    return (
      <View style={styles.container}>
+       <Modal
+       visible={this.state.visible}
+       animationType={"slide"}
+       onRequestClose={() => {}}
+       >
+         <View style={{flex: 1,  flexDirection: 'column',justifyContent: 'center',alignItems: 'center'}}>
+           <View >
+             <Text>載入中...</Text>
+             <Spinner color='blue'/>
+           </View>
+         </View>
+       </Modal>
+       {this.time()}
        <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
          <Button transparent onPress={this.prePage.bind(this)}>
            <Icon name='ios-arrow-back' />

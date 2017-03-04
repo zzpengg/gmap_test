@@ -109,6 +109,7 @@ time=()=>{
         <Modal
         visible={this.state.visible}
         animationType={"slide"}
+        onRequestClose={() => {}}
         >
           <View style={{flex: 1,  flexDirection: 'column',justifyContent: 'center',alignItems: 'center'}}>
             <View >

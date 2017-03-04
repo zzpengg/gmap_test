@@ -290,7 +290,7 @@ checkNet=()=>{
               <Image source={require('../assets/pusheen.jpg')} style={styles.bgImg} />
               <View style={{padding:10}}>
                 <Image source={require('../assets/space.jpg')} style={{width:80, height:80}} />
-                <TouchableOpacity onPress={this.setRequestBody('./image')}>
+                <TouchableOpacity onPress={()=>{}}>
                   <Text>新增圖片</Text>
                 </TouchableOpacity>
               </View>
