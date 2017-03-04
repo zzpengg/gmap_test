@@ -13,6 +13,7 @@ import {
   Image,
   Text,
   Navigator,
+  TouchableOpacity,
 } from 'react-native';
 import {
   Container,
@@ -221,7 +222,15 @@ export default class CreateHouseData extends Component {
       navigator.pop();
     }
   }
-
+  checkWater=()=>{
+    this.setState({checkwater:!this.state.checkwater});
+}
+checkEle=()=>{
+  this.setState({checkele:!this.state.checkele});
+}
+checkNet=()=>{
+  this.setState({checknet:!this.state.checknet});
+}
   onHousePressed = async() => {
     try {
       console.log("testtest");
@@ -238,7 +247,9 @@ export default class CreateHouseData extends Component {
           address: `彰化縣彰化市${this.state.address}`,
           vacancy: this.state.vacancy,
           rent: this.state.rent,
-          waterandelec: this.state.waterandelec,
+          checknet:this.state.checknet,
+          checkele:this.state.checkele,
+          checkwater:this.state.checkwater,
           type: this.state.type,
         })
       }).then( (data) => data.json())
@@ -259,9 +270,6 @@ export default class CreateHouseData extends Component {
       console.log(errors);
     }
   }
-
-
-
   render() {
     // const { region } = this.props;
     //console.log(region);
@@ -282,7 +290,9 @@ export default class CreateHouseData extends Component {
               <Image source={require('../assets/pusheen.jpg')} style={styles.bgImg} />
               <View style={{padding:10}}>
                 <Image source={require('../assets/space.jpg')} style={{width:80, height:80}} />
-                <Text>新增圖片</Text>
+                <TouchableOpacity onPress={this.setRequestBody('./image')}>
+                  <Text>新增圖片</Text>
+                </TouchableOpacity>
               </View>
             </View>
             <List style={styles.form}>
@@ -331,6 +341,20 @@ export default class CreateHouseData extends Component {
                   <Item label="雅房" value="雅房" />
                   <Item label="套房" value="套房" />
                </Picker>
+             </View>
+             <View>
+              <ListItem onPress={this.checkWater}>
+                <CheckBox  checked={this.state.checkwater} />
+                    <Text>包水</Text>
+                </ListItem>
+                <ListItem onPress={this.checkEle}>
+                  <CheckBox checked={this.state.checkele} />
+                      <Text>包電</Text>
+                  </ListItem>
+              <ListItem onPress={this.checkNet}>
+                <CheckBox checked={this.state.checknet} />
+                      <Text>網路</Text>
+              </ListItem>
              </View>
              <Button style={styles.submitBtn} block warning onPress={this.onHousePressed.bind(this)}> 新增 </Button>
            </List>

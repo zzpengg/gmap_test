@@ -297,6 +297,7 @@ export default class LandlordSignin extends Component {
   }
 
   onLoginPressed = async() => {
+
     try {
       let url = 'http://test-zzpengg.c9users.io:8080/user/login';
       let response = await fetch(url, {
@@ -323,6 +324,7 @@ export default class LandlordSignin extends Component {
         this.storeToken(accessToken);
         this.setState({accessToken: accessToken})
         this.setState({error: 'success'});
+        await setTimeout(()=>{},10000);
         this.nextPage();
       } else {
             //Handle error

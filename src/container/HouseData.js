@@ -14,13 +14,15 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import {
   Header,
   Content,
   Button,
   Icon,
-  Title
+  Title,
+  Spinner
 } from 'native-base';
 
 import HouseDetail from './HouseDetail.js';
@@ -34,6 +36,7 @@ export default class HouseData extends Component {
       data: [],
       loading: true,
       accessToken: this.props.accessToken,
+      visible:true,
     }
     this.loadHouse = this.loadHouse.bind(this);
     this.loadHouse();
@@ -88,7 +91,9 @@ export default class HouseData extends Component {
   callback = () => {
     this.loadHouse();
   }
-
+time=()=>{
+  setTimeout(()=>{this.setState({visible:false});},1500);
+}
 
   render() {
     // const { region } = this.props;
@@ -101,6 +106,18 @@ export default class HouseData extends Component {
     const { navigator } = this.props;
     return (
       <View>
+        <Modal
+        visible={this.state.visible}
+        animationType={"slide"}
+        >
+          <View style={{flex: 1,  flexDirection: 'column',justifyContent: 'center',alignItems: 'center'}}>
+            <View >
+              <Text>載入中...</Text>
+              <Spinner color='blue'/>
+            </View>
+          </View>
+        </Modal>
+        {this.time()}
         <ScrollView>
           <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
             <Button transparent onPress={this.prePage.bind(this)}>
