@@ -175,6 +175,7 @@ export default class UpdateHouseData extends Component {
       address: "",
       vacancy: 0,
       rent: 0,
+      check_water:false,
       waterandelec: "都不包",
       type: "套房",
       accessToken: ' eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOjk1MDgsImV4cCI6MTQ4ODQ0Mjg1MDUxNn0.lGVprlf7DzsGE2jC5n4DXW1LHZ5yfDfhUUzw_g7XhjY'
@@ -336,20 +337,6 @@ export default class UpdateHouseData extends Component {
               <Text style={{paddingTop:10, fontSize: 15, color: '#7b7d85'}} >/月</Text>
             </View>
 
-
-
-            <ListItem>
-              <CheckBox checked={true} />
-                  <Text>包水</Text>
-              </ListItem>
-              <ListItem>
-                <CheckBox checked={true} />
-                    <Text>包電</Text>
-                </ListItem>
-            <ListItem>
-              <CheckBox checked={true} />
-                    <Text>網路</Text>
-            </ListItem>
              <View style={styles.viewFlexRow}>
                <Text style={{paddingTop:11, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>類型</Text>
                <Picker
@@ -362,6 +349,7 @@ export default class UpdateHouseData extends Component {
                   <Item label="套房" value="套房" />
                </Picker>
              </View>
+
 
              <Button style={styles.submitBtn} block warning onPress={this.onHousePressed.bind(this)}> 送出修改 </Button>
            </List>

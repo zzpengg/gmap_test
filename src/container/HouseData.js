@@ -131,7 +131,9 @@ export default class HouseData extends Component {
                                 rent: val.rent,
                                 score: val.score,
                                 vacancy: val.vacancy,
-                                waterandelec: val.waterandelec,
+                                checkwater:val.checkwater,
+                                checkele:val.checkele,
+                                checknet:val.checknet,
                                 type: val.type,
                                 accessToken: this.props.accessToken,
                               }
