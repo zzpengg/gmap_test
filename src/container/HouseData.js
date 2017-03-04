@@ -13,6 +13,7 @@ import {
   View,
   ScrollView,
   Image,
+  TouchableOpacity,
 } from 'react-native';
 import {
   Header,
@@ -23,6 +24,7 @@ import {
 } from 'native-base';
 
 import HouseDetail from './HouseDetail.js';
+import CreateHouseData from './CreateHouseData.js';
 
 export default class HouseData extends Component {
 
@@ -36,6 +38,7 @@ export default class HouseData extends Component {
     this.loadHouse = this.loadHouse.bind(this);
     this.loadHouse();
   }
+
 
   nextPage() {
     const { navigator } = this.props;
@@ -82,6 +85,10 @@ export default class HouseData extends Component {
     }
   }
 
+  callback = () => {
+    this.loadHouse();
+  }
+
 
   render() {
     // const { region } = this.props;
@@ -125,6 +132,7 @@ export default class HouseData extends Component {
                               name: 'HouseDetail',
                               component: HouseDetail,
                               params: {
+                                id: val.id,
                                 title: val.title,
                                 area: val.area,
                                 address: val.address,
@@ -146,6 +154,25 @@ export default class HouseData extends Component {
                 )
               })
             }
+            <View style={styles.dataView}>
+              <TouchableOpacity
+                onPress={() => {
+                  const { navigator } = this.props;
+                  if(navigator){
+                    navigator.push({
+                      name: 'CreateHouseData',
+                      component: CreateHouseData,
+                      params: {
+                        accessToken: this.props.accessToken,
+                        callback: this.callback,
+                      }
+                    })
+                  }
+                }}
+              >
+                <Image source={require('../assets/plus.png')} style={{width:80, height:80, marginTop:20, marginLeft:120, marginBottom: 20,}} />
+              </TouchableOpacity>
+            </View>
           </Content>
         </ScrollView>
       </View>
@@ -206,7 +233,9 @@ const styles = StyleSheet.create({
     marginRight: 10,
     borderRadius: 5,
     borderColor: 'gray',
-    borderWidth: 5
+    borderWidth: 5,
+    width: 360,
+    height: 140,
   },
   imageText: {
     textAlign: 'center'

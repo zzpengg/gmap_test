@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class UpdateHouseData extends Component {
+export default class CreateHouseData extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -177,28 +177,9 @@ export default class UpdateHouseData extends Component {
       rent: 0,
       waterandelec: "都不包",
       type: "套房",
-      accessToken: ' eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOjk1MDgsImV4cCI6MTQ4ODQ0Mjg1MDUxNn0.lGVprlf7DzsGE2jC5n4DXW1LHZ5yfDfhUUzw_g7XhjY'
+      accessToken: this.props.accessToken,
     }
 
-  }
-
-  componentWillMount() {
-    this.loadData = this.loadData.bind(this);
-    this.loadData();
-  }
-
-  loadData = async() => {
-    console.log("loadData = " + this.props.title);
-    await this.setState({
-      title: this.props.title || "",
-      area: this.props.area || "寶山",
-      address: this.props.address || "",
-      vacancy: this.props.vacancy || 0,
-      rent: this.props.rent || 0,
-      waterandelec: this.props.waterandelec || "都不包",
-      type: this.props.type || "套房",
-    })
-    console.log("title: " + this.state.title);
   }
 
   onAreaChange (value: string) {
@@ -242,6 +223,7 @@ export default class UpdateHouseData extends Component {
 
   onHousePressed = async() => {
     try {
+      console.log("testtest");
       let url = 'http://test-zzpengg.c9users.io:8080/house/createMyHouse'
       let res = await fetch(url, {
         method: 'POST',
@@ -252,7 +234,7 @@ export default class UpdateHouseData extends Component {
         body: JSON.stringify({
           title: this.state.title,
           area: this.state.area,
-          address: this.state.address,
+          address: `彰化縣彰化市${this.state.address}`,
           vacancy: this.state.vacancy,
           rent: this.state.rent,
           waterandelec: this.state.waterandelec,
@@ -260,15 +242,16 @@ export default class UpdateHouseData extends Component {
         })
       }).then( (data) => data.json())
         .catch( (e) => console.log(e) );
-      console.log(res);
+      console.log("res = " + res);
       console.log( (res != null) );
       if(res != null){
         console.log("in");
-        this.nextPage();
+        this.props.callback();
+        this.prePage();
       }
       else{
         console.log("out");
-        Alert.alert("something wrong");
+        console.log("something wrong");
       }
       console.log(res);
     } catch (errors) {
@@ -288,7 +271,7 @@ export default class UpdateHouseData extends Component {
           <Button transparent onPress={this.prePage.bind(this)}>
             <Icon name='ios-arrow-back' />
           </Button>
-          <Title>修改房屋資訊</Title>
+          <Title>新增房屋資訊</Title>
         </Header>
         <Content>
 
@@ -304,7 +287,7 @@ export default class UpdateHouseData extends Component {
             <List style={styles.form}>
              <View style={styles.viewFlexRow}>
                <Text style={styles.houseTitle}>房屋名稱</Text>
-               <Input style={styles.houseTitleInput} onChangeText={ (title) => this.setState({ title: title }) } value={this.state.title} ></Input>
+               <Input style={styles.houseTitleInput} onChangeText={ (title) => this.setState({ title: title }) } ></Input>
              </View>
              <View style={styles.viewFlexRow}>
                <Text style={styles.areaText}>所在區域</Text>
@@ -322,17 +305,17 @@ export default class UpdateHouseData extends Component {
 
             <View style={styles.viewFlexRow}>
               <Text style={styles.addrText} >彰化縣彰化市</Text>
-              <Input style={{borderColor: 'red', borderWidth: 5}} onChangeText={ (address) => this.setState({ address: address }) } value={this.state.address}></Input>
+              <Input style={{borderColor: 'red', borderWidth: 5}} onChangeText={ (address) => this.setState({ address: address }) }></Input>
             </View>
 
             <View style={styles.viewFlexRow}>
               <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>剩餘空房</Text>
-              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (vacancy) => this.setState({ vacancy: vacancy }) } value={this.state.vacancy}></Input>
+              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (vacancy) => this.setState({ vacancy: vacancy }) }></Input>
             </View>
 
             <View style={styles.viewFlexRow}>
               <Text style={{paddingTop:16, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>租金</Text>
-              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15, textAlign: 'right',marginRight: 5}} onChangeText={ (rent) => this.setState({ rent: rent }) } value={this.state.rent}></Input>
+              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15, textAlign: 'right',marginRight: 5}} onChangeText={ (rent) => this.setState({ rent: rent }) }></Input>
               <Text style={{paddingTop:10, fontSize: 15, color: '#7b7d85'}} >/月</Text>
             </View>
 
@@ -363,7 +346,7 @@ export default class UpdateHouseData extends Component {
                </Picker>
              </View>
 
-             <Button style={styles.submitBtn} block warning onPress={this.onHousePressed.bind(this)}> 送出修改 </Button>
+             <Button style={styles.submitBtn} block warning onPress={this.onHousePressed.bind(this)}> 新增 </Button>
            </List>
           </ScrollView>
         </Content>

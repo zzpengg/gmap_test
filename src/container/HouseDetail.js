@@ -29,14 +29,13 @@ import {
   Input,
   Picker,
   Item,
-
 } from 'native-base';
 
 import Dimensions from 'Dimensions';
 const windowSize = Dimensions.get('window');
 import Comment from '../component/Comment.js';
 
-import UpdateHouseData from './UpdateHouseData.js';
+import CreateHouseData from './CreateHouseData.js';
 
 export default class HouseDetail extends Component {
   constructor(props)
@@ -48,6 +47,7 @@ export default class HouseDetail extends Component {
       results: {
           items: []
       },
+      id: this.props.id,
       title: this.props.title,
       area: this.props.area,
       address: this.props.address,
@@ -125,9 +125,9 @@ export default class HouseDetail extends Component {
     });
   }
 
-  onHousePressed = async() => {
+  updateHousePressed = async() => {
     try {
-      let url = 'http://test-zzpengg.c9users.io:8080/house/createMyHouse'
+      let url = 'http://test-zzpengg.c9users.io:8080/house/updateMyHouse'
       let res = await fetch(url, {
         method: 'POST',
         headers: {
@@ -135,9 +135,10 @@ export default class HouseDetail extends Component {
           'x-access-token': this.state.accessToken,
         },
         body: JSON.stringify({
+          id: this.state.id,
           title: this.state.title,
           area: this.state.area,
-          address: this.state.address,
+          address: `彰化縣彰化市${this.state.address}`,
           vacancy: this.state.vacancy,
           rent: this.state.rent,
           waterandelec: this.state.waterandelec,
@@ -149,12 +150,14 @@ export default class HouseDetail extends Component {
       console.log( (res != null) );
       if(res != null){
         console.log("in");
+        this.setState({
+          tab: 1
+        })
       }
       else{
         console.log("out");
-        Alert.alert("something wrong");
+        console.log("something wrong");
       }
-      console.log(res);
     } catch (errors) {
       console.log(errors);
     }
@@ -260,7 +263,7 @@ export default class HouseDetail extends Component {
 
           <View style={styles.viewFlexRow}>
             <Text style={styles.addrText} >彰化縣彰化市</Text>
-            <Input style={{borderColor: 'red', borderWidth: 5}} onChangeText={ (address) => this.setState({ address: address }) } value={this.state.address}></Input>
+            <Input style={{borderColor: 'red', borderWidth: 5}} onChangeText={ (address) => this.setState({ address: `彰化縣彰化市${address}` }) } value={this.state.address.slice(6,this.state.address.length)}></Input>
           </View>
 
           <View style={styles.viewFlexRow}>
@@ -303,7 +306,7 @@ export default class HouseDetail extends Component {
              </Picker>
            </View>
 
-           <Button style={styles.submitBtn} block warning onPress={this.onHousePressed.bind(this)}> 送出修改 </Button>
+           <Button style={styles.submitBtn} block warning onPress={this.updateHousePressed.bind(this)}> 送出修改 </Button>
          </List>
         </ScrollView>
       )
