@@ -29,10 +29,7 @@ import {
   Input,
   Picker,
   Item,
-<<<<<<< HEAD
   CheckBox
-=======
->>>>>>> upstream/master
 } from 'native-base';
 
 import Dimensions from 'Dimensions';
