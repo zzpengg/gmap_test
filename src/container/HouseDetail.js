@@ -29,14 +29,17 @@ import {
   Input,
   Picker,
   Item,
+<<<<<<< HEAD
   CheckBox
+=======
+>>>>>>> upstream/master
 } from 'native-base';
 
 import Dimensions from 'Dimensions';
 const windowSize = Dimensions.get('window');
 import Comment from '../component/Comment.js';
 
-import UpdateHouseData from './UpdateHouseData.js';
+import CreateHouseData from './CreateHouseData.js';
 
 export default class HouseDetail extends Component {
   constructor(props)
@@ -48,6 +51,7 @@ export default class HouseDetail extends Component {
       results: {
           items: []
       },
+      id: this.props.id,
       title: this.props.title,
       area: this.props.area,
       address: this.props.address,
@@ -127,9 +131,9 @@ export default class HouseDetail extends Component {
     });
   }
 
-  onHousePressed = async() => {
+  updateHousePressed = async() => {
     try {
-      let url = 'http://test-zzpengg.c9users.io:8080/house/createMyHouse'
+      let url = 'http://test-zzpengg.c9users.io:8080/house/updateMyHouse'
       let res = await fetch(url, {
         method: 'POST',
         headers: {
@@ -137,9 +141,10 @@ export default class HouseDetail extends Component {
           'x-access-token': this.state.accessToken,
         },
         body: JSON.stringify({
+          id: this.state.id,
           title: this.state.title,
           area: this.state.area,
-          address: this.state.address,
+          address: `彰化縣彰化市${this.state.address}`,
           vacancy: this.state.vacancy,
           rent: this.state.rent,
           checkwater:this.state.checkwater,
@@ -153,12 +158,15 @@ export default class HouseDetail extends Component {
       console.log( (res != null) );
       if(res != null){
         console.log("in");
+        this.
+        this.setState({
+          tab: 1
+        })
       }
       else{
         console.log("out");
-        Alert.alert("something wrong");
+        console.log("something wrong");
       }
-      console.log(res);
     } catch (errors) {
       console.log(errors);
     }
@@ -240,11 +248,11 @@ checkNet=()=>{
           source={require('../assets/house.jpg')}
           style={{width:300, height:100, marginTop: 10, alignSelf: 'center' }}
         />
-        <Text style={styles.detailText}>房屋名稱: {this.props.title}</Text>
-        <Text style={styles.detailText}>所在區域: {this.props.area}</Text>
-        <Text style={styles.detailText}>租金:  {this.props.rent}/月</Text>
+        <Text style={styles.detailText}>房屋名稱: {this.state.title}</Text>
+        <Text style={styles.detailText}>所在區域: {this.state.area}</Text>
+        <Text style={styles.detailText}>租金:  {this.state.rent}/月</Text>
         {this.gmap()}
-        <Text style={styles.detailText}>評價: {this.props.score}</Text>
+        <Text style={styles.detailText}>評價: {this.state.score}</Text>
         <Text style={styles.detailText}>連絡房東: </Text>
         </View>
       );
@@ -281,7 +289,7 @@ checkNet=()=>{
 
           <View style={styles.viewFlexRow}>
             <Text style={styles.addrText} >彰化縣彰化市</Text>
-            <Input style={{borderColor: 'red', borderWidth: 5}} onChangeText={ (address) => this.setState({ address: address }) } value={this.state.address}></Input>
+            <Input style={{borderColor: 'red', borderWidth: 5}} onChangeText={ (address) => this.setState({ address: `彰化縣彰化市${address}` }) } value={this.state.address.slice(6,this.state.address.length)}></Input>
           </View>
 
           <View style={styles.viewFlexRow}>
@@ -321,7 +329,9 @@ checkNet=()=>{
                     <Text>網路</Text>
             </ListItem>
            </View>
-           <Button style={styles.submitBtn} block warning onPress={this.onHousePressed.bind(this)}> 送出修改 </Button>
+
+
+           <Button style={styles.submitBtn} block warning onPress={this.updateHousePressed.bind(this)}> 送出修改 </Button>
          </List>
         </ScrollView>
       )
