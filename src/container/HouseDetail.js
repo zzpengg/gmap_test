@@ -327,7 +327,6 @@ checkNet=()=>{
             </ListItem>
            </View>
 
-
            <Button style={styles.submitBtn} block warning onPress={this.updateHousePressed.bind(this)}> 送出修改 </Button>
          </List>
         </ScrollView>
