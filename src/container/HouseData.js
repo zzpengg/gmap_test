@@ -81,6 +81,7 @@ export default class HouseData extends Component {
       this.setState({
         data: res.data,
         loading: false,
+        visible:false,
       })
 
     } catch (errors) {
@@ -91,9 +92,7 @@ export default class HouseData extends Component {
   callback = () => {
     this.loadHouse();
   }
-time=()=>{
-  setTimeout(()=>{this.setState({visible:false});},1500);
-}
+
 
   render() {
     // const { region } = this.props;
@@ -118,7 +117,6 @@ time=()=>{
             </View>
           </View>
         </Modal>
-        {this.time()}
         <ScrollView>
           <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
             <Button transparent onPress={this.prePage.bind(this)}>
