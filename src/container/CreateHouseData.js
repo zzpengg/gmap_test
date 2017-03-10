@@ -28,12 +28,11 @@ import {
   Body,
   ListItem,
   InputGroup,
-  CheckBox,
   Input,
   Left,
   Right,
 } from 'native-base';
-
+import CheckBox from 'react-native-checkbox';
 import HouseData from './HouseData.js';
 
 const styles = StyleSheet.create({
@@ -176,8 +175,9 @@ export default class CreateHouseData extends Component {
       address: "",
       vacancy: 0,
       rent: 0,
-      check_water:false,
-      waterandelec: "都不包",
+      checkwater:false,
+      checkele:false,
+      checknet:false,
       type: "套房",
       accessToken: this.props.accessToken,
     }
@@ -343,18 +343,21 @@ checkNet=()=>{
                </Picker>
              </View>
              <View>
-              <ListItem onPress={this.checkWater}>
-                <CheckBox  checked={this.state.checkwater} />
-                    <Text>包水</Text>
-                </ListItem>
-                <ListItem onPress={this.checkEle}>
-                  <CheckBox checked={this.state.checkele} />
-                      <Text>包電</Text>
-                  </ListItem>
-              <ListItem onPress={this.checkNet}>
-                <CheckBox checked={this.state.checknet} />
-                      <Text>網路</Text>
-              </ListItem>
+             <CheckBox
+               label='包水'
+               checked={this.state.checkwater}
+               onChange={this.checkWater}
+             />
+             <CheckBox
+               label='包電'
+               checked={this.state.checkele}
+               onChange={this.checkEle}
+             />
+             <CheckBox
+               label='網路'
+               checked={this.state.checknet}
+               onChange={this.checkNet}
+             />
              </View>
              <Button style={styles.submitBtn} block warning onPress={this.onHousePressed.bind(this)}> 新增 </Button>
            </List>
