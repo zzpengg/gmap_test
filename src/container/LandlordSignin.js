@@ -14,6 +14,7 @@ import {
   AsyncStorage,
   Image,
   Modal,
+  Alert,
 } from 'react-native';
 import {
   Container,
@@ -335,6 +336,13 @@ export default class LandlordSignin extends Component {
             throw error;
       }
     } catch(error){
+      let str=""+error;
+      Alert.alert('錯誤訊息',
+      str,
+      [
+        {text:'我知道了',onPress:()=>{}}
+      ]
+    );
       console.log("error " + error);
     }
   }
