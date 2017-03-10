@@ -14,13 +14,13 @@ import {
   Navigator
 } from 'react-native';
 
-import Filter from './Filter.js';
+import HouseDataStudent from './HouseDataStudent.js';
 import StudentRegister from './StudentRegister.js';
 import LandlordRegistion from './LandlordRegistion.js';
 import Comments from './Comments.js';
-import Detail from './Detail.js';
 import StudentSignin from './StudentSignin.js';
 import LandlordSignin from './LandlordSignin.js';
+import ModalExample from './ModalExample.js';
 
 export default class Index extends Component {
 
@@ -37,8 +37,8 @@ export default class Index extends Component {
     //这里传递了navigator作为props
     if(navigator) {
         navigator.push({
-            name: 'Filter',
-            component: Filter,
+            name: 'HouseDataStudent',
+            component: HouseDataStudent,
         })
     }
   }
@@ -52,6 +52,19 @@ export default class Index extends Component {
         navigator.push({
             name: 'LandlordSignin',
             component: LandlordSignin,
+        })
+    }
+  }
+
+  _pressButton3() {
+    const { navigator } = this.props;
+    //为什么这里可以取得 props.navigator?请看上文:
+    //<Component {...route.params} navigator={navigator} />
+    //这里传递了navigator作为props
+    if(navigator) {
+        navigator.push({
+            name: 'ModalExample',
+            component: ModalExample,
         })
     }
   }

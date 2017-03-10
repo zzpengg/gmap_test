@@ -15,6 +15,8 @@ import {
   Image,
   TouchableOpacity,
   Modal,
+  Animated,
+  Dimensions,
 } from 'react-native';
 import {
   Header,
@@ -22,11 +24,14 @@ import {
   Button,
   Icon,
   Title,
-  Spinner
+  Spinner,
+  Input
 } from 'native-base';
 
-import HouseDetail from './HouseDetail.js';
+import HouseDetailStudent from './HouseDetailStudent.js';
 import CreateHouseData from './CreateHouseData.js';
+import Filter from '../component/Filter/FilterContainer';
+var {height, width} = Dimensions.get('window');
 
 export default class HouseData extends Component {
 
@@ -36,6 +41,13 @@ export default class HouseData extends Component {
       data: [],
       loading: true,
       visible:true,
+      areaId: 0,
+      typeId: 0,
+      slideInValue: new Animated.Value(10),
+      area: '',
+      modalVisible: false,
+      updateData: [],
+      rent: 0,
     }
     this.loadHouse = this.loadHouse.bind(this);
     this.loadHouse();
@@ -50,8 +62,8 @@ export default class HouseData extends Component {
     console.log("next page pressed");
     if(navigator) {
         navigator.push({
-            name: 'HouseDetail',
-            component: HouseDetail,
+            name: 'HouseDetailStudent',
+            component: HouseDetailStudent,
         })
     }
   }
@@ -72,11 +84,9 @@ export default class HouseData extends Component {
         .catch((e) => console.log(e));
 
       console.log(res);
-      let data = res.data.filter(function (el) {
-        return el.area === '進德';
-      });
       this.setState({
-        data: data,
+        data: res.data,
+        updateData: res.data,
         loading: false,
       })
 
@@ -89,9 +99,61 @@ export default class HouseData extends Component {
   callback = () => {
     this.loadHouse();
   }
-time=()=>{
-  setTimeout(()=>{this.setState({visible:false});},1500);
-}
+
+  time=()=>{
+    setTimeout(()=>{this.setState({visible:false});},1500);
+  }
+
+  typeOnChange = (id) => {
+    // this.props.requestFilterType(id);
+    this.setState({
+      typeId: id,
+    });
+  };
+
+  update = () => {
+    let data = this.state.data;
+    if(this.state.area == '進德')
+    {
+      data = data.filter(function (el) {
+        return el.area === '進德';
+      });
+    }
+    if(this.state.area == '寶山')
+    {
+      data = data.filter(function (el) {
+        return el.area === '寶山';
+      });
+    }
+    if(this.state.rent == 1)
+    {
+      data = data.filter(function (el) {
+        return el.rent < 3000;
+      });
+    }
+    if(this.state.rent == 2)
+    {
+      data = data.filter(function (el) {
+        return el.rent >= 3000 && el.rent < 4000;
+      });
+    }
+    if(this.state.rent == 3)
+    {
+      data = data.filter(function (el) {
+        return el.rent >= 4000 && el.rent < 5000;
+      });
+    }
+    if(this.state.rent == 4)
+    {
+      data = data.filter(function (el) {
+        return el.rent >= 5000;
+      });
+    }
+    this.setState({
+      updateData: data,
+      modalVisible: false,
+    })
+  }
 
   render() {
     // const { region } = this.props;
@@ -125,8 +187,66 @@ time=()=>{
             <Title>房屋資訊</Title>
           </Header>
           <Content>
+          <Modal
+            transparent={true}
+            visible={this.state.modalVisible}
+            onRequestClose={() => {this.state.toggleModal()}}
+            animationType='fade'
+            >
+            <View style={styles.updateModalMask}></View>
+            <Animated.View style={[
+                styles.updateModal,
+                {transform: [{translateY: this.state.slideInValue}]}
+              ]} >
+              <View style={{padding: 18,paddingTop: 16,paddingBottom: 6,flex: 1, flexDirection: 'row'}} >
+                <Button onPress={ () => {
+                  this.setState({
+                    area: '寶山',
+                  })
+                }}>寶山</Button>
+                <Button onPress={ () => {
+                  this.setState({
+                    area: '進德',
+                  })
+                }}>進德</Button>
+              </View>
+              <View style={{padding: 18,paddingTop: 16,paddingBottom: 6,flex: 1, flexDirection: 'row'}} >
+                <Button onPress={ () => {
+                  this.setState({
+                    rent: 1,
+                  })
+                }}>3000以下</Button>
+                <Button onPress={ () => {
+                  this.setState({
+                    rent: 2,
+                  })
+                }}>3000~4000</Button>
+                <Button onPress={ () => {
+                  this.setState({
+                    rent: 3,
+                  })
+                }}>4000~5000</Button>
+                <Button onPress={ () => {
+                  this.setState({
+                    rent: 4,
+                  })
+                }}>5000以上</Button>
+              </View>
+              <Button style={{margin: 15,elevation:0}} block warning onPress={()=>this.update()} >更新</Button>
+            </Animated.View>
+          </Modal>
+            <View style={{flexDirection: 'row',flex: 1,justifyContent: 'space-between',}}>
+              <Text style={{marginLeft: 10, marginTop: 10}}>共{this.state.updateData.length}筆資料</Text>
+              <TouchableOpacity onPress={() => {
+                this.setState({
+                  modalVisible: true
+                })
+              }}>
+                <Image source={require('../assets/filter.png')} style={{width:20, height:20, marginRight: 20, marginTop: 10}} />
+              </TouchableOpacity>
+            </View>
             {
-              this.state.data.map((val, index) => {
+              this.state.updateData.map((val, index) => {
                 return (
                   <View style={styles.dataView} key={index}>
                     <View>
@@ -145,8 +265,8 @@ time=()=>{
                           const { navigator } = this.props;
                           if(navigator){
                             navigator.push({
-                              name: 'HouseDetail',
-                              component: HouseDetail,
+                              name: 'HouseDetailStudent',
+                              component: HouseDetailStudent,
                               params: {
                                 id: val.id,
                                 title: val.title,
@@ -267,5 +387,25 @@ const styles = StyleSheet.create({
     width: 220,
     flex:1,
     justifyContent: 'flex-end'
+  },
+  updateModal: {
+    backgroundColor: 'white',
+    marginTop: 150,
+    padding: 25,
+    elevation: 8,
+    borderRadius: 2,
+    position: 'absolute',
+    bottom: -5,
+    left: width*0.025,
+    width: width*0.95,
+
+  },
+  updateModalMask: {
+    position: 'absolute',
+    width: width,
+    height: height,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    top: 0,
+    left: 0
   }
 });
