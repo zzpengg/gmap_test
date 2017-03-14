@@ -183,12 +183,12 @@ export default class HouseData extends Component {
             </Button>
             <Title>房屋資訊</Title>
           </Header>
-          <Content>
-          <View style={{flex: 1}} >
+      <View>
+        <View style={{flex: 1}} >
           <DropdownMenu style={{flex: 1}}
             arrowImg={require('../assets/dropdown_arrow.png')}      //set the arrow icon, default is a triangle
             checkImage={require('../assets/menu_check.png')}    //set the icon of the selected item, default is a check mark
-            bgColor={"red"}                            //the background color of the head, default is grey
+            bgColor={"brown"}                            //the background color of the head, default is grey
             tintColor={"white"}                        //the text color of the head, default is white
             selectItemColor={"red"}                    //the text color of the selected item, default is red
             data={data}
@@ -218,21 +218,19 @@ export default class HouseData extends Component {
                 }
               }
             } >
-            <View style={{flexDirection: 'row',flex: 1,justifyContent: 'space-between',}}>
-              <Text style={{marginLeft: 10, marginTop: 10}}>共{this.state.updateData.length}筆資料</Text>
-            </View>
-            <Modal
-            visible={this.state.visible}
-            animationType={"slide"}
-            onRequestClose={() => {}}
-            >
-              <View style={{flex: 1,  flexDirection: 'column',justifyContent: 'center',alignItems: 'center'}}>
-                <View >
-                  <Text>載入中...</Text>
-                  <Spinner color='blue'/>
-                </View>
+          <View style={{flex: 1, alignSelf: 'center', justifyContent: 'center'}}>
+
+            {
+              this.state.loading ?null:
+              this.state.updateData.length?<Text style={{marginLeft:10, marginTop:10}} >共{this.state.updateData.length}筆資料</Text>:
+
+              <View>
+               <Image source={{uri:'https://image.freepik.com/free-icon/house-search_318-33352.jpg'}} style={{width:width*0.75, height:width*0.75}}/ >
+               <Text>目前尚無符合的房屋</Text>
               </View>
-            </Modal>
+
+            }
+
             {
               this.state.loading ?
                 <ActivityIndicator
@@ -242,7 +240,7 @@ export default class HouseData extends Component {
             }
 
             {
-              this.state.updateData.map((val, index) => {
+                this.state.updateData.map((val, index) => {
                 return (
                   <View style={styles.dataView} key={index}>
                     <View>
@@ -288,11 +286,11 @@ export default class HouseData extends Component {
                 )
               })
             }
-
+              </View>
             </DropdownMenu>
             </View>
 
-          </Content>
+          </View>
         </ScrollView>
       </View>
     );

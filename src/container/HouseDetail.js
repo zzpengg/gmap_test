@@ -178,7 +178,7 @@ export default class HouseDetail extends Component {
   }
 
   navigate = () => {
-    Alert.alert('導航',`${this.state.address}` [
+    Alert.alert('導航',`${this.state.address}`, [
       // { text: '進德校區', onPress: () => {
       //   //const url = `http://maps.google.com/maps/?q=@${this.state.myLat},${this.state.myLon}`;
       //   const url = `http://maps.google.com/maps/?saddr=國立彰化師範大學進德校區&daddr=${this.state.address}`;
