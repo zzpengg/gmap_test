@@ -169,7 +169,9 @@ export default class HouseData extends Component {
 
   render() {
 
+
     var data = [["地區", "寶山", "進德"], ["類型", "套房", "雅房"], ["租金", "3000以下", "3000~4000", "4000~5000", "5000以上"]];
+
 
     const { navigator } = this.props;
     return (
@@ -274,6 +276,7 @@ export default class HouseData extends Component {
                 )
               })
             }
+
             </DropdownMenu>
             </View>
 
