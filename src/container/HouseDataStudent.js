@@ -279,11 +279,9 @@ export default class HouseData extends Component {
                 )
               })
             }
-<<<<<<< HEAD
-=======
+
             </DropdownMenu>
      </View>
->>>>>>> upstream/master
 
           </Content>
         </ScrollView>
