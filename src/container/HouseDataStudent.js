@@ -175,18 +175,6 @@ export default class HouseData extends Component {
     const { navigator } = this.props;
     return (
       <View>
-        <Modal
-        visible={this.state.visible}
-        animationType={"slide"}
-        onRequestClose={() => {}}
-        >
-          <View style={{flex: 1,  flexDirection: 'column',justifyContent: 'center',alignItems: 'center'}}>
-            <View >
-              <Text>載入中...</Text>
-              <Spinner color='blue'/>
-            </View>
-          </View>
-        </Modal>
         <ScrollView>
           <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
             <Button transparent onPress={this.prePage.bind(this)}>
@@ -232,6 +220,18 @@ export default class HouseData extends Component {
             <View style={{flexDirection: 'row',flex: 1,justifyContent: 'space-between',}}>
               <Text style={{marginLeft: 10, marginTop: 10}}>共{this.state.updateData.length}筆資料</Text>
             </View>
+            <Modal
+            visible={this.state.visible}
+            animationType={"slide"}
+            onRequestClose={() => {}}
+            >
+              <View style={{flex: 1,  flexDirection: 'column',justifyContent: 'center',alignItems: 'center'}}>
+                <View >
+                  <Text>載入中...</Text>
+                  <Spinner color='blue'/>
+                </View>
+              </View>
+            </Modal>
             {
               this.state.updateData.map((val, index) => {
                 return (
