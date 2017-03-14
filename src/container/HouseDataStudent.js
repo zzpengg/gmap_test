@@ -32,6 +32,8 @@ import HouseDetailStudent from './HouseDetailStudent.js';
 import CreateHouseData from './CreateHouseData.js';
 import Filter from '../component/Filter/FilterContainer';
 var {height, width} = Dimensions.get('window');
+import DropdownMenu from 'react-native-dropdown-menu';
+
 
 export default class HouseData extends Component {
 
@@ -89,7 +91,7 @@ export default class HouseData extends Component {
         updateData: res.data,
         loading: false,
       })
-
+      this.setState({visible:false})
 
     } catch (errors) {
       console.log(errors);
@@ -100,9 +102,6 @@ export default class HouseData extends Component {
     this.loadHouse();
   }
 
-  time=()=>{
-    setTimeout(()=>{this.setState({visible:false});},1500);
-  }
 
   typeOnChange = (id) => {
     // this.props.requestFilterType(id);
@@ -125,28 +124,40 @@ export default class HouseData extends Component {
         return el.area === '寶山';
       });
     }
-    if(this.state.rent == 1)
+    if(this.state.rent == '3000以下')
     {
       data = data.filter(function (el) {
         return el.rent < 3000;
       });
     }
-    if(this.state.rent == 2)
+    if(this.state.rent == '3000~4000')
     {
       data = data.filter(function (el) {
         return el.rent >= 3000 && el.rent < 4000;
       });
     }
-    if(this.state.rent == 3)
+    if(this.state.rent == '4000~5000')
     {
       data = data.filter(function (el) {
         return el.rent >= 4000 && el.rent < 5000;
       });
     }
-    if(this.state.rent == 4)
+    if(this.state.rent == '5000以上')
     {
       data = data.filter(function (el) {
         return el.rent >= 5000;
+      });
+    }
+    if(this.state.type == '套房')
+    {
+      data = data.filter(function (el) {
+        return el.type == '套房';
+      });
+    }
+    if(this.state.type == '雅房')
+    {
+      data = data.filter(function (el) {
+        return el.type == '雅房';
       });
     }
     this.setState({
@@ -156,8 +167,11 @@ export default class HouseData extends Component {
   }
 
   render() {
-    // const { region } = this.props;
-    //console.log(region);
+
+
+    var data = [["地區", "寶山", "進德"], ["類型", "套房", "雅房"], ["租金", "3000以下", "3000~4000", "4000~5000", "5000以上"]];
+
+
     const { navigator } = this.props;
     return (
       <View>
@@ -173,7 +187,6 @@ export default class HouseData extends Component {
             </View>
           </View>
         </Modal>
-        {this.time()}
         <ScrollView>
           <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
             <Button transparent onPress={this.prePage.bind(this)}>
@@ -182,63 +195,42 @@ export default class HouseData extends Component {
             <Title>房屋資訊</Title>
           </Header>
           <Content>
-          <Modal
-            transparent={true}
-            visible={this.state.modalVisible}
-            onRequestClose={() => {this.state.toggleModal()}}
-            animationType='fade'
-            >
-            <View style={styles.updateModalMask}></View>
-            <Animated.View style={[
-                styles.updateModal,
-                {transform: [{translateY: this.state.slideInValue}]}
-              ]} >
-              <View style={{padding: 18,paddingTop: 16,paddingBottom: 6,flex: 1, flexDirection: 'row'}} >
-                <Button onPress={ () => {
-                  this.setState({
-                    area: '寶山',
+          <View style={{flex: 1}} >
+          <DropdownMenu style={{flex: 1}}
+            arrowImg={require('../assets/dropdown_arrow.png')}      //set the arrow icon, default is a triangle
+            checkImage={require('../assets/menu_check.png')}    //set the icon of the selected item, default is a check mark
+            bgColor={"red"}                            //the background color of the head, default is grey
+            tintColor={"white"}                        //the text color of the head, default is white
+            selectItemColor={"red"}                    //the text color of the selected item, default is red
+            data={data}
+            maxHeight={410}                            // the max height of the menu
+            handler={
+              async (selection, row) => {
+                if(selection == 0){
+                  await this.setState({
+                    area: data[0][row]
                   })
-                }}>寶山</Button>
-                <Button onPress={ () => {
-                  this.setState({
-                    area: '進德',
+                  console.log("data = " + data[selection][row]);
+                  await this.update();
+                }
+                if(selection == 1){
+                  await this.setState({
+                    type: data[1][row]
                   })
-                }}>進德</Button>
-              </View>
-              <View style={{padding: 18,paddingTop: 16,paddingBottom: 6,flex: 1, flexDirection: 'row'}} >
-                <Button onPress={ () => {
-                  this.setState({
-                    rent: 1,
+                  console.log("data = " + data[selection][row]);
+                  await this.update();
+                }
+                if(selection == 2){
+                  await this.setState({
+                    rent: data[2][row]
                   })
-                }}>3000以下</Button>
-                <Button onPress={ () => {
-                  this.setState({
-                    rent: 2,
-                  })
-                }}>3000~4000</Button>
-                <Button onPress={ () => {
-                  this.setState({
-                    rent: 3,
-                  })
-                }}>4000~5000</Button>
-                <Button onPress={ () => {
-                  this.setState({
-                    rent: 4,
-                  })
-                }}>5000以上</Button>
-              </View>
-              <Button style={{margin: 15,elevation:0}} block warning onPress={()=>this.update()} >更新</Button>
-            </Animated.View>
-          </Modal>
+                  console.log("data = " + data[selection][row]);
+                  await this.update();
+                }
+              }
+            } >
             <View style={{flexDirection: 'row',flex: 1,justifyContent: 'space-between',}}>
               <Text style={{marginLeft: 10, marginTop: 10}}>共{this.state.updateData.length}筆資料</Text>
-              <TouchableOpacity onPress={() => {
-                this.setState({
-                  modalVisible: true
-                })
-              }}>
-                <Image source={require('../assets/filter.png')} style={{width:20, height:20, marginRight: 20, marginTop: 10}} />
-              </TouchableOpacity>
             </View>
             {
               this.state.updateData.map((val, index) => {
@@ -287,6 +279,11 @@ export default class HouseData extends Component {
                 )
               })
             }
+<<<<<<< HEAD
+=======
+            </DropdownMenu>
+     </View>
+>>>>>>> upstream/master
 
           </Content>
         </ScrollView>
