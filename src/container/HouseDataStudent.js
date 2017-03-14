@@ -292,25 +292,7 @@ export default class HouseData extends Component {
                 )
               })
             }
-            <View style={styles.dataView}>
-              <TouchableOpacity
-                onPress={() => {
-                  const { navigator } = this.props;
-                  if(navigator){
-                    navigator.push({
-                      name: 'CreateHouseData',
-                      component: CreateHouseData,
-                      params: {
-                        accessToken: this.props.accessToken,
-                        callback: this.callback,
-                      }
-                    })
-                  }
-                }}
-              >
-                <Image source={require('../assets/plus.png')} style={{width:80, height:80, marginTop:20, marginLeft:120, marginBottom: 20,}} />
-              </TouchableOpacity>
-            </View>
+
           </Content>
         </ScrollView>
       </View>
