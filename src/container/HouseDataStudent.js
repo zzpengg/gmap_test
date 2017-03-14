@@ -17,6 +17,7 @@ import {
   Modal,
   Animated,
   Dimensions,
+  ActivityIndicator
 } from 'react-native';
 import {
   Header,
@@ -233,6 +234,14 @@ export default class HouseData extends Component {
               </View>
             </Modal>
             {
+              this.state.loading ?
+                <ActivityIndicator
+                  animating={this.state.loading}
+                  color="rgb(213, 179, 36)"
+                /> : null
+            }
+
+            {
               this.state.updateData.map((val, index) => {
                 return (
                   <View style={styles.dataView} key={index}>
@@ -281,7 +290,7 @@ export default class HouseData extends Component {
             }
 
             </DropdownMenu>
-     </View>
+            </View>
 
           </Content>
         </ScrollView>
@@ -379,5 +388,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.65)',
     top: 0,
     left: 0
-  }
+  },
 });

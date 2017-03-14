@@ -293,12 +293,12 @@ checkNet=()=>{
           }
 
 
-          <Text style={styles.houseTitle}>{this.state.userId}</Text>
+          <Text style={styles.houseTitle}>userId: {this.state.userId}</Text>
+          <Text style={styles.houseTitle}>houseId: {this.state.id}</Text>
           <TextInput
-            onChangeText = { (content) => this.setState({content: content})}
-            editable = {true}
-            numberOfLines = {4}
-            multiline = {true}
+            style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+            onChangeText={(text) => this.setState({text})}
+            value={this.state.text}
           />
           <Text style={styles.houseTitle}>content:{this.state.content}</Text>
           <Button style={styles.submitBtn} onPress={this.onCommentPressed.bind(this)} block warning> 確認送出 </Button>
