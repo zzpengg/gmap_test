@@ -142,7 +142,7 @@ export default class HouseDetail extends Component {
           id: this.state.id,
           title: this.state.title,
           area: this.state.area,
-          address: `彰化縣彰化市${this.state.address}`,
+          address: this.state.address,
           vacancy: this.state.vacancy,
           rent: this.state.rent,
           checkwater:this.state.checkwater,
