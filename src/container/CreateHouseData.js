@@ -8,11 +8,12 @@ import React, { Component } from 'react';
 // import MapView from 'react-native-maps';
 import {
   StyleSheet,
-  Text,
   View,
   ScrollView,
   Image,
+  Text,
   Navigator,
+  TouchableOpacity,
 } from 'react-native';
 import {
   Container,
@@ -24,14 +25,15 @@ import {
   Icon,
   Title,
   List,
+  Body,
   ListItem,
   InputGroup,
   Input,
   Left,
   Right,
 } from 'native-base';
-
-import HouseDatas from './HouseDatas.js';
+import CheckBox from 'react-native-checkbox';
+import HouseData from './HouseData.js';
 
 const styles = StyleSheet.create({
   container: {
@@ -160,7 +162,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class UpdateHouseData extends Component {
+export default class CreateHouseData extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -173,10 +175,13 @@ export default class UpdateHouseData extends Component {
       address: "",
       vacancy: 0,
       rent: 0,
-      waterandelec: "都不包",
+      checkwater:false,
+      checkele:false,
+      checknet:false,
       type: "套房",
-      accessToken: ' eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOjk1MDgsImV4cCI6MTQ4ODQ0Mjg1MDUxNn0.lGVprlf7DzsGE2jC5n4DXW1LHZ5yfDfhUUzw_g7XhjY'
+      accessToken: this.props.accessToken,
     }
+
   }
 
   onAreaChange (value: string) {
@@ -217,9 +222,18 @@ export default class UpdateHouseData extends Component {
       navigator.pop();
     }
   }
-
+  checkWater=()=>{
+    this.setState({checkwater:!this.state.checkwater});
+}
+checkEle=()=>{
+  this.setState({checkele:!this.state.checkele});
+}
+checkNet=()=>{
+  this.setState({checknet:!this.state.checknet});
+}
   onHousePressed = async() => {
     try {
+      console.log("testtest");
       let url = 'http://test-zzpengg.c9users.io:8080/house/createMyHouse'
       let res = await fetch(url, {
         method: 'POST',
@@ -230,32 +244,32 @@ export default class UpdateHouseData extends Component {
         body: JSON.stringify({
           title: this.state.title,
           area: this.state.area,
-          address: this.state.address,
+          address: `彰化縣彰化市${this.state.address}`,
           vacancy: this.state.vacancy,
           rent: this.state.rent,
-          waterandelec: this.state.waterandelec,
+          checknet:this.state.checknet,
+          checkele:this.state.checkele,
+          checkwater:this.state.checkwater,
           type: this.state.type,
         })
       }).then( (data) => data.json())
         .catch( (e) => console.log(e) );
-      console.log(res);
+      console.log("res = " + res);
       console.log( (res != null) );
       if(res != null){
         console.log("in");
-        this.nextPage();
+        this.props.callback();
+        this.prePage();
       }
       else{
         console.log("out");
-        Alert.alert("something wrong");
+        console.log("something wrong");
       }
       console.log(res);
     } catch (errors) {
       console.log(errors);
     }
   }
-
-
-
   render() {
     // const { region } = this.props;
     //console.log(region);
@@ -266,22 +280,25 @@ export default class UpdateHouseData extends Component {
           <Button transparent onPress={this.prePage.bind(this)}>
             <Icon name='ios-arrow-back' />
           </Button>
-          <Title>修改房屋資訊</Title>
+          <Title>新增房屋資訊</Title>
         </Header>
         <Content>
+
           <ScrollView>
             <View style={styles.viewFlexRow} >
               <Image source={require('../assets/fuck_cat.jpg')} style={styles.bgImg} />
               <Image source={require('../assets/pusheen.jpg')} style={styles.bgImg} />
               <View style={{padding:10}}>
                 <Image source={require('../assets/space.jpg')} style={{width:80, height:80}} />
-                <Text>新增圖片</Text>
+                <TouchableOpacity onPress={()=>{}}>
+                  <Text>新增圖片</Text>
+                </TouchableOpacity>
               </View>
             </View>
             <List style={styles.form}>
              <View style={styles.viewFlexRow}>
                <Text style={styles.houseTitle}>房屋名稱</Text>
-               <Input style={styles.houseTitleInput} onChangeText={ (title) => this.setState({ title: title }) }></Input>
+               <Input style={styles.houseTitleInput} onChangeText={ (title) => this.setState({ title: title }) } ></Input>
              </View>
              <View style={styles.viewFlexRow}>
                <Text style={styles.areaText}>所在區域</Text>
@@ -313,22 +330,6 @@ export default class UpdateHouseData extends Component {
               <Text style={{paddingTop:10, fontSize: 15, color: '#7b7d85'}} >/月</Text>
             </View>
 
-
-
-             <View style={styles.viewFlexRow}>
-               <Text style={{paddingTop:20, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>包水、包電</Text>
-               <Picker
-                  style={{ width: 120, marginLeft: 50, marginTop: 6}}
-                  iosHeader="Select one"
-                  mode="dropdown"
-                  selectedValue={this.state.waterandelec}
-                  onValueChange={this.onWaterAndElecChange.bind(this)}>
-                  <Item label="只包水" value="只包水" />
-                  <Item label="只包電" value="只包電" />
-                  <Item label="全包" value="全包" />
-                  <Item label="都不包" value="都不包" />
-               </Picker>
-             </View>
              <View style={styles.viewFlexRow}>
                <Text style={{paddingTop:11, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>類型</Text>
                <Picker
@@ -341,8 +342,24 @@ export default class UpdateHouseData extends Component {
                   <Item label="套房" value="套房" />
                </Picker>
              </View>
-
-             <Button style={styles.submitBtn} block warning onPress={this.onHousePressed.bind(this)}> 送出修改 </Button>
+             <View>
+             <CheckBox
+               label='包水'
+               checked={this.state.checkwater}
+               onChange={this.checkWater}
+             />
+             <CheckBox
+               label='包電'
+               checked={this.state.checkele}
+               onChange={this.checkEle}
+             />
+             <CheckBox
+               label='網路'
+               checked={this.state.checknet}
+               onChange={this.checkNet}
+             />
+             </View>
+             <Button style={styles.submitBtn} block warning onPress={this.onHousePressed.bind(this)}> 新增 </Button>
            </List>
           </ScrollView>
         </Content>

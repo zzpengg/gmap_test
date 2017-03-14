@@ -92,7 +92,7 @@ const DataCard = (props) => (
       <Text style={styles.detailText}>租金: {props.rent} /月</Text>
       <Text style={styles.detailText}>評分: {props.score}</Text>
       <View style={styles.detailData}>
-        <Button success bordered style={{height: 18}}>
+        <Button success bordered style={{height: 18}} onPress={props.onPress}>
             <Text>詳細資料</Text>
         </Button>
       </View>

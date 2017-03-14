@@ -14,17 +14,16 @@ import {
   Navigator
 } from 'react-native';
 
-import Filter from './Filter.js';
-import UpdateHouseData from './UpdateHouseData.js';
-import HouseDetail from './HouseDetail.js';
+import HouseDataStudent from './HouseDataStudent.js';
 import StudentRegister from './StudentRegister.js';
 import LandlordRegistion from './LandlordRegistion.js';
-import HouseDatas from './HouseDatas.js';
 import Comments from './Comments.js';
-import Detail from './Detail.js';
 import StudentSignin from './StudentSignin.js';
 import LandlordSignin from './LandlordSignin.js';
-import Conditions from './Conditions.js';
+<<<<<<< HEAD
+=======
+import ModalExample from './ModalExample.js';
+>>>>>>> upstream/master
 
 export default class Index extends Component {
 
@@ -34,8 +33,6 @@ export default class Index extends Component {
     }
   }
 
-
-
   _pressButton() {
     const { navigator } = this.props;
     //为什么这里可以取得 props.navigator?请看上文:
@@ -43,8 +40,8 @@ export default class Index extends Component {
     //这里传递了navigator作为props
     if(navigator) {
         navigator.push({
-            name: 'Filter',
-            component: Filter,
+            name: 'HouseDataStudent',
+            component: HouseDataStudent,
         })
     }
   }
@@ -69,88 +66,13 @@ export default class Index extends Component {
     //这里传递了navigator作为props
     if(navigator) {
         navigator.push({
-            name: 'UpdateHouseData',
-            component: UpdateHouseData,
-        })
-    }
-  }
-  _pressButton4() {
-    const { navigator } = this.props;
-    //为什么这里可以取得 props.navigator?请看上文:
-    //<Component {...route.params} navigator={navigator} />
-    //这里传递了navigator作为props
-    if(navigator) {
-        navigator.push({
-            name: 'LandlordRegistion',
-            component: LandlordRegistion,
+            name: 'ModalExample',
+            component: ModalExample,
         })
     }
   }
 
-  _pressButton5() {
-    const { navigator } = this.props;
-    //为什么这里可以取得 props.navigator?请看上文:
-    //<Component {...route.params} navigator={navigator} />
-    //这里传递了navigator作为props
-    if(navigator) {
-        navigator.push({
-            name: 'StudentRegister',
-            component: StudentRegister,
-        })
-    }
-  }
-
-  _pressButton6() {
-    const { navigator } = this.props;
-    //为什么这里可以取得 props.navigator?请看上文:
-    //<Component {...route.params} navigator={navigator} />
-    //这里传递了navigator作为props
-    if(navigator) {
-        navigator.push({
-            name: 'HouseDatas',
-            component: HouseDatas,
-        })
-    }
-  }
-
-  _pressButton7() {
-    const { navigator } = this.props;
-    //为什么这里可以取得 props.navigator?请看上文:
-    //<Component {...route.params} navigator={navigator} />
-    //这里传递了navigator作为props
-    if(navigator) {
-        navigator.push({
-            name: 'Comments',
-            component: Comments,
-        })
-    }
-  }
-
-  _pressButton8() {
-    const { navigator } = this.props;
-    //为什么这里可以取得 props.navigator?请看上文:
-    //<Component {...route.params} navigator={navigator} />
-    //这里传递了navigator作为props
-    if(navigator) {
-        navigator.push({
-            name: 'Detail',
-            component: Detail,
-        })
-    }
-  }
-  _pressButton9() {
-    const { navigator } = this.props;
-    //为什么这里可以取得 props.navigator?请看上文:
-    //<Component {...route.params} navigator={navigator} />
-    //这里传递了navigator作为props
-    if(navigator) {
-        navigator.push({
-            name: 'HouseDetail',
-            component: HouseDetail,
-        })
-    }
-  }
-
+<<<<<<< HEAD
   _pressButton10() {
     const { navigator } = this.props;
     //为什么这里可以取得 props.navigator?请看上文:
@@ -163,22 +85,12 @@ export default class Index extends Component {
         })
     }
   }
-
-  _pressButton11() {
-    const { navigator } = this.props;
-    //为什么这里可以取得 props.navigator?请看上文:
-    //<Component {...route.params} navigator={navigator} />
-    //这里传递了navigator作为props
-    if(navigator) {
-        navigator.push({
-            name: 'Conditions',
-            component: Conditions,
-        })
-    }
   }
 
 
 
+=======
+>>>>>>> upstream/master
   render() {
     // const { region } = this.props;
     //console.log(region);
@@ -189,6 +101,7 @@ export default class Index extends Component {
           <TouchableOpacity onPress={this._pressButton.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30  }}> 學生 </Text>
           </TouchableOpacity>
+<<<<<<< HEAD
           <TouchableOpacity onPress={this._pressButton5.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30 }}> 學生註冊 </Text>
           </TouchableOpacity>
@@ -204,22 +117,12 @@ export default class Index extends Component {
           <TouchableOpacity onPress={this._pressButton9.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30 }}> HouseDetail </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this._pressButton11.bind(this)}>
-          <Text style={{ color: '#fff', fontSize: 30 }}> Conditions </Text>
-          </TouchableOpacity>
+=======
+>>>>>>> upstream/master
         </View>
         <View style={[styles.center, { backgroundColor: 'darksalmon' }]}>
           <TouchableOpacity onPress={this._pressButton2.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30 }}> 房東 </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._pressButton3.bind(this)}>
-            <Text style={{ color: '#fff', fontSize: 30 }}> 修改房屋資訊 </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._pressButton4.bind(this)}>
-            <Text style={{ color: '#fff', fontSize: 30 }}> LandlordRegistion </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._pressButton10.bind(this)}>
-            <Text style={{ color: '#fff', fontSize: 30 }}> StudentSignin </Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -4,7 +4,9 @@ import {
   View,
   Text,
   Image,
-  Alert
+  Alert,
+  Modal,
+  TouchableHighlight
 } from 'react-native';
 import {
   Header,
@@ -38,6 +40,7 @@ export default class LandlordRegistion extends Component {
         password: "",
         password_comfirmed: "",
         error: "",
+        modalVisible:true
     }
   }
 
@@ -101,11 +104,19 @@ export default class LandlordRegistion extends Component {
       console.log(errors);
     }
   }
+  setModalVisible(visible) {
+     this.setState({modalVisible: visible});
+   }
 
 
 render() {
+    var data= [
+              { sex:"男", type:"male"},
+              { sex:"女",type:"female"}
+            ];
     return (
       <View style={styles.container}>
+
         <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
           <Button transparent onPress={this.prePage.bind(this)} >
             <Icon name='ios-arrow-back' />
@@ -177,8 +188,10 @@ render() {
                     mode="dropdown"
                     selectedValue={this.state.selected1}
                     onValueChange={this.onValueChange.bind(this)}>
-                    <Item label="男" value="male" />
-                    <Item label="女" value="female" />
+                    {data.map(function(val, index)  {
+                        return (<Item key={index} label={val.sex} value={val.type}/>)
+                    })}
+
                  </Picker>
                </View>
                <ListItem style={{ marginTop: 15 }}>

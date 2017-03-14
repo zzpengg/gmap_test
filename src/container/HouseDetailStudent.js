@@ -39,7 +39,7 @@ import Comment from '../component/Comment.js';
 
 import CreateHouseData from './CreateHouseData.js';
 
-export default class HouseDetail extends Component {
+export default class HouseDetailStudent extends Component {
   constructor(props)
   {
     super(props);
@@ -409,23 +409,15 @@ checkNet=()=>{
                 tab: 1
               })
             }}
-            style={{width: windowSize.width/3}}
+            style={{width: windowSize.width/2}}
           >詳細資訊</Button>
-          <Button
-            onPress={() => {
-              this.setState({
-                tab: 2
-              })
-            }}
-            style={{width: windowSize.width/3}}
-          >修改資訊</Button>
           <Button
             onPress={() => {
               this.setState({
                 tab: 3
               })
             }}
-            style={{width: windowSize.width/3}}
+            style={{width: windowSize.width/2}}
           >房屋評論</Button>
         </View>
         {this.dataContent(this.state.tab)}

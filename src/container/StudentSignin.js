@@ -25,7 +25,7 @@ import {
   Input,
 } from 'native-base';
 
-import HouseDatas from './HouseDatas';
+import HouseData from './HouseData';
 
 export default class StudentSignin extends Component {
   render() {
@@ -37,8 +37,8 @@ export default class StudentSignin extends Component {
         const { navigator } = this.props;
         if(navigator){
           navigator.push({
-            name: 'HouseDatas',
-            component: HouseDatas
+            name: 'HouseData',
+            component: HouseData
           })
         }
       }} >123</Button>

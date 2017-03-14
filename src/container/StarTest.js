@@ -1,3 +1,4 @@
+
 import React, { Component, PropTypes } from 'react';
 import {
   StyleSheet,
@@ -74,6 +75,7 @@ export default class Detail extends Component {
         star.push(
           <Icon
             key={i}
+
             style={{ marginRight: 5 }}
             name={'star'}
             size={15}

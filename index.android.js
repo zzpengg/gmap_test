@@ -21,7 +21,7 @@ export default class test extends Component {
   render() {
     // const { region } = this.props;
     //console.log(region);
-    
+
     let defaultName = 'Index';
     let defaultComponent = Index;
     return (
