@@ -32,8 +32,8 @@ import {
   Spinner,
 } from 'native-base';
 
-import HouseData from './HouseData.js';
-import LandlordRegistion from './LandlordRegistion.js';
+import HouseDetailStudent from './HouseDetailStudent.js';
+import StudentRegister from './StudentRegister.js';
 
 const styles = StyleSheet.create({
   container: {
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const ACCESS_TOKEN = 'access_token';
+const STUDENT_ACCESS_TOKEN = 'student_access_token';
 
 export default class LandlordSignin extends Component {
   constructor(props) {
@@ -210,7 +210,7 @@ export default class LandlordSignin extends Component {
 
   async getToken() {
     try {
-      let accessToken = await AsyncStorage.getItem(ACCESS_TOKEN);
+      let accessToken = await AsyncStorage.getItem(STUDENT_ACCESS_TOKEN);
       if(!accessToken) {
           console.log("not have token");
       } else {
@@ -235,9 +235,21 @@ export default class LandlordSignin extends Component {
   nextPage(){
     const { navigator } = this.props;
     navigator.push({
-      name: 'HouseData',
-      component: HouseData,
+      name: 'HouseDetailStudent',
+      component: HouseDetailStudent,
       params: {
+        id: this.props.id,
+        userId: 1,
+        title: this.props.title,
+        area: this.props.area,
+        address: this.props.address,
+        rent: this.props.rent,
+        score: this.props.score,
+        vacancy: this.props.vacancy,
+        checkwater:this.props.checkwater,
+        checkele:this.props.checkele,
+        checknet:this.props.checknet,
+        type: this.props.type,
         accessToken: this.state.accessToken
       }
     });
@@ -251,7 +263,7 @@ export default class LandlordSignin extends Component {
   }
 
   storeToken(responseData){
-    AsyncStorage.setItem(ACCESS_TOKEN, responseData, (err)=> {
+    AsyncStorage.setItem(STUDENT_ACCESS_TOKEN, responseData, (err)=> {
       if(err){
         console.log("an error");
         throw err;
@@ -264,7 +276,7 @@ export default class LandlordSignin extends Component {
 
   async deleteToken() {
     try {
-        await AsyncStorage.removeItem(ACCESS_TOKEN)
+        await AsyncStorage.removeItem(STUDENT_ACCESS_TOKEN)
     } catch(error) {
         console.log("Something went wrong");
     }
@@ -279,7 +291,7 @@ export default class LandlordSignin extends Component {
 
   async checkAuth(token) {
     try{
-      let url = 'http://test-zzpengg.c9users.io:8080/user/islogin';
+      let url = 'http://test-zzpengg.c9users.io:8080/student/islogin';
       let response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -303,7 +315,7 @@ export default class LandlordSignin extends Component {
   onLoginPressed = async() => {
 
     try {
-      let url = 'http://test-zzpengg.c9users.io:8080/user/login';
+      let url = 'http://test-zzpengg.c9users.io:8080/student/login';
       let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -350,8 +362,8 @@ export default class LandlordSignin extends Component {
   nextPageRegister = () => {
     const { navigator } = this.props;
     navigator.push({
-      name: 'LandlordRegistion',
-      component: LandlordRegistion,
+      name: 'StudentRegister',
+      component: StudentRegister,
       params: {
         accessToken: this.state.accessToken
       }

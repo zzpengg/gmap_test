@@ -62,7 +62,7 @@ export default class HouseDetailStudent extends Component {
       checkele:this.props.checkele,
       checknet:this.props.checknet,
       houseId: this.props.id,
-      userId: 0,
+      userId: this.props.userId||0,
       name: "develop",
       content: "",
       data: [],
@@ -266,7 +266,21 @@ export default class HouseDetailStudent extends Component {
             if(navigator){
               navigator.push({
                 name: 'StudentSignin',
-                component: StudentSignin
+                component: StudentSignin,
+                params: {
+                  id: this.state.id,
+                  title: this.state.title,
+                  area: this.state.area,
+                  address: this.state.address,
+                  rent: this.state.rent,
+                  score: this.state.score,
+                  vacancy: this.state.vacancy,
+                  checkwater:this.state.checkwater,
+                  checkele:this.state.checkele,
+                  checknet:this.state.checknet,
+                  type: this.state.type,
+                  accessToken: this.props.accessToken,
+                }
               })
             }
           }}>
