@@ -241,7 +241,7 @@ render() {
                      if(this.state.password.length<6 &&this.state.password.length!=0){
                        Alert.alert(
                          "長度不符",
-                         "密碼長度應為6~20個字",
+                         "密碼長度為6~20個字母",
                          [{
                            text:'我知道了',onPress:()=>{}
                          }]
