@@ -170,21 +170,20 @@ export default class HouseData extends Component {
   render() {
 
 
-    var data = [["地區", "寶山", "進德"], ["類型", "套房", "雅房"], ["租金", "3000以下", "3000~4000", "4000~5000", "5000以上"]];
+    const data = [["地區", "寶山", "進德"], ["類型", "套房", "雅房"], ["租金", "3000以下", "3000~4000", "4000~5000", "5000以上"]];
 
 
     const { navigator } = this.props;
     return (
       <View>
-        <ScrollView>
-          <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
-            <Button transparent onPress={this.prePage.bind(this)}>
-              <Icon name='ios-arrow-back' />
-            </Button>
-            <Title>房屋資訊</Title>
-          </Header>
-      <View>
-        <View style={{flex: 1}} >
+        <ScrollView pagingEnabled={true}>
+          <View style={{flex: 1}} >
+            <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
+              <Button transparent onPress={this.prePage.bind(this)}>
+                <Icon name='ios-arrow-back' />
+              </Button>
+              <Title>房屋資訊</Title>
+            </Header>
           <DropdownMenu style={{flex: 1}}
             arrowImg={require('../assets/dropdown_arrow.png')}      //set the arrow icon, default is a triangle
             checkImage={require('../assets/menu_check.png')}    //set the icon of the selected item, default is a check mark
@@ -192,7 +191,7 @@ export default class HouseData extends Component {
             tintColor={"white"}                        //the text color of the head, default is white
             selectItemColor={"red"}                    //the text color of the selected item, default is red
             data={data}
-            maxHeight={410}                            // the max height of the menu
+            maxHeight={310}                            // the max height of the menu
             handler={
               async (selection, row) => {
                 if(selection == 0){
@@ -218,14 +217,14 @@ export default class HouseData extends Component {
                 }
               }
             } >
-          <View style={{flex: 1, alignSelf: 'center', justifyContent: 'center'}}>
+          <View style={{flex: 10, alignItems: 'center', justifyContent: 'flex-end'}}>
 
             {
               this.state.loading ?null:
               this.state.updateData.length?<Text style={{marginLeft:10, marginTop:10}} >共{this.state.updateData.length}筆資料</Text>:
 
-              <View>
-               <Image source={{uri:'https://image.freepik.com/free-icon/house-search_318-33352.jpg'}} style={{width:width*0.75, height:width*0.75}}/ >
+              <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+               <Image source={require('../assets/searchhouse.jpg')} style={{width:width*0.75, height:width*0.75}}/ >
                <Text>目前尚無符合的房屋</Text>
               </View>
 
@@ -289,8 +288,6 @@ export default class HouseData extends Component {
               </View>
             </DropdownMenu>
             </View>
-
-          </View>
         </ScrollView>
       </View>
     );

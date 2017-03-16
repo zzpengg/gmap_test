@@ -124,7 +124,8 @@ export default class HouseData extends Component {
             </Button>
             <Title>房屋資訊</Title>
           </Header>
-          <Content>
+          <View style={{flex: 1,justifyContent: 'center',alignItems: 'center'}}>
+          <Text style={{marginLeft:10, marginTop:10}} >共{this.state.data.length}間房屋</Text>
             {
               this.state.data.map((val, index) => {
                 return (
@@ -191,7 +192,7 @@ export default class HouseData extends Component {
                 <Image source={require('../assets/plus.png')} style={{width:80, height:80, marginTop:20, marginLeft:120, marginBottom: 20,}} />
               </TouchableOpacity>
             </View>
-          </Content>
+          </View>
         </ScrollView>
       </View>
     );
