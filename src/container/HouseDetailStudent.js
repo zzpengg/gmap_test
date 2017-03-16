@@ -179,28 +179,28 @@ export default class HouseDetailStudent extends Component {
   }
 
   navigate = () => {
-    Alert.alert('選擇出發地點','進德校區,寶山校區', [
-      { text: '進德校區', onPress: () => {
-        //const url = `http://maps.google.com/maps/?q=@${this.state.myLat},${this.state.myLon}`;
-        const url = `http://maps.google.com/maps/?saddr=國立彰化師範大學進德校區&daddr=${this.state.address}`;
-        Linking.canOpenURL(url).then(supported => {
-          if (supported) {
-            Linking.openURL(url);
-          }
-        });
-      } },
-      {
-        text: '寶山校區',onPress:()=>{
-          const url = `http://maps.google.com/maps/?saddr=國立彰化師範大學寶山校區&daddr=${this.state.address}`;
-          Linking.canOpenURL(url).then(supported => {
-            if (supported) {
-              Linking.openURL(url);
-            }
-          });
-        }},
+    Alert.alert('導航',`${this.state.address.slice(6)}`, [
+      // { text: '進德校區', onPress: () => {
+      //   //const url = `http://maps.google.com/maps/?q=@${this.state.myLat},${this.state.myLon}`;
+      //   const url = `http://maps.google.com/maps/?saddr=國立彰化師範大學進德校區&daddr=${this.state.address}`;
+      //   Linking.canOpenURL(url).then(supported => {
+      //     if (supported) {
+      //       Linking.openURL(url);
+      //     }
+      //   });
+      // } },
+      // {
+      //   text: '寶山校區',onPress:()=>{
+      //     const url = `http://maps.google.com/maps/?saddr=國立彰化師範大學寶山校區&daddr=${this.state.address}`;
+      //     Linking.canOpenURL(url).then(supported => {
+      //       if (supported) {
+      //         Linking.openURL(url);
+      //       }
+      //     });
+      //   }},
         {
-          text: '目前位置',onPress:()=>{
-            const url = `http://maps.google.com/maps/?daddr=${this.state.address}`;
+          text: '前往',onPress:()=>{
+            const url = `http://maps.google.com/maps/?daddr=${this.state.address.slice(6)}`;
             Linking.canOpenURL(url).then(supported => {
               if (supported) {
                 Linking.openURL(url);
@@ -220,7 +220,7 @@ export default class HouseDetailStudent extends Component {
         <Image
           resizeMode="cover"
           source={{
-            uri: `https://maps.googleapis.com/maps/api/staticmap?center=${this.state.address}&zoom=16.85&size=${imgWidth}x${imgHeight}&scale=8&language=zh-tw&markers=size:mid%7Ccolor:blue%7C${this.state.address}&key=AIzaSyBiwSQUTr6brsJoPHcliZ3TVFYgYf7ulbw` }}
+            uri: `https://maps.googleapis.com/maps/api/staticmap?center=${this.state.address.slice(6)}&zoom=16.85&size=${imgWidth}x${imgHeight}&scale=8&language=zh-tw&markers=size:mid%7Ccolor:blue%7C${this.state.address}&key=AIzaSyBiwSQUTr6brsJoPHcliZ3TVFYgYf7ulbw` }}
           style={{
             width: imgWidth,
             height: imgHeight,
@@ -337,7 +337,7 @@ export default class HouseDetailStudent extends Component {
           }
           {
             tmp_array.map((val, index) => {
-              return (<Comment key={index+2} name={val.name} content={val.content} score={val.score}/>)
+              return (<Comment key={index+1} name={val.name} content={val.content} score={val.score}/>)
             })
           }
           {
