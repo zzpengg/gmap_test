@@ -177,7 +177,7 @@ export default class HouseData extends Component {
     return (
       <View>
         <ScrollView>
-          <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
+          <Header style={{backgroundColor: "rgb(255, 0, 0)"}}>
             <Button transparent onPress={this.prePage.bind(this)}>
               <Icon name='ios-arrow-back' />
             </Button>
@@ -188,7 +188,7 @@ export default class HouseData extends Component {
           <DropdownMenu style={{flex: 1}}
             arrowImg={require('../assets/dropdown_arrow.png')}      //set the arrow icon, default is a triangle
             checkImage={require('../assets/menu_check.png')}    //set the icon of the selected item, default is a check mark
-            bgColor={"red"}                            //the background color of the head, default is grey
+            bgColor={"rgb(255, 150, 150)"}                            //the background color of the head, default is grey
             tintColor={"white"}                        //the text color of the head, default is white
             selectItemColor={"red"}                    //the text color of the selected item, default is red
             data={data}

@@ -20,10 +20,8 @@ import LandlordRegistion from './LandlordRegistion.js';
 import Comments from './Comments.js';
 import StudentSignin from './StudentSignin.js';
 import LandlordSignin from './LandlordSignin.js';
-<<<<<<< HEAD
-=======
+
 import ModalExample from './ModalExample.js';
->>>>>>> upstream/master
 
 export default class Index extends Component {
 
@@ -72,26 +70,10 @@ export default class Index extends Component {
     }
   }
 
-<<<<<<< HEAD
-  _pressButton10() {
-    const { navigator } = this.props;
-    //为什么这里可以取得 props.navigator?请看上文:
-    //<Component {...route.params} navigator={navigator} />
-    //这里传递了navigator作为props
-    if(navigator) {
-        navigator.push({
-            name: 'StudentSignin',
-            component: StudentSignin,
-        })
-    }
-  }
-  }
 
 
 
-=======
->>>>>>> upstream/master
-  render() {
+  render(){
     // const { region } = this.props;
     //console.log(region);
 
@@ -101,24 +83,6 @@ export default class Index extends Component {
           <TouchableOpacity onPress={this._pressButton.bind(this)}>
             <Text style={{ color: '#fff', fontSize: 30  }}> 學生 </Text>
           </TouchableOpacity>
-<<<<<<< HEAD
-          <TouchableOpacity onPress={this._pressButton5.bind(this)}>
-            <Text style={{ color: '#fff', fontSize: 30 }}> 學生註冊 </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._pressButton6.bind(this)}>
-            <Text style={{ color: '#fff', fontSize: 30 }}> HouseDatas </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._pressButton7.bind(this)}>
-            <Text style={{ color: '#fff', fontSize: 30 }}> Comments </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._pressButton8.bind(this)}>
-            <Text style={{ color: '#fff', fontSize: 30 }}> Detail </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._pressButton9.bind(this)}>
-            <Text style={{ color: '#fff', fontSize: 30 }}> HouseDetail </Text>
-          </TouchableOpacity>
-=======
->>>>>>> upstream/master
         </View>
         <View style={[styles.center, { backgroundColor: 'darksalmon' }]}>
           <TouchableOpacity onPress={this._pressButton2.bind(this)}>
