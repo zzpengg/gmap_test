@@ -170,12 +170,13 @@ export default class HouseData extends Component {
   render() {
 
 
-    var data = [["地區", "寶山", "進德"], ["類型", "套房", "雅房"], ["租金", "3000以下", "3000~4000", "4000~5000", "5000以上"]];
+    const data = [["地區", "寶山", "進德"], ["類型", "套房", "雅房"], ["租金", "3000以下", "3000~4000", "4000~5000", "5000以上"]];
 
 
     const { navigator } = this.props;
     return (
       <View>
+<<<<<<< HEAD
         <ScrollView>
           <Header style={{backgroundColor: "rgb(255, 0, 0)"}}>
             <Button transparent onPress={this.prePage.bind(this)}>
@@ -184,15 +185,28 @@ export default class HouseData extends Component {
             <Title>房屋資訊</Title>
           </Header>
           <Content>
+=======
+        <ScrollView pagingEnabled={true}>
+>>>>>>> upstream/master
           <View style={{flex: 1}} >
+            <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
+              <Button transparent onPress={this.prePage.bind(this)}>
+                <Icon name='ios-arrow-back' />
+              </Button>
+              <Title>房屋資訊</Title>
+            </Header>
           <DropdownMenu style={{flex: 1}}
             arrowImg={require('../assets/dropdown_arrow.png')}      //set the arrow icon, default is a triangle
             checkImage={require('../assets/menu_check.png')}    //set the icon of the selected item, default is a check mark
+<<<<<<< HEAD
             bgColor={"rgb(255, 150, 150)"}                            //the background color of the head, default is grey
+=======
+            bgColor={"brown"}                            //the background color of the head, default is grey
+>>>>>>> upstream/master
             tintColor={"white"}                        //the text color of the head, default is white
             selectItemColor={"red"}                    //the text color of the selected item, default is red
             data={data}
-            maxHeight={410}                            // the max height of the menu
+            maxHeight={310}                            // the max height of the menu
             handler={
               async (selection, row) => {
                 if(selection == 0){
@@ -218,9 +232,19 @@ export default class HouseData extends Component {
                 }
               }
             } >
-            <View style={{flexDirection: 'row',flex: 1,justifyContent: 'space-between',}}>
-              <Text style={{marginLeft: 10, marginTop: 10}}>共{this.state.updateData.length}筆資料</Text>
-            </View>
+          <View style={{flex: 10, alignItems: 'center', justifyContent: 'flex-end'}}>
+
+            {
+              this.state.loading ?null:
+              this.state.updateData.length?<Text style={{marginLeft:10, marginTop:10}} >共{this.state.updateData.length}筆資料</Text>:
+
+              <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+               <Image source={require('../assets/searchhouse.jpg')} style={{width:width*0.75, height:width*0.75}}/ >
+               <Text>目前尚無符合的房屋</Text>
+              </View>
+
+            }
+
             {
               this.state.loading ?
                 <ActivityIndicator
@@ -230,7 +254,7 @@ export default class HouseData extends Component {
             }
 
             {
-              this.state.updateData.map((val, index) => {
+                this.state.updateData.map((val, index) => {
                 return (
                   <View style={styles.dataView} key={index}>
                     <View>
@@ -276,11 +300,9 @@ export default class HouseData extends Component {
                 )
               })
             }
-
+              </View>
             </DropdownMenu>
             </View>
-
-          </Content>
         </ScrollView>
       </View>
     );

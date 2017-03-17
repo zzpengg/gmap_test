@@ -38,6 +38,7 @@ const windowSize = Dimensions.get('window');
 import Comment from '../component/Comment.js';
 
 import CreateHouseData from './CreateHouseData.js';
+import StudentSignin from './StudentSignin.js';
 
 export default class HouseDetailStudent extends Component {
   constructor(props)
@@ -60,8 +61,8 @@ export default class HouseDetailStudent extends Component {
       checkwater:this.props.checkwater,
       checkele:this.props.checkele,
       checknet:this.props.checknet,
-      houseId: 0,
-      userId: 0,
+      houseId: this.props.id,
+      userId: this.props.userId||0,
       name: "develop",
       content: "",
       data: [],
@@ -89,14 +90,15 @@ export default class HouseDetailStudent extends Component {
     }
   }
 
-  async onCommentPressed () {
+  onCommentPressed = async() => {
     try {
-      let url = 'http://test-zzpengg.c9users.io:8080/comment'
+      let url = 'http://test-zzpengg.c9users.io:8080/comment/createMyComment'
       let response = await fetch(url, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
+          'x-access-token': this.state.accessToken,
         },
         body: JSON.stringify({
           houseId: this.state.houseId,
@@ -230,13 +232,65 @@ export default class HouseDetailStudent extends Component {
 
   checkWater=()=>{
     this.setState({checkwater:!this.state.checkwater});
-}
-checkEle=()=>{
-  this.setState({checkele:!this.state.checkele});
-}
-checkNet=()=>{
-  this.setState({checknet:!this.state.checknet});
-}
+  }
+  checkEle=()=>{
+    this.setState({checkele:!this.state.checkele});
+  }
+  checkNet=()=>{
+    this.setState({checknet:!this.state.checknet});
+  }
+
+  commentArea = () => {
+    if(this.state.userId != 0){
+      return (
+        <View>
+          <Text style={styles.houseTitle}>userId: {this.state.userId}</Text>
+          <Text style={styles.houseTitle}>houseId: {this.state.houseId}</Text>
+          <TextInput
+            style={{borderColor: 'gray', borderWidth: 1, marginLeft: 10, marginRight: 10}}
+            onChangeText={(content) => this.setState({content})}
+            value={this.state.content}
+            multiline={true}
+          />
+          <Text style={styles.houseTitle}> {this.state.content.length}/100</Text>
+          <Button style={styles.submitBtn} onPress={this.onCommentPressed.bind(this)} block warning> 確認送出 </Button>
+        </View>
+      );
+    }
+    else {
+      return (
+        <View>
+          <TouchableOpacity onPress={ () => {
+            const { navigator } = this.props;
+
+            if(navigator){
+              navigator.push({
+                name: 'StudentSignin',
+                component: StudentSignin,
+                params: {
+                  id: this.state.id,
+                  title: this.state.title,
+                  area: this.state.area,
+                  address: this.state.address,
+                  rent: this.state.rent,
+                  score: this.state.score,
+                  vacancy: this.state.vacancy,
+                  checkwater:this.state.checkwater,
+                  checkele:this.state.checkele,
+                  checknet:this.state.checknet,
+                  type: this.state.type,
+                  accessToken: this.props.accessToken,
+                }
+              })
+            }
+          }}>
+            <Text style={{fontSize: 20, alignSelf: 'center'}}>需要登入</Text>
+          </TouchableOpacity>
+        </View>
+      )
+    }
+  }
+
   dataContent = tab => {
     if(tab==1){
       return (
@@ -271,7 +325,7 @@ checkNet=()=>{
       ];
       return (
         <View>
-          <Text style={styles.houseTitle}>房屋名稱: </Text>
+          <Text style={styles.houseTitle}>房屋名稱: {this.state.title}</Text>
           <Image source={require('../assets/house.jpg')} style={styles.houseImage} />
           {
             this.state.loading ?
@@ -292,16 +346,7 @@ checkNet=()=>{
             })
           }
 
-
-          <Text style={styles.houseTitle}>userId: {this.state.userId}</Text>
-          <Text style={styles.houseTitle}>houseId: {this.state.id}</Text>
-          <TextInput
-            style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-            onChangeText={(text) => this.setState({text})}
-            value={this.state.text}
-          />
-          <Text style={styles.houseTitle}>content:{this.state.content}</Text>
-          <Button style={styles.submitBtn} onPress={this.onCommentPressed.bind(this)} block warning> 確認送出 </Button>
+          {this.commentArea()}
         </View>
       )
     }
@@ -435,7 +480,7 @@ const styles = StyleSheet.create({
   submitBtn: {
     elevation: 1,
     marginLeft: 18,
-    marginRight: 0,
+    marginRight: 10,
     marginTop: 20,
   },
   hr: {
@@ -515,11 +560,5 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginBottom: 5,
     alignSelf: 'center'
-  },
-  submitBtn: {
-    elevation: 1,
-    marginLeft: 18,
-    marginRight: 0,
-    marginTop: 20,
   },
 });

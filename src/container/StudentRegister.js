@@ -4,6 +4,7 @@ import {
   View,
   Text,
   Image,
+  Alert,
 } from 'react-native';
 import {
   Header,
@@ -28,7 +29,15 @@ export default class StudentRegister extends Component {
         selected1: 'key1',
         results: {
             items: []
-        }
+        },
+        name: "",
+        phone: "",
+        gender: "",
+        address: "",
+        changhao: "",
+        password: "",
+        password_comfirmed: "",
+        error: "",
     }
   }
 
@@ -43,6 +52,51 @@ export default class StudentRegister extends Component {
       if(navigator) {
           navigator.pop();
       }
+  }
+
+  onRegisterPressed = async() => {
+    try {
+
+        if((this.state.name.length == 0)||
+           (this.state.phone.length == 0)||
+           (this.state.changhao.length == 0)||
+           (this.state.address.length == 0)||
+           (this.state.password.length == 0)){
+          Alert.alert(
+            "錯誤訊息",
+            "欄位值不能為空",
+            [
+              {text:'我知道了',onPress:()=>{}}
+            ]
+          )
+        }
+        else if(this.state.password.localeCompare(this.state.password_comfirmed)!=0){
+          console.log(this.state.password + "+" + this.state.password_comfirmed);
+          Alert.alert(
+            '密碼確認錯誤',
+            '請確認密碼',
+            [{
+              text:'我知道了',onPress:()=>{}
+            }]
+          )
+        }
+        else {
+          await  fetch('http://test-zzpengg.c9users.io:8080/student', {
+                  method: 'POST',
+                  body: JSON.stringify({
+                        name: this.state.name,
+                        phone: this.state.phone,
+                        gender: this.state.selected1,
+                        address: this.state.address,
+                        changhao: this.state.changhao,
+                        password: this.state.password,
+                        password_comfirmed: this.state.password_comfirmed
+                  })
+                })
+        }
+    } catch (errors) {
+      console.log(errors);
+    }
   }
 
   render() {
@@ -65,12 +119,48 @@ export default class StudentRegister extends Component {
                 <Text style={{fontSize: 18}}>基本資料</Text>
                 <ListItem style={{ marginTop: 15 }}>
                   <InputGroup borderType="regular" style={{ borderRadius: 5}} >
-                    <Input placeholder="姓名" />
+                    <Input
+                      placeholder="姓名"
+                      onChangeText={ (val) =>{
+                        if(val.length<=10){this.setState({name:val})}
+                        else{
+                        this.setState({name:""})
+                        Alert.alert(
+                          '名字超過長度限制',
+                          '請輸入小於10個字的名字',
+                         [
+                          {text:'我知道了',onPress:()=>{}}
+                         ]
+                        )
+                        }}}/>
                   </InputGroup>
                 </ListItem>
                 <ListItem style={{ marginTop: 10 }}>
                   <InputGroup borderType="regular" style={{ borderRadius: 5}} >
-                    <Input placeholder="電話" />
+                    <Input placeholder="電話" onChangeText={ (val) =>{
+                      if(isNaN(val)==true)
+                      {
+                        Alert.alert(
+                          "型態錯誤",
+                          "請輸入數字",
+                          [
+                            {text:'我知道了',onPress:()=>{}}
+                          ]
+                        )
+                        this.setState({phone:""})
+                      }
+                      else if(val.length<=10)
+                      this.setState({phone: val})
+                      else {
+                        Alert.alert(
+                          "電話長度不對",
+                          "電話長度應少於11個數字",
+                          [
+                            {text:'我知道了',onPress:()=>{}}
+                          ]
+                        )
+                        this.setState({phone:""})
+                      }}}/>
                   </InputGroup>
                 </ListItem>
                <View style={{flexDirection:'row'}}>
@@ -88,27 +178,111 @@ export default class StudentRegister extends Component {
                </View>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="住址" />
+                   <Input placeholder="住址" maxLength={50} onChangeText={ (val) => this.setState({address: val}) }/>
                  </InputGroup>
                </ListItem>
                <Text style={{fontSize: 18, marginTop: 40}}>帳號密碼</Text>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="帳號" />
+                   <Input placeholder="帳號" onBlur={()=>{
+                     if(this.state.changhao.length<4&&this.state.changhao.length!=0){
+                       Alert.alert(
+                         "長度不符",
+                         "帳號長度應為4~16個字",
+                         [{
+                           text:'我知道了',onPress:()=>{}
+                         }]
+                       )
+                       this.setState({changhao:""})
+                     }
+
+                   }}
+                   onChangeText={ (val) => {
+                     if(val.length<=16)
+                     this.setState({changhao: val})
+                     else {
+                       Alert.alert(
+                         "長度不符",
+                         "帳號長度應為4~16個字",
+                         [{
+                           text:'我知道了',onPress:()=>{}
+                         }]
+                       )
+                       this.setState({changhao:""})
+                     }
+                   }}/>
                  </InputGroup>
                </ListItem>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="密碼" />
+                   <Input placeholder="密碼" secureTextEntry={true}
+                   onBlur={()=>{
+                     if(this.state.password.length<6 &&this.state.password.length!=0){
+                       Alert.alert(
+                         "長度不符",
+                         "密碼長度應為6~20個字",
+                         [{
+                           text:'我知道了',onPress:()=>{}
+                         }]
+                       )
+                       this.setState({password:""})
+                     }
+                   }}
+                   onChangeText={(val)=>{
+                     if(val.length<=20 )
+                     this.setState({password:val})
+                     else {
+                       Alert.alert(
+                         '長度不符',
+                         '密碼長度為6~20個字母',
+                         [{
+                           text:'我知道了',onPress:()=>{}
+                         }]
+                       )
+                       this.setState({password:""})
+                     }
+                   }
+
+                   }/>
                  </InputGroup>
                </ListItem>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="確認密碼" />
+                   <Input placeholder="確認密碼" secureTextEntry={true}
+                   value={this.state.password_comfirmed}
+                   onBlur={()=>{
+                     if(this.state.password_comfirmed.length<6 &&this.state.password_comfirmed.length!=0){
+                       Alert.alert(
+                         "長度不符",
+                         "密碼長度應為6~20個字",
+                         [{
+                           text:'我知道了',onPress:()=>{}
+                         }]
+                       )
+                       this.setState({password_comfirmed:""})
+                     }
+                   }}
+                   onChangeText={(val)=>{
+                     if(val.length<=20 )
+                     this.setState({password_comfirmed:val})
+                     else {
+                       Alert.alert(
+                         '長度不符',
+                         '密碼長度為6~20個字母',
+                         [{
+                           text:'我知道了',onPress:()=>{}
+                         }]
+                       )
+                       this.setState({password_comfirmed:""})
+                     }
+                   }
+                 }/>
                  </InputGroup>
                </ListItem>
 
-               <Button style={styles.submitBtn} block warning> 確認送出 </Button>
+               <Button style={styles.submitBtn}
+                 block warning
+                 onPress={this.onRegisterPressed.bind(this)} > 確認送出 </Button>
              </List>
             </View>
         </Content>
