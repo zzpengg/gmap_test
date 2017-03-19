@@ -196,6 +196,7 @@ export default class LandlordSignin extends Component {
     super(props);
     this.state = {
       name: "",
+      account: "",
       status: "",
       password: "",
       accessToken: "",
@@ -311,7 +312,7 @@ export default class LandlordSignin extends Component {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: this.state.name,
+          account: this.state.account,
           password: this.state.password,
         })
       }).then( (data) => data.json() )
@@ -392,13 +393,13 @@ export default class LandlordSignin extends Component {
            <ListItem style={{ marginTop: 15 }}>
              <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
                <Icon name="ios-person" />
-               <Input onChangeText={(name) => {this.setState({name})}} placeholder="NAME" />
+               <Input onChangeText={(account) => {this.setState({account})}} placeholder="帳號" />
              </InputGroup>
            </ListItem>
            <ListItem style={{ marginTop: 10 }}>
              <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
                <Icon name="ios-unlock" />
-               <Input onChangeText={(password) => {this.setState({password})}} placeholder="PASSWORD" secureTextEntry={true}/>
+               <Input onChangeText={(password) => {this.setState({password})}} placeholder="密碼" secureTextEntry={true}/>
              </InputGroup>
            </ListItem>
            <Button onPress={this.nextPageRegister.bind(this)} style={styles.submitBtn} block warning> 註冊 </Button>
