@@ -6,7 +6,8 @@ import {
   Image,
   Alert,
   Modal,
-  TouchableHighlight
+  TouchableHighlight,
+  AsyncStorage,
 } from 'react-native';
 import {
   Header,
@@ -23,6 +24,8 @@ import {
 } from 'native-base';
 
 import HouseData from './HouseData.js';
+
+const ACCESS_TOKEN = 'access_token';
 
 export default class LandlordRegistion extends Component {
 
@@ -42,7 +45,8 @@ export default class LandlordRegistion extends Component {
         password: "",
         password_comfirmed: "",
         error: "",
-        modalVisible:true
+        modalVisible:true,
+        accessToken: '',
     }
   }
 
@@ -64,6 +68,18 @@ export default class LandlordRegistion extends Component {
     if(val.length==0)
     return 1;
     else return 0;
+  }
+
+  storeToken(responseData){
+    AsyncStorage.setItem(ACCESS_TOKEN, responseData, (err)=> {
+      if(err){
+        console.log("an error");
+        throw err;
+      }
+      console.log("success");
+    }).catch((err)=> {
+        console.log("error is: " + err);
+    });
   }
 
   async onRegisterPressed () {
@@ -110,6 +126,7 @@ export default class LandlordRegistion extends Component {
           await this.setState({
             accessToken: response.token
           })
+          this.storeToken(response.token);
           const { navigator } = this.props;
           if(navigator){
             navigator.push({
