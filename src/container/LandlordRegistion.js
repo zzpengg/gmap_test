@@ -43,7 +43,12 @@ export default class LandlordRegistion extends Component {
         modalVisible:true
     }
   }
-
+  checkIdRepeat=()=>{
+    let res=fetch('http//:test-zzpengg.c9users.io:8080/user/checkIdRepeat',{
+      method:'GET',
+    }).then((data)=>data.json())
+    .catch((e)=>console.log(e));
+  }
   onValueChange (value: string) {
     this.setState({
         selected1 : value
