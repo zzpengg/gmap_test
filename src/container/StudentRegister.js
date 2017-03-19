@@ -34,7 +34,7 @@ export default class StudentRegister extends Component {
         phone: "",
         gender: "",
         address: "",
-        changhao: "",
+        account: "",
         password: "",
         password_comfirmed: "",
         error: "",
@@ -59,7 +59,7 @@ export default class StudentRegister extends Component {
 
         if((this.state.name.length == 0)||
            (this.state.phone.length == 0)||
-           (this.state.changhao.length == 0)||
+           (this.state.account.length == 0)||
            (this.state.address.length == 0)||
            (this.state.password.length == 0)){
           Alert.alert(
@@ -88,7 +88,7 @@ export default class StudentRegister extends Component {
                         phone: this.state.phone,
                         gender: this.state.selected1,
                         address: this.state.address,
-                        changhao: this.state.changhao,
+                        account: this.state.account,
                         password: this.state.password,
                         password_comfirmed: this.state.password_comfirmed
                   })
@@ -187,10 +187,9 @@ export default class StudentRegister extends Component {
                <Text style={{fontSize: 18, marginTop: 40}}>帳號密碼</Text>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="帳號"
-                   value={this.state.changhao}
-                   onBlur={()=>{
-                     if(this.state.changhao.length<4&&this.state.changhao.length!=0){
+
+                   <Input placeholder="帳號" onBlur={()=>{
+                     if(this.state.account.length<4&&this.state.account.length!=0){
                        Alert.alert(
                          "長度不符",
                          "帳號長度應為4~16個字",
@@ -198,13 +197,13 @@ export default class StudentRegister extends Component {
                            text:'我知道了',onPress:()=>{}
                          }]
                        )
-                       this.setState({changhao:""})
+                       this.setState({account:""})
                      }
 
                    }}
                    onChangeText={ (val) => {
                      if(val.length<=16)
-                     this.setState({changhao: val})
+                     this.setState({account: val})
                      else {
                        Alert.alert(
                          "長度不符",
@@ -213,7 +212,7 @@ export default class StudentRegister extends Component {
                            text:'我知道了',onPress:()=>{}
                          }]
                        )
-                       this.setState({changhao:""})
+                       this.setState({account:""})
                      }
                    }}/>
                  </InputGroup>
