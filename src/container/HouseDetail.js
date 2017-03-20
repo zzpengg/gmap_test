@@ -17,6 +17,7 @@ import {
   Image,
   ScrollView,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import {
   Header,
@@ -156,7 +157,6 @@ export default class HouseDetail extends Component {
       console.log( (res != null) );
       if(res != null){
         console.log("in");
-        this.
         this.setState({
           tab: 1
         })
@@ -231,13 +231,13 @@ export default class HouseDetail extends Component {
 
   checkWater=()=>{
     this.setState({checkwater:!this.state.checkwater});
-}
-checkEle=()=>{
-  this.setState({checkele:!this.state.checkele});
-}
-checkNet=()=>{
-  this.setState({checknet:!this.state.checknet});
-}
+  }
+  checkEle=()=>{
+    this.setState({checkele:!this.state.checkele});
+  }
+  checkNet=()=>{
+    this.setState({checknet:!this.state.checknet});
+  }
   dataContent = tab => {
     if(tab==1){
       return (

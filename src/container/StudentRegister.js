@@ -5,6 +5,7 @@ import {
   Text,
   Image,
   Alert,
+  AsyncStorage,
 } from 'react-native';
 import {
   Header,
@@ -19,6 +20,10 @@ import {
   Input,
   Picker,
 } from 'native-base';
+
+import HouseComment from './HouseComment.js';
+
+const STUDENT_ACCESS_TOKEN = 'student_access_token';
 
 export default class StudentRegister extends Component {
 
@@ -38,6 +43,33 @@ export default class StudentRegister extends Component {
         password: "",
         password_comfirmed: "",
         error: "",
+    }
+  }
+
+  storeToken(responseData){
+    AsyncStorage.setItem(STUDENT_ACCESS_TOKEN, responseData, (err)=> {
+      if(err){
+        console.log("an error");
+        throw err;
+      }
+      console.log("success");
+    }).catch((err)=> {
+        console.log("error is: " + err);
+    });
+  }
+
+  onLogout(){
+    this.deleteToken();
+    this.setState({
+      error: 'logout'
+    })
+  }
+
+  async deleteToken() {
+    try {
+        await AsyncStorage.removeItem(STUDENT_ACCESS_TOKEN)
+    } catch(error) {
+        console.log("Something went wrong");
     }
   }
 
@@ -81,7 +113,7 @@ export default class StudentRegister extends Component {
           )
         }
         else {
-          await  fetch('http://test-zzpengg.c9users.io:8080/student', {
+          let response = await fetch('http://test-zzpengg.c9users.io:8080/student/register', {
                   method: 'POST',
                   body: JSON.stringify({
                         name: this.state.name,
@@ -92,7 +124,23 @@ export default class StudentRegister extends Component {
                         password: this.state.password,
                         password_comfirmed: this.state.password_comfirmed
                   })
+                }).then( data => data.json() )
+                console.log(response);
+                await this.setState({
+                  accessToken: response.token
                 })
+                this.onLogout.bind(this);
+                this.storeToken(response.token);
+                const { navigator } = this.props;
+                if(navigator){
+                  navigator.push({
+                    name: 'HouseComment',
+                    component: HouseComment,
+                    params: {
+                      accessToken: this.state.accessToken
+                    }
+                  })
+                }
         }
     } catch (errors) {
       console.log(errors);
@@ -132,7 +180,8 @@ export default class StudentRegister extends Component {
                           {text:'我知道了',onPress:()=>{}}
                          ]
                         )
-                        }}}/>
+                        }}}
+                      value={this.state.name}/>
                   </InputGroup>
                 </ListItem>
                 <ListItem style={{ marginTop: 10 }}>
@@ -160,7 +209,8 @@ export default class StudentRegister extends Component {
                           ]
                         )
                         this.setState({phone:""})
-                      }}}/>
+                      }}}
+                      value={this.state.phone}/>
                   </InputGroup>
                 </ListItem>
                <View style={{flexDirection:'row'}}>
@@ -178,7 +228,10 @@ export default class StudentRegister extends Component {
                </View>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="住址" maxLength={50} onChangeText={ (val) => this.setState({address: val}) }/>
+                   <Input placeholder="住址"
+                     maxLength={50}
+                     onChangeText={ (val) => this.setState({address: val}) }
+                     value={this.state.address}/>
                  </InputGroup>
                </ListItem>
                <Text style={{fontSize: 18, marginTop: 40}}>帳號密碼</Text>
@@ -210,7 +263,8 @@ export default class StudentRegister extends Component {
                        )
                        this.setState({account:""})
                      }
-                   }}/>
+                   }}
+                   value={this.state.account}/>
                  </InputGroup>
                </ListItem>
                <ListItem style={{ marginTop: 15 }}>
@@ -243,7 +297,8 @@ export default class StudentRegister extends Component {
                      }
                    }
 
-                   }/>
+                   }
+                   value={this.state.password}/>
                  </InputGroup>
                </ListItem>
                <ListItem style={{ marginTop: 15 }}>
@@ -276,7 +331,8 @@ export default class StudentRegister extends Component {
                        this.setState({password_comfirmed:""})
                      }
                    }
-                 }/>
+                 }
+                 value={this.state.password_comfirmed}/>
                  </InputGroup>
                </ListItem>
 

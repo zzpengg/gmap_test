@@ -18,6 +18,7 @@ import {
   ScrollView,
   TextInput,
   ActivityIndicator,
+  AsyncStorage,
 } from 'react-native';
 import {
   Header,
@@ -32,7 +33,7 @@ import {
   Item,
 } from 'native-base';
 import CheckBox from 'react-native-checkbox';
-import IconVec from 'react-native-vector-icons/FontAwesome';
+
 
 import Dimensions from 'Dimensions';
 const windowSize = Dimensions.get('window');
@@ -41,13 +42,14 @@ import Comment from '../component/Comment.js';
 import CreateHouseData from './CreateHouseData.js';
 import StudentSignin from './StudentSignin.js';
 
-import HouseComment from './HouseComment.js';
+const STUDENT_ACCESS_TOKEN = 'student_access_token';
 
 export default class HouseDetailStudent extends Component {
   constructor(props)
   {
     super(props);
     this.state = {
+      tab : 1,
       selectedItem: undefined,
       results: {
           items: []
@@ -69,34 +71,51 @@ export default class HouseDetailStudent extends Component {
       content: "",
       data: [],
       loading: true,
-      comment: [],
+      isLogin: 0,
+      loadingisLogin: true,
     }
     this.loadComment = this.loadComment.bind(this);
     this.loadComment();
+    this.getToken = this.getToken.bind(this);
+    this.getToken();
   }
 
   loadComment = async () => {
     try {
-      const url = 'http://test-zzpengg.c9users.io:8080/comment/findHouseComment'
+      const url = 'http://test-zzpengg.c9users.io:8080/comment'
       let res = await fetch(url,{
+      method: 'GET',
+    }).then((data) => data.json())
+      .catch((e) => console.log(e));
+
+      this.setState({
+        data: res,
+        loading: false,
+      });
+      console.log(res);
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
+
+  onCommentPressed = async() => {
+    try {
+      let url = 'http://test-zzpengg.c9users.io:8080/comment/createMyComment'
+      let response = await fetch(url, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
+          'x-access-token': this.state.accessToken,
         },
         body: JSON.stringify({
           houseId: this.state.houseId,
+          userId: this.state.userId,
+          name: this.state.name,
+          content: this.state.content,
         })
-      }).then( (data) => data.json() )
-        .catch((e) => console.log(e));
-
-      console.log(res);
-
-      this.setState({
-        comment: res.data,
-        loading: false,
       });
-      console.log(res);
+      console.log(response);
     } catch (errors) {
       console.log(errors);
     }
@@ -109,145 +128,133 @@ export default class HouseDetailStudent extends Component {
     }
   }
 
-  commentPage = () => {
+  studentSigninPage = () => {
     const { navigator } = this.props;
     if(navigator) {
-      navigator.push({
-        name: 'HouseComment',
-        component: HouseComment,
-        params: {
-          accessToken: this.props.accessToken,
-        }
-      });
+        navigator.push({
+          name: 'StudentSignin',
+          component: StudentSignin,
+        })
     }
   }
 
-  navigate = () => {
-    Alert.alert('選擇出發地點','進德校區,寶山校區', [
-      { text: '進德校區', onPress: () => {
-        //const url = `http://maps.google.com/maps/?q=@${this.state.myLat},${this.state.myLon}`;
-        const url = `http://maps.google.com/maps/?saddr=國立彰化師範大學進德校區&daddr=${this.state.address}`;
-        Linking.canOpenURL(url).then(supported => {
-          if (supported) {
-            Linking.openURL(url);
-          }
-        });
-      } },
-      {
-        text: '寶山校區',onPress:()=>{
-          const url = `http://maps.google.com/maps/?saddr=國立彰化師範大學寶山校區&daddr=${this.state.address}`;
-          Linking.canOpenURL(url).then(supported => {
-            if (supported) {
-              Linking.openURL(url);
-            }
-          });
-        }},
-        {
-          text: '目前位置',onPress:()=>{
-            const url = `http://maps.google.com/maps/?daddr=${this.state.address}`;
-            Linking.canOpenURL(url).then(supported => {
-              if (supported) {
-                Linking.openURL(url);
-              }
-            });
-          }},
-      { text: '取消', onPress: () => {} },
-    ]);
-  }
-
-  gmap = () => {
-    const imgWidth = parseInt(windowSize.width/5*4);
-    const imgHeight = parseInt(imgWidth / 16.0 * 9.0, 10);
-
-    return (
-      <TouchableOpacity  style={{flex: 1, paddingTop: 20,alignItems:'center' }} onPress={this.navigate}>
-        <Image
-          resizeMode="cover"
-          source={{
-            uri: `https://maps.googleapis.com/maps/api/staticmap?center=${this.state.address}&zoom=16.85&size=${imgWidth}x${imgHeight}&scale=8&language=zh-tw&markers=size:mid%7Ccolor:blue%7C${this.state.address}&key=AIzaSyBiwSQUTr6brsJoPHcliZ3TVFYgYf7ulbw` }}
-          style={{
-            width: imgWidth,
-            height: imgHeight,
-          }}
-        />
-      </TouchableOpacity>
-    );
-  }
-
-  extra = () => {
-    let text = "";
-    let check = 0;
-    if(this.state.checkwater){
-      text += "水費";
-      check = 1;
-    }
-    if(this.state.checkele){
-      text += "電費";
-      check = 1;
-    }
-    if(this.state.checknet){
-      text += "網路費";
-      check = 1;
-    }
-    if(check == 1){
-      temp = "含" + text;
+  commentArea = () => {
+    if(this.state.isLogin == 1){
+      return (
+        <View>
+          <Text style={styles.houseTitle}>userId: {this.state.userId}</Text>
+          <Text style={styles.houseTitle}>houseId: {this.state.houseId}</Text>
+          <TextInput
+            style={{borderColor: 'gray', borderWidth: 1, marginLeft: 10, marginRight: 10}}
+            onChangeText={(content) => this.setState({content})}
+            value={this.state.content}
+            multiline={true}
+          />
+          <Text style={styles.houseTitle}> {this.state.content.length}/100</Text>
+          <Button style={styles.submitBtn} onPress={this.onCommentPressed.bind(this)} block warning> 確認送出 </Button>
+        </View>
+      );
     }else{
-      temp = null;
+      return (
+        <TouchableOpacity onPress={ this.studentSigninPage }><Text>尚未登入</Text></TouchableOpacity>
+      )
     }
-    return (
-      <Text style={styles.detailText}>({temp})</Text>
-    )
+
   }
+
+  dataContent = () => {
+      return (
+        <View>
+          {
+            this.state.loadingisLogin ?
+              <ActivityIndicator
+                animating={this.state.loadingisLogin}
+                color="rgb(213, 179, 36)"
+              /> : null
+          }
+          {this.commentArea()}
+          {
+            this.state.loading ?
+              <ActivityIndicator
+                animating={this.state.loading}
+                style={styles.spinner}
+                color="rgb(213, 179, 36)"
+              /> : null
+          }
+          {
+            this.state.data.map((val, index) => {
+              return (<Comment key={index+2} name={val.name} content={val.content} score={val.score}/>)
+            })
+          }
+        </View>
+      )
+  }
+
+  getToken = async() => {
+    try {
+      let accessToken = await AsyncStorage.getItem(STUDENT_ACCESS_TOKEN);
+      if(!accessToken) {
+          console.log("not have token");
+      } else {
+          console.log("accessToken = " + accessToken);
+          let text = await this.checkAuth(accessToken);
+          console.log("TExt = " + text);
+          if(text==='check success'){
+            this.setState({accessToken: accessToken})
+            this.setState({error: 'success'});
+            this.setState({isLogin: 1});
+            this.setState({loadingisLogin: false});
+          }
+          else{
+            this.setState({error: text});
+          }
+
+          console.log("nextpage");
+      }
+    } catch(error) {
+        console.log("catch error = " + error);
+    }
+  }
+
+  checkAuth = async(token) => {
+    try{
+      let url = 'http://test-zzpengg.c9users.io:8080/student/islogin';
+      let response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'x-access-token': token,
+        }
+      }).then( (data) => data.json() )
+      console.log("checkAuth");
+      console.log("response = " + response);
+      console.log("name = " + response.name);
+      this.setState({
+        name: response.name
+      })
+      return response.text;
+    }catch(error){
+      console.log("catch error = " + error);
+      return error;
+    }
+  }
+
+
 
   render() {
     // const { region } = this.props;
     //console.log(region);
 
    return (
-     <ScrollView>
+     <ScrollView style={{flexDirection:'column',flex:1}}>
        <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
          <Button transparent onPress={this.prePage.bind(this)}>
            <Icon name='ios-arrow-back' />
          </Button>
-         <Title>房屋資訊</Title>
+         <Title>留言</Title>
        </Header>
-       <View>
-         <Image
-           source={require('../assets/house.jpg')}
-           style={{width:300, height:100, marginTop: 10, alignSelf: 'center' }}
-         />
-         <Text style={styles.detailText}>房屋名稱: {this.state.title}</Text>
-         <Text style={styles.detailText}>所在區域: {this.state.area}</Text>
-         <View style={{flexDirection: 'row'}}>
-           <Text style={styles.detailText}>租金:  {this.state.rent}/月</Text>
-           {this.extra()}
-         </View>
-         <Text style={styles.detailText}>地址:  {this.state.address}</Text>
-         <Text style={styles.detailText}>類型:  {this.state.type}</Text>
-         {this.gmap()}
-         <Text style={styles.detailText}>評價: {this.state.score}</Text>
-         <Text style={styles.detailText}>連絡房東: </Text>
-         <TouchableOpacity onPress={ this.commentPage }>
-           <Text style={{marginLeft: 33, fontSize: 18, marginTop: 10}}>最佳留言 <IconVec name='chevron-right' /></Text>
-         </TouchableOpacity>
-         <View style={styles.hr}></View>
-         {
-           this.state.loading ?
-             <ActivityIndicator
-               animating={this.state.loading}
-               color="rgb(213, 179, 36)"
-             /> :
-           (this.state.comment.length != 0) ?
-           this.state.comment.map((val, index) => {
-             return (
-               <View key={index}>
-               <Comment name={val.name} content={val.content} score={val.score} time={val.createdAt}/>
-               <View style={styles.hr}></View>
-               </View>
-             )
-           }) : <Text style={{alignSelf: 'center'}}>暫無留言</Text>
-         }
-       </View>
+        {this.dataContent()}
+
      </ScrollView>
    );
   }
@@ -271,7 +278,7 @@ const styles = StyleSheet.create({
   },
   detailText: {
     marginTop: 5,
-    marginLeft: 33,
+    marginLeft: 30,
   },
   container: {
     backgroundColor: '#FBFAFA',
@@ -308,7 +315,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     position: 'absolute',
     top: 85,
-    left: 250,
+    left: 38 / 2 - 19,
   },
   floatingBtn: {
     position: 'absolute',
@@ -351,10 +358,10 @@ const styles = StyleSheet.create({
     flex: 1,
     borderBottomWidth: 1,
     borderColor: 'gray',
-    marginTop: 10,
-    marginBottom: 10,
-    marginLeft: 20,
-    marginRight: 20,
+    marginTop: 15,
+    marginBottom: 15,
+    width: 230,
+    marginRight: -18,
   },
   orText: {
     textAlign: 'center',
