@@ -11,7 +11,10 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Navigator
+  Navigator,
+  BackAndroid,
+  AppState,
+  ToastAndroid
 } from 'react-native';
 
 import HouseDataStudent from './HouseDataStudent.js';
@@ -29,7 +32,31 @@ export default class Index extends Component {
     this.state = {
     }
   }
-
+async componentDidMount(){
+      await BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+async componentWillUnmount() {
+      await BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+onBackAndroid=()=>{
+        const nav = this.props.navigator;
+        const routers = nav.getCurrentRoutes();
+        if(!nav)
+         return false
+        if(routers.length>1){
+          nav.pop();
+          return true;
+        }
+        const now = Date.now();
+        if (now - this.lastBackPressed < 1500) {
+        BackAndroid.exitApp();
+        } else {
+        this.lastBackPressed = now;
+        ToastAndroid.show('再按一次退出', 1000);
+        }
+        return true
+          
+  }
   _pressButton() {
     const { navigator } = this.props;
     //为什么这里可以取得 props.navigator?请看上文:
@@ -39,6 +66,7 @@ export default class Index extends Component {
         navigator.push({
             name: 'HouseDataStudent',
             component: HouseDataStudent,
+            initroute:true
         })
     }
   }
@@ -52,6 +80,7 @@ export default class Index extends Component {
         navigator.push({
             name: 'LandlordSignin',
             component: LandlordSignin,
+            initroute:true
         })
     }
   }

@@ -17,7 +17,9 @@ import {
   Modal,
   Animated,
   Dimensions,
-  ActivityIndicator
+  ActivityIndicator,
+  BackAndroid,
+  Navigator
 } from 'react-native';
 import {
   Header,
@@ -34,7 +36,6 @@ import CreateHouseData from './CreateHouseData.js';
 import Filter from '../component/Filter/FilterContainer';
 var {height, width} = Dimensions.get('window');
 import DropdownMenu from 'react-native-dropdown-menu';
-
 
 export default class HouseData extends Component {
 
@@ -175,8 +176,7 @@ export default class HouseData extends Component {
 
     const { navigator } = this.props;
     return (
-      <View>
-        <ScrollView pagingEnabled={true}>
+        <ScrollView pagingEnabled={true} style={{flex:1}}>
           <View style={{flex: 1}} >
             <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
               <Button transparent onPress={this.prePage.bind(this)}>
@@ -288,7 +288,6 @@ export default class HouseData extends Component {
             </DropdownMenu>
             </View>
         </ScrollView>
-      </View>
     );
   }
 }

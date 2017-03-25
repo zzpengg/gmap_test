@@ -337,9 +337,8 @@ export default class LandlordSignin extends Component {
             throw error;
       }
     } catch(error){
-      let str=""+error;
       Alert.alert('錯誤訊息',
-      str,
+      "發生錯誤",
       [
         {text:'我知道了',onPress:()=>{}}
       ]
