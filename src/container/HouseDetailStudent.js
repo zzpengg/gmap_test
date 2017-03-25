@@ -18,6 +18,7 @@ import {
   ScrollView,
   TextInput,
   ActivityIndicator,
+  AsyncStorage,
 } from 'react-native';
 import {
   Header,
@@ -42,6 +43,8 @@ import CreateHouseData from './CreateHouseData.js';
 import StudentSignin from './StudentSignin.js';
 
 import HouseComment from './HouseComment.js';
+
+const STUDENT_ACCESS_TOKEN = 'student_access_token';
 
 export default class HouseDetailStudent extends Component {
   constructor(props)
@@ -73,11 +76,13 @@ export default class HouseDetailStudent extends Component {
     }
     this.loadComment = this.loadComment.bind(this);
     this.loadComment();
+    this.getToken = this.getToken.bind(this);
+    this.getToken();
   }
 
   loadComment = async () => {
     try {
-      const url = 'http://test-zzpengg.c9users.io:8080/comment/findHouseComment'
+      const url = 'http://test-zzpengg.c9users.io:8080/comment/findBestComment'
       let res = await fetch(url,{
         method: 'POST',
         headers: {
@@ -92,13 +97,31 @@ export default class HouseDetailStudent extends Component {
 
       console.log(res);
 
-      this.setState({
+      await this.setState({
         comment: res.data,
         loading: false,
       });
+
       console.log(res);
     } catch (errors) {
       console.log(errors);
+    }
+  }
+
+  getToken = async() => {
+    try {
+      let accessToken = await AsyncStorage.getItem(STUDENT_ACCESS_TOKEN);
+      if(!accessToken) {
+          console.log("not have token");
+      } else {
+          console.log("accessToken = " + accessToken);
+          this.setState({accessToken: accessToken});
+          this.setState({error: 'success'});
+          this.setState({isLogin: 1});
+          this.setState({loadingisLogin: false});
+      }
+    } catch(error) {
+        console.log("catch error = " + error);
     }
   }
 
@@ -116,7 +139,8 @@ export default class HouseDetailStudent extends Component {
         name: 'HouseComment',
         component: HouseComment,
         params: {
-          accessToken: this.props.accessToken,
+          accessToken: this.state.accessToken,
+          houseId: this.state.houseId,
         }
       });
     }
@@ -200,6 +224,56 @@ export default class HouseDetailStudent extends Component {
     )
   }
 
+  thumbs_up = async(commentId) => {
+    try {
+      console.log("commentId = " + commentId);
+      const url = 'http://test-zzpengg.c9users.io:8080/like/addLike'
+      let res = await fetch(url,{
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'x-access-token': this.state.accessToken,
+        },
+        body: JSON.stringify({
+          commentId: commentId,
+        })
+      }).then( (data) => data.json() )
+        .catch((e) => console.log(e));
+
+      console.log(res);
+      this.loadComment();
+
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
+
+  thumbs_down = async(commentId) => {
+    try {
+      console.log("commentId = " + commentId);
+      const url = 'http://test-zzpengg.c9users.io:8080/like/addDislike'
+      let res = await fetch(url,{
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'x-access-token': this.state.accessToken,
+        },
+        body: JSON.stringify({
+          commentId: commentId,
+        })
+      }).then( (data) => data.json() )
+        .catch((e) => console.log(e));
+
+      console.log(res);
+      this.loadComment();
+
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
+
   render() {
     // const { region } = this.props;
     //console.log(region);
@@ -242,7 +316,7 @@ export default class HouseDetailStudent extends Component {
            this.state.comment.map((val, index) => {
              return (
                <View key={index}>
-               <Comment name={val.name} content={val.content} score={val.score} time={val.createdAt}/>
+               <Comment {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)}/>
                <View style={styles.hr}></View>
                </View>
              )
