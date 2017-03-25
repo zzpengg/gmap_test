@@ -47,7 +47,7 @@ export default class LandlordRegistion extends Component {
     async checkIdRepeat (){
     let url='http://test-zzpengg.c9users.io:8080/user/checkIdRepeat';
     let res=await fetch(url,{
-      method:'GET',
+      method:'POST',
       headers:{
         'Content-Type': 'application/json'
       },
@@ -249,8 +249,7 @@ render() {
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
                    <Input placeholder="帳號"
                       value={this.state.account}
-                      onBlur={()=>{
-                        this.checkIdRepeat();
+                      onBlur={async()=>{
                         if(this.state.account.length<4&&this.state.account.length!=0){
                           Alert.alert(
                             "長度不符",
@@ -259,12 +258,12 @@ render() {
                               text:'我知道了',onPress:()=>{}
                             }]
                           )
-                          this.setState({account:""})
+                          await this.setState({account:""})
                         }
                       }}
-                   onChangeText={(val) => {
+                   onChangeText={async(val) => {
                      if(val.length<=16)
-                     this.setState({account: val})
+                     await this.setState({account: val})
                      else {
                        Alert.alert(
                          "長度不符",
@@ -273,8 +272,9 @@ render() {
                            text:'我知道了',onPress:()=>{}
                          }]
                        )
-                       this.setState({account:""})
+                       await this.setState({account:""})
                      }
+                     this.checkIdRepeat();
                    }}/>
                  </InputGroup>
                </ListItem>
