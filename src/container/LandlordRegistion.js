@@ -65,9 +65,9 @@ export default class LandlordRegistion extends Component {
     }).then((data)=>data.json())
     .catch((e)=>console.log(e));
     console.log(res);
-     this.setState({checkid:res.data});
+     await this.setState({checkid:res.data});
     if(this.state.checkid==1){
-      this.setState({account:""});
+      await this.setState({account:""});
       Alert.alert(
         '錯誤訊息',
         '此帳號已存在',
@@ -271,7 +271,8 @@ render() {
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
                    <Input placeholder="帳號"
                       value={this.state.account}
-                      onBlur={()=>{
+                      onBlur={async()=>{
+
                         if(this.state.account.length<4&&this.state.account.length!=0){
                           Alert.alert(
                             "長度不符",
@@ -280,12 +281,12 @@ render() {
                               text:'我知道了',onPress:()=>{}
                             }]
                           )
-                          this.setState({account:""})
+                          await this.setState({account:""})
                         }
                       }}
-                   onChangeText={(val) => {
+                   onChangeText={async(val) => {
                      if(val.length<=16)
-                     this.setState({account: val})
+                     await this.setState({account: val})
                      else {
                        Alert.alert(
                          "長度不符",
@@ -294,8 +295,9 @@ render() {
                            text:'我知道了',onPress:()=>{}
                          }]
                        )
-                       this.setState({account:""})
+                       await this.setState({account:""})
                      }
+                     this.checkIdRepeat();
                    }}/>
                  </InputGroup>
                </ListItem>

@@ -157,7 +157,7 @@ export default class HouseDetail extends Component {
       console.log( (res != null) );
       if(res != null){
         console.log("in");
-        this.setState({
+        await this.setState({
           tab: 1
         })
       }
