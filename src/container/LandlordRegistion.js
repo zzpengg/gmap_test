@@ -44,10 +44,11 @@ export default class LandlordRegistion extends Component {
         modalVisible:true
     }
   }
-    async checkIdRepeat (){
+  checkIdRepeat = async() => {
+    console.log("checkIdRepeat");
     let url='http://test-zzpengg.c9users.io:8080/user/checkIdRepeat';
     let res=await fetch(url,{
-      method:'GET',
+      method:'POST',
       headers:{
         'Content-Type': 'application/json'
       },
@@ -56,6 +57,7 @@ export default class LandlordRegistion extends Component {
       })
     }).then((data)=>data.json())
     .catch((e)=>console.log(e));
+    console.log(res);
      this.setState({checkid:res.data});
     if(this.state.checkid==1){
       this.setState({account:""});
@@ -68,6 +70,7 @@ export default class LandlordRegistion extends Component {
       )
     }
   }
+
   onValueChange (value: string) {
     this.setState({
         selected1 : value
@@ -250,7 +253,6 @@ render() {
                    <Input placeholder="帳號"
                       value={this.state.account}
                       onBlur={()=>{
-                        this.checkIdRepeat();
                         if(this.state.account.length<4&&this.state.account.length!=0){
                           Alert.alert(
                             "長度不符",
