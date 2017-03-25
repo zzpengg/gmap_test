@@ -97,11 +97,7 @@ export default class HouseData extends Component {
   render() {
     // const { region } = this.props;
     //console.log(region);
-    var tmp_array = [
-     { title: "便宜的雅房", rent: 10000, area: "寶山", score: 3 },
-     { title: "昂貴的套房", rent: 2000, area: "寶山", score: 1},
-     { title: "破爛的房子", rent: 500, area: "進德", score: 5 }
-    ];
+
     const { navigator } = this.props;
     return (
       <View>
