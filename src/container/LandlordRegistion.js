@@ -6,8 +6,7 @@ import {
   Image,
   Alert,
   Modal,
-  TouchableHighlight,
-  AsyncStorage,
+  TouchableHighlight
 } from 'react-native';
 import {
   Header,
@@ -22,10 +21,6 @@ import {
   Input,
   Picker,
 } from 'native-base';
-
-import HouseData from './HouseData.js';
-
-const ACCESS_TOKEN = 'access_token';
 
 export default class LandlordRegistion extends Component {
 
@@ -45,11 +40,34 @@ export default class LandlordRegistion extends Component {
         password: "",
         password_comfirmed: "",
         error: "",
-        modalVisible:true,
-        accessToken: '',
+        checkId:"",
+        modalVisible:true
     }
   }
-
+    async checkIdRepeat (){
+    let url='http://test-zzpengg.c9users.io:8080/user/checkIdRepeat';
+    let res=await fetch(url,{
+      method:'GET',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        account:this.state.account
+      })
+    }).then((data)=>data.json())
+    .catch((e)=>console.log(e));
+     this.setState({checkid:res.data});
+    if(this.state.checkid==1){
+      this.setState({account:""});
+      Alert.alert(
+        '錯誤訊息',
+        '此帳號已存在',
+        [
+          {text:'我知道了',onPress:()=>{}}
+        ]
+      )
+    }
+  }
   onValueChange (value: string) {
     this.setState({
         selected1 : value
@@ -68,18 +86,6 @@ export default class LandlordRegistion extends Component {
     if(val.length==0)
     return 1;
     else return 0;
-  }
-
-  storeToken(responseData){
-    AsyncStorage.setItem(ACCESS_TOKEN, responseData, (err)=> {
-      if(err){
-        console.log("an error");
-        throw err;
-      }
-      console.log("success");
-    }).catch((err)=> {
-        console.log("error is: " + err);
-    });
   }
 
   async onRegisterPressed () {
@@ -106,42 +112,42 @@ export default class LandlordRegistion extends Component {
         }
         else {
           let url = 'http://test-zzpengg.c9users.io:8080/user/register';
-          let response = await fetch(url, {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              name: this.state.name,
-              phone: this.state.phone,
-              gender: this.state.selected1,
-              address: this.state.address,
-              account: this.state.account,
-              password: this.state.password,
-            })
-          }).then( (data) => data.json() )
+               let response = await fetch(url, {
+                 method: 'POST',
+                 headers: {
+                   'Accept': 'application/json',
+                   'Content-Type': 'application/json',
+                 },
+                 body: JSON.stringify({
+                   name: this.state.name,
+                   phone: this.state.phone,
+                   gender: this.state.selected1,
+                   address: this.state.address,
+                   account: this.state.account,
+                   password: this.state.password,
+                 })
+               }).then( (data) => data.json() )
 
-          console.log(response);
-          await this.setState({
-            accessToken: response.token
-          })
-          this.storeToken(response.token);
-          const { navigator } = this.props;
-          if(navigator){
-            navigator.push({
-              name: 'HouseData',
-              component: HouseData,
-              params: {
-                accessToken: this.state.accessToken
-              }
-            })
-          }
+               console.log(response);
+               await this.setState({
+                 accessToken: response.token
+               })
+               this.storeToken(response.token);
+               const { navigator } = this.props;
+               if(navigator){
+                 navigator.push({
+                   name: 'HouseData',
+                   component: HouseData,
+                   params: {
+                     accessToken: this.state.accessToken
+                   }
+                 })
+               }
 
-        }
-    } catch (errors) {
-      console.log(errors);
-    }
+             }
+         } catch (errors) {
+           console.log(errors);
+         }
   }
   setModalVisible(visible) {
      this.setState({modalVisible: visible});
@@ -244,6 +250,7 @@ render() {
                    <Input placeholder="帳號"
                       value={this.state.account}
                       onBlur={()=>{
+                        this.checkIdRepeat();
                         if(this.state.account.length<4&&this.state.account.length!=0){
                           Alert.alert(
                             "長度不符",
@@ -255,7 +262,7 @@ render() {
                           this.setState({account:""})
                         }
                       }}
-                   onChangeText={ (val) => {
+                   onChangeText={(val) => {
                      if(val.length<=16)
                      this.setState({account: val})
                      else {
@@ -280,7 +287,7 @@ render() {
                      if(this.state.password.length<6 &&this.state.password.length!=0){
                        Alert.alert(
                          "長度不符",
-                         "密碼長度應為6~20個字",
+                         "密碼長度為6~20個字母",
                          [{
                            text:'我知道了',onPress:()=>{}
                          }]

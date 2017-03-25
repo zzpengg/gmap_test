@@ -243,8 +243,7 @@ export default class HouseData extends Component {
                 return (
                   <View style={styles.dataView} key={index}>
                     <View>
-                      <Image source={require('../assets/fuck_cat.jpg')} style={{width:100, height:100, marginTop:5, marginLeft:5, marginBottom: 5 }} />
-                      <Text style={styles.imageText}>更改圖片</Text>
+                      <Image source={require('../assets/fuck_cat.jpg')} style={{width:100, height:100, marginTop:10, marginLeft:5, marginBottom: 5 }} />
                     </View>
 
                     <View style={{marginTop:10, marginLeft: 10}} >

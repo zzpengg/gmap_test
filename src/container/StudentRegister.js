@@ -169,10 +169,10 @@ export default class StudentRegister extends Component {
                   <InputGroup borderType="regular" style={{ borderRadius: 5}} >
                     <Input
                       placeholder="姓名"
+                      value={this.state.name}
                       onChangeText={ (val) =>{
                         if(val.length<=10){this.setState({name:val})}
                         else{
-                        this.setState({name:""})
                         Alert.alert(
                           '名字超過長度限制',
                           '請輸入小於10個字的名字',
@@ -180,13 +180,16 @@ export default class StudentRegister extends Component {
                           {text:'我知道了',onPress:()=>{}}
                          ]
                         )
-                        }}}
-                      value={this.state.name}/>
+                        this.setState({name:""});
+                        }}}/>
+
                   </InputGroup>
                 </ListItem>
                 <ListItem style={{ marginTop: 10 }}>
                   <InputGroup borderType="regular" style={{ borderRadius: 5}} >
-                    <Input placeholder="電話" onChangeText={ (val) =>{
+                    <Input placeholder="電話"
+                    value={this.state.phone}
+                    onChangeText={ (val) =>{
                       if(isNaN(val)==true)
                       {
                         Alert.alert(
@@ -237,6 +240,7 @@ export default class StudentRegister extends Component {
                <Text style={{fontSize: 18, marginTop: 40}}>帳號密碼</Text>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
+
                    <Input placeholder="帳號" onBlur={()=>{
                      if(this.state.account.length<4&&this.state.account.length!=0){
                        Alert.alert(
@@ -270,11 +274,12 @@ export default class StudentRegister extends Component {
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
                    <Input placeholder="密碼" secureTextEntry={true}
+                   value={this.state.password}
                    onBlur={()=>{
                      if(this.state.password.length<6 &&this.state.password.length!=0){
                        Alert.alert(
                          "長度不符",
-                         "密碼長度應為6~20個字",
+                         "密碼長度為6~20個字母",
                          [{
                            text:'我知道了',onPress:()=>{}
                          }]
