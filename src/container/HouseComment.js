@@ -55,18 +55,8 @@ export default class HouseDetailStudent extends Component {
           items: []
       },
       id: this.props.id,
-      title: this.props.title,
-      area: this.props.area,
-      address: this.props.address,
-      vacancy: this.props.vacancy,
-      rent: this.props.rent,
-      type: this.props.type,
       accessToken: this.props.accessToken,
-      checkwater:this.props.checkwater,
-      checkele:this.props.checkele,
-      checknet:this.props.checknet,
-      houseId: this.props.id,
-      userId: this.props.userId||0,
+      houseId: this.props.houseId,
       name: "develop",
       content: "",
       data: [],
@@ -82,17 +72,24 @@ export default class HouseDetailStudent extends Component {
 
   loadComment = async () => {
     try {
-      const url = 'http://test-zzpengg.c9users.io:8080/comment'
+      const url = 'http://test-zzpengg.c9users.io:8080/comment/findHouseComment'
       let res = await fetch(url,{
-      method: 'GET',
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          houseId: this.state.houseId,
+        })
     }).then((data) => data.json())
       .catch((e) => console.log(e));
-
+      console.log(res);
       this.setState({
-        data: res,
+        data: res.data,
         loading: false,
       });
-      console.log(res);
+
     } catch (errors) {
       console.log(errors);
     }
@@ -110,12 +107,12 @@ export default class HouseDetailStudent extends Component {
         },
         body: JSON.stringify({
           houseId: this.state.houseId,
-          userId: this.state.userId,
           name: this.state.name,
           content: this.state.content,
         })
       });
       console.log(response);
+      this.loadComment();
     } catch (errors) {
       console.log(errors);
     }
@@ -138,12 +135,60 @@ export default class HouseDetailStudent extends Component {
     }
   }
 
+  thumbs_up = async(commentId) => {
+    try {
+      console.log("commentId = " + commentId);
+      const url = 'http://test-zzpengg.c9users.io:8080/like/addLike'
+      let res = await fetch(url,{
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'x-access-token': this.state.accessToken,
+        },
+        body: JSON.stringify({
+          commentId: commentId,
+        })
+      }).then( (data) => data.json() )
+        .catch((e) => console.log(e));
+
+      console.log(res);
+      this.loadComment();
+
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
+
+  thumbs_down = async(commentId) => {
+    try {
+      console.log("commentId = " + commentId);
+      const url = 'http://test-zzpengg.c9users.io:8080/like/addDislike'
+      let res = await fetch(url,{
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'x-access-token': this.state.accessToken,
+        },
+        body: JSON.stringify({
+          commentId: commentId,
+        })
+      }).then( (data) => data.json() )
+        .catch((e) => console.log(e));
+
+      console.log(res);
+      this.loadComment();
+
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
+
   commentArea = () => {
     if(this.state.isLogin == 1){
       return (
         <View>
-          <Text style={styles.houseTitle}>userId: {this.state.userId}</Text>
-          <Text style={styles.houseTitle}>houseId: {this.state.houseId}</Text>
           <TextInput
             style={{borderColor: 'gray', borderWidth: 1, marginLeft: 10, marginRight: 10}}
             onChangeText={(content) => this.setState({content})}
@@ -154,7 +199,10 @@ export default class HouseDetailStudent extends Component {
           <Button style={styles.submitBtn} onPress={this.onCommentPressed.bind(this)} block warning> 確認送出 </Button>
         </View>
       );
-    }else{
+    }else if(this.state.isLogin == 0){
+      return null;
+    }
+    else{
       return (
         <TouchableOpacity onPress={ this.studentSigninPage }><Text>尚未登入</Text></TouchableOpacity>
       )
@@ -182,9 +230,10 @@ export default class HouseDetailStudent extends Component {
               /> : null
           }
           {
-            this.state.data.map((val, index) => {
-              return (<Comment key={index+2} name={val.name} content={val.content} score={val.score}/>)
-            })
+            this.state.data ?
+            this.state.data.map((val, index) =>
+              <Comment key={index+2} {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)}/>
+            ) : null
           }
         </View>
       )
@@ -200,7 +249,7 @@ export default class HouseDetailStudent extends Component {
           let text = await this.checkAuth(accessToken);
           console.log("TExt = " + text);
           if(text==='check success'){
-            this.setState({accessToken: accessToken})
+            this.setState({accessToken: accessToken});
             this.setState({error: 'success'});
             this.setState({isLogin: 1});
             this.setState({loadingisLogin: false});

@@ -120,16 +120,16 @@ const Comment = (props) => (
         <Text>評分: {props.score}</Text>
         <Text style={{fontWeight: 'bold', color: 'black'}}>{props.content}</Text>
         <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginTop: 10}}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={props.thumbs_up}>
             <View style={{flexDirection: 'row'}}>
               <Icon name="thumbs-up" />
-              <Text>讚</Text>
+              <Text>讚{props.like}</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={props.thumbs_down}>
             <View style={{flexDirection: 'row'}}>
               <Icon name="thumbs-down" />
-              <Text>爛</Text>
+              <Text>爛{props.dislike}</Text>
             </View>
           </TouchableOpacity>
         </View>
