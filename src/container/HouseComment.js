@@ -121,7 +121,8 @@ export default class HouseDetailStudent extends Component {
   prePage() {
     const { navigator } = this.props;
     if(navigator) {
-        navigator.pop();
+      this.props.loadBestComment();
+      navigator.pop();
     }
   }
 
@@ -233,7 +234,7 @@ export default class HouseDetailStudent extends Component {
             this.state.data ?
             this.state.data.map((val, index) =>
               <Comment key={index+2} {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)}/>
-            ) : null
+            ) : <Text>暫無留言</Text>
           }
         </View>
       )
@@ -255,6 +256,8 @@ export default class HouseDetailStudent extends Component {
             this.setState({loadingisLogin: false});
           }
           else{
+            this.setState({loadingisLogin: false});
+            this.setState({isLogin: 1});
             this.setState({error: text});
           }
 

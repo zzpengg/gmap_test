@@ -6,7 +6,8 @@ import {
   Image,
   Alert,
   Modal,
-  TouchableHighlight
+  TouchableHighlight,
+  AsyncStorage,
 } from 'react-native';
 import {
   Header,
@@ -21,6 +22,10 @@ import {
   Input,
   Picker,
 } from 'native-base';
+
+import HouseData from './HouseData.js';
+
+const ACCESS_TOKEN = 'access_token';
 
 export default class LandlordRegistion extends Component {
 
@@ -43,6 +48,8 @@ export default class LandlordRegistion extends Component {
         checkId:"",
         modalVisible:true
     }
+    console.disableYellowBox = true;
+    console.warn('YellowBox is disabled.');
   }
   checkIdRepeat = async() => {
     console.log("checkIdRepeat");
@@ -70,6 +77,18 @@ export default class LandlordRegistion extends Component {
       )
     }
   }
+
+  storeToken(responseData){
+     AsyncStorage.setItem(ACCESS_TOKEN, responseData, (err)=> {
+       if(err){
+         console.log("an error");
+         throw err;
+       }
+       console.log("success");
+     }).catch((err)=> {
+         console.log("error is: " + err);
+     });
+   }
 
   onValueChange (value: string) {
     this.setState({

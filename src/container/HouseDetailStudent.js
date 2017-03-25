@@ -55,32 +55,25 @@ export default class HouseDetailStudent extends Component {
       results: {
           items: []
       },
-      id: this.props.id,
-      title: this.props.title,
-      area: this.props.area,
-      address: this.props.address,
-      vacancy: this.props.vacancy,
-      rent: this.props.rent,
-      type: this.props.type,
       accessToken: this.props.accessToken,
-      checkwater:this.props.checkwater,
-      checkele:this.props.checkele,
-      checknet:this.props.checknet,
       houseId: this.props.id,
       userId: this.props.userId||0,
       name: "develop",
       content: "",
       data: [],
+      house: [],
       loading: true,
       comment: [],
     }
-    this.loadComment = this.loadComment.bind(this);
-    this.loadComment();
+    this.loadBestComment = this.loadBestComment.bind(this);
+    this.loadBestComment();
     this.getToken = this.getToken.bind(this);
     this.getToken();
+    this.loadTheHouse = this.loadTheHouse.bind(this);
+    this.loadTheHouse();
   }
 
-  loadComment = async () => {
+  loadBestComment = async () => {
     try {
       const url = 'http://test-zzpengg.c9users.io:8080/comment/findBestComment'
       let res = await fetch(url,{
@@ -101,8 +94,6 @@ export default class HouseDetailStudent extends Component {
         comment: res.data,
         loading: false,
       });
-
-      console.log(res);
     } catch (errors) {
       console.log(errors);
     }
@@ -125,6 +116,31 @@ export default class HouseDetailStudent extends Component {
     }
   }
 
+  loadTheHouse = async () => {
+    try {
+      const url = 'http://test-zzpengg.c9users.io:8080/house/findTheHouse'
+      let res = await fetch(url,{
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          houseId: this.state.houseId,
+        })
+      }).then( (data) => data.json() )
+        .catch((e) => console.log(e));
+
+      console.log(res);
+
+      await this.setState({
+        house: res.data,
+      });
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
+
   prePage() {
     const { navigator } = this.props;
     if(navigator) {
@@ -141,6 +157,7 @@ export default class HouseDetailStudent extends Component {
         params: {
           accessToken: this.state.accessToken,
           houseId: this.state.houseId,
+          loadBestComment: this.loadBestComment,
         }
       });
     }
@@ -242,7 +259,7 @@ export default class HouseDetailStudent extends Component {
         .catch((e) => console.log(e));
 
       console.log(res);
-      this.loadComment();
+      this.loadBestComment();
 
     } catch (errors) {
       console.log(errors);
@@ -267,7 +284,7 @@ export default class HouseDetailStudent extends Component {
         .catch((e) => console.log(e));
 
       console.log(res);
-      this.loadComment();
+      this.loadBestComment();
 
     } catch (errors) {
       console.log(errors);
@@ -277,7 +294,7 @@ export default class HouseDetailStudent extends Component {
   render() {
     // const { region } = this.props;
     //console.log(region);
-
+   const { title, area, address, vacancy, rent, type, checkwater, checkele, checknet, score, phone } = this.state.house;
    return (
      <ScrollView>
        <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
@@ -291,17 +308,17 @@ export default class HouseDetailStudent extends Component {
            source={require('../assets/house.jpg')}
            style={{width:300, height:100, marginTop: 10, alignSelf: 'center' }}
          />
-         <Text style={styles.detailText}>房屋名稱: {this.state.title}</Text>
-         <Text style={styles.detailText}>所在區域: {this.state.area}</Text>
+         <Text style={styles.detailText}>房屋名稱: {title}</Text>
+         <Text style={styles.detailText}>所在區域: {area}</Text>
          <View style={{flexDirection: 'row'}}>
-           <Text style={styles.detailText}>租金:  {this.state.rent}/月</Text>
+           <Text style={styles.detailText}>租金:  {rent}/月</Text>
            {this.extra()}
          </View>
-         <Text style={styles.detailText}>地址:  {this.state.address}</Text>
-         <Text style={styles.detailText}>類型:  {this.state.type}</Text>
+         <Text style={styles.detailText}>地址:  {address}</Text>
+         <Text style={styles.detailText}>類型:  {type}</Text>
          {this.gmap()}
-         <Text style={styles.detailText}>評價: {this.state.score}</Text>
-         <Text style={styles.detailText}>連絡房東: </Text>
+         <Text style={styles.detailText}>評價: {score}</Text>
+         <Text style={styles.detailText}>連絡房東: {phone}</Text>
          <TouchableOpacity onPress={ this.commentPage }>
            <Text style={{marginLeft: 33, fontSize: 18, marginTop: 10}}>最佳留言 <IconVec name='chevron-right' /></Text>
          </TouchableOpacity>
