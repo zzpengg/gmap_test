@@ -231,10 +231,10 @@ export default class HouseDetailStudent extends Component {
               /> : null
           }
           {
-            this.state.data ?
+            this.state.data.length > 0 ?
             this.state.data.map((val, index) =>
               <Comment key={index+2} {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)}/>
-            ) : <Text>暫無留言</Text>
+            ) : <Text style={{alignSelf: 'center'}} >暫無留言</Text>
           }
         </View>
       )
