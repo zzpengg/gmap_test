@@ -34,6 +34,8 @@ export default class Index extends Component {
   }
 async componentDidMount(){
       await BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+      console.disableYellowBox = true;
+      console.warn('YellowBox is disabled.');
   }
 async componentWillUnmount() {
       await BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
