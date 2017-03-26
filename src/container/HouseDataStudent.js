@@ -36,7 +36,7 @@ import CreateHouseData from './CreateHouseData.js';
 import Filter from '../component/Filter/FilterContainer';
 var {height, width} = Dimensions.get('window');
 import DropdownMenu from 'react-native-dropdown-menu';
-
+const windowSize = Dimensions.get('window');
 export default class HouseData extends Component {
 
   constructor(props) {
@@ -176,7 +176,8 @@ export default class HouseData extends Component {
 
     const { navigator } = this.props;
     return (
-        <ScrollView pagingEnabled={true} style={{flex:1}}>
+        <ScrollView pagingEnabled={true}
+        style={{flex:1}}>
           <View style={{flex: 1}} >
             <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
               <Button transparent onPress={this.prePage.bind(this)}>
