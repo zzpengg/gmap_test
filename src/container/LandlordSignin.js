@@ -34,7 +34,7 @@ import {
 
 import HouseData from './HouseData.js';
 import LandlordRegistion from './LandlordRegistion.js';
-
+import FBLoginView from'../component/FBLoginView'
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fffbe2',
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
 });
 
 const ACCESS_TOKEN = 'access_token';
-
+import {FBLogin, FBLoginManager} from 'react-native-facebook-login';
 export default class LandlordSignin extends Component {
   constructor(props) {
     super(props);
@@ -409,6 +409,17 @@ export default class LandlordSignin extends Component {
              <View style={styles.hr} />
            </View>
            <Button style={styles.submitBtn} onPress={this.onLoginPressed.bind(this)} block info> 登入 </Button>
+           <FBLogin
+              buttonView={<FBLoginView />}
+              ref={(fbLogin) => { this.fbLogin = fbLogin }}
+              loginBehavior={FBLoginManager.LoginBehaviors.Native}
+              permissions={["public_profile","email","user_friends"]}
+              onLogin={function(data){console.log("log in");console.log(data.credentials)}}
+              onLoginFound={function(data){console.log(data.credentials)}}
+              onLoginNotFound={function(e){console.log(e)}}
+              onLogout={function(e){console.log(e)}}
+              onCancel={function(e){console.log(e)}}
+              onPermissionsMissing={function(e){console.log(e)}}/>
          </List>
          </Content>
          :
