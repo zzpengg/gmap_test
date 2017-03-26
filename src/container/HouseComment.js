@@ -121,9 +121,13 @@ export default class HouseDetailStudent extends Component {
   prePage() {
     const { navigator } = this.props;
     if(navigator) {
-      this.props.loadBestComment();
       navigator.pop();
     }
+  }
+
+  loadToPrePage = () => {
+    this.props.callback();
+    this.prePage();
   }
 
   studentSigninPage = () => {
@@ -186,6 +190,24 @@ export default class HouseDetailStudent extends Component {
     }
   }
 
+  deleteToken = async() => {
+    try {
+        await AsyncStorage.removeItem(STUDENT_ACCESS_TOKEN)
+    } catch(error) {
+        console.log("Something went wrong");
+    }
+  }
+
+  onLogout = () => {
+    this.deleteToken();
+    this.setState({
+      error: 'logout',
+      isLogin: 0,
+    })
+  }
+
+
+
   commentArea = () => {
     if(this.state.isLogin == 1){
       return (
@@ -198,14 +220,13 @@ export default class HouseDetailStudent extends Component {
           />
           <Text style={styles.houseTitle}> {this.state.content.length}/100</Text>
           <Button style={styles.submitBtn} onPress={this.onCommentPressed.bind(this)} block warning> 確認送出 </Button>
+          <Button style={styles.submitBtn} onPress={ this.onLogout } block warning> 登出 </Button>
         </View>
       );
-    }else if(this.state.isLogin == 0){
-      return null;
     }
     else{
       return (
-        <TouchableOpacity onPress={ this.studentSigninPage }><Text>尚未登入</Text></TouchableOpacity>
+        <TouchableOpacity onPress={ this.studentSigninPage }><Text style={{alignSelf: 'center'}}>尚未登入</Text></TouchableOpacity>
       )
     }
 
@@ -245,6 +266,7 @@ export default class HouseDetailStudent extends Component {
       let accessToken = await AsyncStorage.getItem(STUDENT_ACCESS_TOKEN);
       if(!accessToken) {
           console.log("not have token");
+          this.setState({loadingisLogin: false});
       } else {
           console.log("accessToken = " + accessToken);
           let text = await this.checkAuth(accessToken);
@@ -300,7 +322,7 @@ export default class HouseDetailStudent extends Component {
    return (
      <ScrollView style={{flexDirection:'column',flex:1}}>
        <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
-         <Button transparent onPress={this.prePage.bind(this)}>
+         <Button transparent onPress={this.loadToPrePage.bind(this)}>
            <Icon name='ios-arrow-back' />
          </Button>
          <Title>留言</Title>

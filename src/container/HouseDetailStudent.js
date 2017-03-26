@@ -147,6 +147,9 @@ export default class HouseDetailStudent extends Component {
         navigator.pop();
     }
   }
+  callback = () => {
+    this.loadBestComment();
+  }
 
   commentPage = () => {
     const { navigator } = this.props;
@@ -157,7 +160,7 @@ export default class HouseDetailStudent extends Component {
         params: {
           accessToken: this.state.accessToken,
           houseId: this.state.houseId,
-          loadBestComment: this.loadBestComment,
+          callback: this.callback,
         }
       });
     }

@@ -400,7 +400,7 @@ export default class LandlordSignin extends Component {
            <ListItem style={{ marginTop: 10 }}>
              <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
                <Icon name="ios-unlock" />
-               <Input onChangeText={(password) => {this.setState({password})}} placeholder="PASSWORD" secureTextEntry={true}/>
+               <Input onChangeText={(password) => {this.setState({password})}} placeholder="密碼" secureTextEntry={true}/>
              </InputGroup>
            </ListItem>
            <Button onPress={this.nextPageRegister.bind(this)} style={styles.submitBtn} block warning> 註冊 </Button>

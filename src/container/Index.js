@@ -32,32 +32,31 @@ export default class Index extends Component {
     this.state = {
     }
   }
-async componentDidMount(){
-      await BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
-      console.disableYellowBox = true;
-      console.warn('YellowBox is disabled.');
+  async componentDidMount(){
+    await BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+    console.disableYellowBox = true;
+    console.warn('YellowBox is disabled.');
   }
-async componentWillUnmount() {
+  async componentWillUnmount() {
       await BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
   }
-onBackAndroid=()=>{
-        const nav = this.props.navigator;
-        const routers = nav.getCurrentRoutes();
-        if(!nav)
-         return false
-        if(routers.length>1){
-          nav.pop();
-          return true;
-        }
-        const now = Date.now();
-        if (now - this.lastBackPressed < 1500) {
-        BackAndroid.exitApp();
-        } else {
-        this.lastBackPressed = now;
-        ToastAndroid.show('再按一次退出', 1000);
-        }
-        return true
-          
+  onBackAndroid=()=>{
+    const nav = this.props.navigator;
+    const routers = nav.getCurrentRoutes();
+    if(!nav)
+      return false
+    if(routers.length>1){
+      nav.pop();
+      return true;
+    }
+    const now = Date.now();
+    if (now - this.lastBackPressed < 1500) {
+      BackAndroid.exitApp();
+    } else {
+      this.lastBackPressed = now;
+      ToastAndroid.show('再按一次退出', 1000);
+    }
+    return true
   }
   _pressButton() {
     const { navigator } = this.props;

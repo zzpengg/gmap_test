@@ -36,9 +36,8 @@ export default class StudentRegister extends Component {
             items: []
         },
         name: "",
-        phone: "",
         gender: "",
-        address: "",
+        email: "",
         account: "",
         password: "",
         password_comfirmed: "",
@@ -90,9 +89,8 @@ export default class StudentRegister extends Component {
     try {
 
         if((this.state.name.length == 0)||
-           (this.state.phone.length == 0)||
            (this.state.account.length == 0)||
-           (this.state.address.length == 0)||
+           (this.state.email.length == 0)||
            (this.state.password.length == 0)){
           Alert.alert(
             "錯誤訊息",
@@ -117,9 +115,8 @@ export default class StudentRegister extends Component {
                   method: 'POST',
                   body: JSON.stringify({
                         name: this.state.name,
-                        phone: this.state.phone,
                         gender: this.state.selected1,
-                        address: this.state.address,
+                        email: this.state.email,
                         account: this.state.account,
                         password: this.state.password,
                         password_comfirmed: this.state.password_comfirmed
@@ -185,56 +182,27 @@ export default class StudentRegister extends Component {
 
                   </InputGroup>
                 </ListItem>
-                <ListItem style={{ marginTop: 10 }}>
-                  <InputGroup borderType="regular" style={{ borderRadius: 5}} >
-                    <Input placeholder="電話"
-                    value={this.state.phone}
-                    onChangeText={ (val) =>{
-                      if(isNaN(val)==true)
-                      {
-                        Alert.alert(
-                          "型態錯誤",
-                          "請輸入數字",
-                          [
-                            {text:'我知道了',onPress:()=>{}}
-                          ]
-                        )
-                        this.setState({phone:""})
-                      }
-                      else if(val.length<=10)
-                      this.setState({phone: val})
-                      else {
-                        Alert.alert(
-                          "電話長度不對",
-                          "電話長度應少於11個數字",
-                          [
-                            {text:'我知道了',onPress:()=>{}}
-                          ]
-                        )
-                        this.setState({phone:""})
-                      }}}
-                      value={this.state.phone}/>
-                  </InputGroup>
-                </ListItem>
                <View style={{flexDirection:'row'}}>
                  <Text style={{paddingTop:20, paddingLeft: 30, fontSize: 18}}>性別</Text>
-                 {data.length > 0 ?
-                    <Picker
-                      iosHeader="Select one"
-                      mode="dropdown"
-                      selectedValue={this.state.selected1}
-                      onValueChange={this.onValueChange.bind(this)}>
-                      {data.map((val, index) => {
-                        return <Item key={index} label={val} value={val} />
-                      })}
-                    </Picker> : <Text>Placeholder text</Text>}
+                 {
+                   data.length > 0 ?
+                      <Picker
+                        iosHeader="Select one"
+                        mode="dropdown"
+                        selectedValue={this.state.selected1}
+                        onValueChange={this.onValueChange.bind(this)}>
+                        {
+                          data.map( (val, index) => <Item key={index} label={val} value={val} /> )
+                        }
+                      </Picker> : null
+                  }
                </View>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="住址"
+                   <Input placeholder="信箱"
                      maxLength={50}
-                     onChangeText={ (val) => this.setState({address: val}) }
-                     value={this.state.address}/>
+                     onChangeText={ (val) => this.setState({email: val}) }
+                     value={this.state.email}/>
                  </InputGroup>
                </ListItem>
                <Text style={{fontSize: 18, marginTop: 40}}>帳號密碼</Text>

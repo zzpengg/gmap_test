@@ -37,6 +37,7 @@ import Filter from '../component/Filter/FilterContainer';
 var {height, width} = Dimensions.get('window');
 import DropdownMenu from 'react-native-dropdown-menu';
 const windowSize = Dimensions.get('window');
+import IconVec from 'react-native-vector-icons/FontAwesome';
 export default class HouseData extends Component {
 
   constructor(props) {
@@ -168,6 +169,40 @@ export default class HouseData extends Component {
     })
   }
 
+  rankStar = (rank) => {
+    const star = [];
+    for (let i = rank; i > 0; i--) {
+      if (i >= 1) {
+        star.push(
+          <IconVec
+            key={i}
+
+            style={{ marginRight: 5 }}
+            name={'star'}
+            size={15}
+            color={'gold'}
+          />
+        );
+      } else if (i < 1 && i >= 0.5) {
+        star.push(
+          <IconVec
+            key={'tail'}
+            style={{ marginRight: 5 }}
+            name={'star-half'}
+            size={15}
+            color={'gold'}
+          />
+        );
+      }
+    }
+    console.log("o");
+    if(rank == 0){
+      console.log("test");
+      return <Text>暫無評分</Text>
+    }
+    return star;
+  };
+
   render() {
 
 
@@ -251,7 +286,7 @@ export default class HouseData extends Component {
                       <Text style={styles.detailText}>房屋名稱: {val.title}</Text>
                       <Text style={styles.detailText}>所在區域: {val.area}</Text>
                       <Text style={styles.detailText}>租金: {val.rent} /月</Text>
-                      <Text style={styles.detailText}>評分: {val.score}</Text>
+                      <Text style={styles.detailText}>評分: {this.rankStar(val.score)}</Text>
                       <View style={styles.detailData}>
                         <Button success bordered style={{height: 18}} key={index}
                         onPress={() => {

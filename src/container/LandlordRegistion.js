@@ -48,8 +48,6 @@ export default class LandlordRegistion extends Component {
         checkId:"",
         modalVisible:true
     }
-    console.disableYellowBox = true;
-    console.warn('YellowBox is disabled.');
   }
   checkIdRepeat = async() => {
     console.log("checkIdRepeat");
