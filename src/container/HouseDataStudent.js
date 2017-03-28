@@ -176,7 +176,6 @@ export default class HouseData extends Component {
     const { navigator } = this.props;
     return (
       <View>
-<<<<<<< HEAD
         <ScrollView>
           <Header style={{backgroundColor: "rgb(255, 0, 0)"}}>
             <Button transparent onPress={this.prePage.bind(this)}>
@@ -185,9 +184,7 @@ export default class HouseData extends Component {
             <Title>房屋資訊</Title>
           </Header>
           <Content>
-=======
         <ScrollView pagingEnabled={true}>
->>>>>>> upstream/master
           <View style={{flex: 1}} >
             <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
               <Button transparent onPress={this.prePage.bind(this)}>
@@ -198,11 +195,8 @@ export default class HouseData extends Component {
           <DropdownMenu style={{flex: 1}}
             arrowImg={require('../assets/dropdown_arrow.png')}      //set the arrow icon, default is a triangle
             checkImage={require('../assets/menu_check.png')}    //set the icon of the selected item, default is a check mark
-<<<<<<< HEAD
             bgColor={"rgb(255, 150, 150)"}                            //the background color of the head, default is grey
-=======
             bgColor={"brown"}                            //the background color of the head, default is grey
->>>>>>> upstream/master
             tintColor={"white"}                        //the text color of the head, default is white
             selectItemColor={"red"}                    //the text color of the selected item, default is red
             data={data}
