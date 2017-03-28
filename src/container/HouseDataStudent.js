@@ -211,16 +211,6 @@ export default class HouseData extends Component {
 
     const { navigator } = this.props;
     return (
-      <View>
-        <ScrollView>
-          <Header style={{backgroundColor: "rgb(255, 0, 0)"}}>
-            <Button transparent onPress={this.prePage.bind(this)}>
-              <Icon name='ios-arrow-back' />
-            </Button>
-            <Title>房屋資訊</Title>
-          </Header>
-          <Content>
-        <ScrollView pagingEnabled={true}>
         <ScrollView pagingEnabled={true}
         style={{flex:1}}>
           <View style={{flex: 1}} >
@@ -233,7 +223,6 @@ export default class HouseData extends Component {
           <DropdownMenu style={{flex: 1}}
             arrowImg={require('../assets/dropdown_arrow.png')}      //set the arrow icon, default is a triangle
             checkImage={require('../assets/menu_check.png')}    //set the icon of the selected item, default is a check mark
-            bgColor={"rgb(255, 150, 150)"}                            //the background color of the head, default is grey
             bgColor={"brown"}                            //the background color of the head, default is grey
             tintColor={"white"}                        //the text color of the head, default is white
             selectItemColor={"red"}                    //the text color of the selected item, default is red
@@ -331,6 +320,7 @@ export default class HouseData extends Component {
 
 const styles = StyleSheet.create({
   container: {
+   ...StyleSheet.absoluteFillObject,
    height: 400,
    width: 400,
    justifyContent: 'flex-end',

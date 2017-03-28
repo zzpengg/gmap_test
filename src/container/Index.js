@@ -23,121 +23,117 @@ import LandlordRegistion from './LandlordRegistion.js';
 import Comments from './Comments.js';
 import StudentSignin from './StudentSignin.js';
 import LandlordSignin from './LandlordSignin.js';
-
 import ModalExample from './ModalExample.js';
 
 export default class Index extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-    }
+    this.state = {}
   }
+
   async componentDidMount(){
     await BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
     console.disableYellowBox = true;
     console.warn('YellowBox is disabled.');
   }
   async componentWillUnmount() {
-      await BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+    await BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
   }
-  onBackAndroid=()=>{
+
+  onBackAndroid = () => {
     const nav = this.props.navigator;
     const routers = nav.getCurrentRoutes();
+    const now = Date.now();
+
     if(!nav)
       return false
-    if(routers.length>1){
+    if(routers.length > 1){
       nav.pop();
       return true;
     }
-    const now = Date.now();
-    if (now - this.lastBackPressed < 1500) {
+
+    if (now - this.lastBackPressed < 1500)
       BackAndroid.exitApp();
-    } else {
+    else {
       this.lastBackPressed = now;
       ToastAndroid.show('再按一次退出', 1000);
     }
     return true
   }
-  _pressButton() {
+
+  studentButton() {
     const { navigator } = this.props;
-    //为什么这里可以取得 props.navigator?请看上文:
-    //<Component {...route.params} navigator={navigator} />
-    //这里传递了navigator作为props
     if(navigator) {
-        navigator.push({
+        navigator.push
+        ({
             name: 'HouseDataStudent',
             component: HouseDataStudent,
-            initroute:true
+            initroute: true
         })
     }
   }
 
-  _pressButton2() {
+  landlordButton() {
     const { navigator } = this.props;
-    //为什么这里可以取得 props.navigator?请看上文:
-    //<Component {...route.params} navigator={navigator} />
-    //这里传递了navigator作为props
     if(navigator) {
-        navigator.push({
+        navigator.push
+        ({
             name: 'LandlordSignin',
             component: LandlordSignin,
-            initroute:true
+            initroute: true
         })
     }
   }
-
-  _pressButton3() {
-    const { navigator } = this.props;
-    //为什么这里可以取得 props.navigator?请看上文:
-    //<Component {...route.params} navigator={navigator} />
-    //这里传递了navigator作为props
-    if(navigator) {
-        navigator.push({
-            name: 'ModalExample',
-            component: ModalExample,
-        })
-    }
-  }
-
-
-
 
   render(){
     // const { region } = this.props;
     //console.log(region);
-
    return (
-     <View style={{ flex: 1 }}>
-        <View style={[styles.center, { backgroundColor: 'cadetblue'}]}>
-          <TouchableOpacity onPress={this._pressButton.bind(this)}>
-            <Text style={{ color: '#fff', fontSize: 30  }}> 學生 </Text>
+     <View style = {{ flex: 1 }}>
+
+        <View style = {styles.center1}>
+          <TouchableOpacity onPress = {this.studentButton.bind(this)}>
+            <Text style = {styles.text}> 學生入口 </Text>
           </TouchableOpacity>
         </View>
-        <View style={[styles.center, { backgroundColor: 'darksalmon' }]}>
-          <TouchableOpacity onPress={this._pressButton2.bind(this)}>
-            <Text style={{ color: '#fff', fontSize: 30 }}> 房東 </Text>
+
+        <View style = {styles.center2}>
+          <TouchableOpacity onPress = {this.landlordButton.bind(this)}>
+            <Text style = {styles.text}> 房東入口 </Text>
           </TouchableOpacity>
         </View>
+
       </View>
    );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-   ...StyleSheet.absoluteFillObject,
-   height: 400,
-   width: 400,
-   justifyContent: 'flex-end',
-   alignItems: 'center',
- },
- map: {
-   ...StyleSheet.absoluteFillObject,
- },
- center: {
+  container:
+  {
+    height: 400,
+    width: 400,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+ map: {},
+ center1:
+  {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'cadetblue',
   },
+  center2:
+   {
+     flex: 1,
+     justifyContent: 'center',
+     alignItems: 'center',
+     backgroundColor: 'darksalmon',
+   },
+  text:{
+    color: '#fff',
+    fontSize: 30,
+  }
 });
