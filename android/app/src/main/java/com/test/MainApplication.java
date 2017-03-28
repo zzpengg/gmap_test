@@ -12,7 +12,7 @@ import com.facebook.soloader.SoLoader;
 import com.airbnb.android.react.maps.MapsPackage;
 
 import com.oblador.vectoricons.VectorIconsPackage;
-
+import com.magus.fblogin.FacebookLoginPackage;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
-    protected boolean getUseDeveloperSupport() {
+    public boolean getUseDeveloperSupport() {
       return BuildConfig.DEBUG;
     }
 
@@ -29,7 +29,8 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
           new MapsPackage(),
-          new VectorIconsPackage()
+          new VectorIconsPackage(),
+          new FacebookLoginPackage()
       );
     }
   };
