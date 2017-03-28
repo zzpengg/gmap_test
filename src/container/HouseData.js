@@ -93,15 +93,40 @@ export default class HouseData extends Component {
     this.loadHouse();
   }
 
+  rankStar = (rank) => {
+    const star = [];
+    for (let i = rank; i > 0; i--) {
+      if (i >= 1) {
+        star.push(
+          <Icon
+            key={i}
+
+            style={{ marginRight: 5 }}
+            name={'star'}
+            size={15}
+            color={'gold'}
+          />
+        );
+      } else if (i < 1 && i >= 0.5) {
+        star.push(
+          <Icon
+            key={'tail'}
+            style={{ marginRight: 5 }}
+            name={'star-half'}
+            size={15}
+            color={'gold'}
+          />
+        );
+      }
+    }
+    return star;
+  };
+
 
   render() {
     // const { region } = this.props;
     //console.log(region);
-    var tmp_array = [
-     { title: "便宜的雅房", rent: 10000, area: "寶山", score: 3 },
-     { title: "昂貴的套房", rent: 2000, area: "寶山", score: 1},
-     { title: "破爛的房子", rent: 500, area: "進德", score: 5 }
-    ];
+
     const { navigator } = this.props;
     return (
       <View>

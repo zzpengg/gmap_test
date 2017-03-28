@@ -6,7 +6,8 @@ import {
   Image,
   Alert,
   Modal,
-  TouchableHighlight
+  TouchableHighlight,
+  AsyncStorage,
 } from 'react-native';
 import {
   Header,
@@ -22,6 +23,10 @@ import {
   Picker,
 } from 'native-base';
 
+import HouseData from './HouseData.js';
+
+const ACCESS_TOKEN = 'access_token';
+
 export default class LandlordRegistion extends Component {
 
   constructor(props) {
@@ -36,13 +41,52 @@ export default class LandlordRegistion extends Component {
         phone: "",
         gender: "",
         address: "",
-        changhao: "",
+        account: "",
         password: "",
         password_comfirmed: "",
         error: "",
+        checkId:"",
         modalVisible:true
     }
   }
+  checkIdRepeat = async() => {
+    console.log("checkIdRepeat");
+    let url='http://test-zzpengg.c9users.io:8080/user/checkIdRepeat';
+    let res=await fetch(url,{
+      method:'POST',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        account:this.state.account
+      })
+    }).then((data)=>data.json())
+    .catch((e)=>console.log(e));
+    console.log(res);
+     await this.setState({checkid:res.data});
+    if(this.state.checkid==1){
+      await this.setState({account:""});
+      Alert.alert(
+        '錯誤訊息',
+        '此帳號已存在',
+        [
+          {text:'我知道了',onPress:()=>{}}
+        ]
+      )
+    }
+  }
+
+  storeToken(responseData){
+     AsyncStorage.setItem(ACCESS_TOKEN, responseData, (err)=> {
+       if(err){
+         console.log("an error");
+         throw err;
+       }
+       console.log("success");
+     }).catch((err)=> {
+         console.log("error is: " + err);
+     });
+   }
 
   onValueChange (value: string) {
     this.setState({
@@ -67,7 +111,7 @@ export default class LandlordRegistion extends Component {
   async onRegisterPressed () {
     try {
 
-        if(this.isempty(this.state.name)||this.isempty(this.state.phone)||this.isempty(this.state.changhao)||this.isempty(this.state.address)||this.isempty(this.state.password)){
+        if(this.isempty(this.state.name)||this.isempty(this.state.phone)||this.isempty(this.state.account)||this.isempty(this.state.address)||this.isempty(this.state.password)){
           Alert.alert(
             "錯誤訊息",
             "欄位值不能為空",
@@ -87,22 +131,43 @@ export default class LandlordRegistion extends Component {
           )
         }
         else {
-          await  fetch('http://test-zzpengg.c9users.io:8080/user', {
-                  method: 'POST',
-                  body: JSON.stringify({
-                        name: this.state.name,
-                        phone: this.state.phone,
-                        gender: this.state.selected1,
-                        address: this.state.address,
-                        changhao: this.state.changhao,
-                        password: this.state.password,
-                        password_comfirmed: this.state.password_comfirmed
-                  })
-                })
-        }
-    } catch (errors) {
-      console.log(errors);
-    }
+          let url = 'http://test-zzpengg.c9users.io:8080/user/register';
+               let response = await fetch(url, {
+                 method: 'POST',
+                 headers: {
+                   'Accept': 'application/json',
+                   'Content-Type': 'application/json',
+                 },
+                 body: JSON.stringify({
+                   name: this.state.name,
+                   phone: this.state.phone,
+                   gender: this.state.selected1,
+                   address: this.state.address,
+                   account: this.state.account,
+                   password: this.state.password,
+                 })
+               }).then( (data) => data.json() )
+
+               console.log(response);
+               await this.setState({
+                 accessToken: response.token
+               })
+               this.storeToken(response.token);
+               const { navigator } = this.props;
+               if(navigator){
+                 navigator.push({
+                   name: 'HouseData',
+                   component: HouseData,
+                   params: {
+                     accessToken: this.state.accessToken
+                   }
+                 })
+               }
+
+             }
+         } catch (errors) {
+           console.log(errors);
+         }
   }
   setModalVisible(visible) {
      this.setState({modalVisible: visible});
@@ -203,9 +268,10 @@ render() {
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
                    <Input placeholder="帳號"
-                      value={this.state.changhao}
-                      onBlur={()=>{
-                        if(this.state.changhao.length<4&&this.state.changhao.length!=0){
+                      value={this.state.account}
+                      onBlur={async()=>{
+
+                        if(this.state.account.length<4&&this.state.account.length!=0){
                           Alert.alert(
                             "長度不符",
                             "帳號長度應為4~16個字",
@@ -213,12 +279,12 @@ render() {
                               text:'我知道了',onPress:()=>{}
                             }]
                           )
-                          this.setState({changhao:""})
+                          await this.setState({account:""})
                         }
                       }}
-                   onChangeText={ (val) => {
+                   onChangeText={async(val) => {
                      if(val.length<=16)
-                     this.setState({changhao: val})
+                     await this.setState({account: val})
                      else {
                        Alert.alert(
                          "長度不符",
@@ -227,8 +293,9 @@ render() {
                            text:'我知道了',onPress:()=>{}
                          }]
                        )
-                       this.setState({changhao:""})
+                       await this.setState({account:""})
                      }
+                     this.checkIdRepeat();
                    }}/>
                  </InputGroup>
                </ListItem>
@@ -241,7 +308,7 @@ render() {
                      if(this.state.password.length<6 &&this.state.password.length!=0){
                        Alert.alert(
                          "長度不符",
-                         "密碼長度應為6~20個字",
+                         "密碼長度為6~20個字母",
                          [{
                            text:'我知道了',onPress:()=>{}
                          }]

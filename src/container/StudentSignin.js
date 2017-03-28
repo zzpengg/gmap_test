@@ -34,6 +34,7 @@ import {
 
 import HouseDetailStudent from './HouseDetailStudent.js';
 import StudentRegister from './StudentRegister.js';
+import HouseComment from './HouseComment.js';
 
 const styles = StyleSheet.create({
   container: {
@@ -196,6 +197,7 @@ export default class LandlordSignin extends Component {
     super(props);
     this.state = {
       name: "",
+      account: "",
       status: "",
       password: "",
       accessToken: "",
@@ -235,21 +237,9 @@ export default class LandlordSignin extends Component {
   nextPage(){
     const { navigator } = this.props;
     navigator.push({
-      name: 'HouseDetailStudent',
-      component: HouseDetailStudent,
+      name: 'HouseComment',
+      component: HouseComment,
       params: {
-        id: this.props.id,
-        userId: 1,
-        title: this.props.title,
-        area: this.props.area,
-        address: this.props.address,
-        rent: this.props.rent,
-        score: this.props.score,
-        vacancy: this.props.vacancy,
-        checkwater:this.props.checkwater,
-        checkele:this.props.checkele,
-        checknet:this.props.checknet,
-        type: this.props.type,
         accessToken: this.state.accessToken
       }
     });
@@ -323,7 +313,7 @@ export default class LandlordSignin extends Component {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: this.state.name,
+          account: this.state.account,
           password: this.state.password,
         })
       }).then( (data) => data.json() )
@@ -369,8 +359,8 @@ export default class LandlordSignin extends Component {
       }
     });
   }
-  time=(sec)=>{
-    setTimeout(()=>{this.setState({visible:false});},1100);
+  time = (sec) => {
+    setTimeout( () => {this.setState({visible:false});}, 1100);
   }
   render() {
     // const { region } = this.props;
@@ -404,13 +394,13 @@ export default class LandlordSignin extends Component {
            <ListItem style={{ marginTop: 15 }}>
              <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
                <Icon name="ios-person" />
-               <Input onChangeText={(name) => {this.setState({name})}} placeholder="NAME" />
+               <Input onChangeText={(account) => {this.setState({account})}} placeholder="帳號" />
              </InputGroup>
            </ListItem>
            <ListItem style={{ marginTop: 10 }}>
              <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
                <Icon name="ios-unlock" />
-               <Input onChangeText={(password) => {this.setState({password})}} placeholder="PASSWORD" secureTextEntry={true}/>
+               <Input onChangeText={(password) => {this.setState({password})}} placeholder="密碼" secureTextEntry={true}/>
              </InputGroup>
            </ListItem>
            <Button onPress={this.nextPageRegister.bind(this)} style={styles.submitBtn} block warning> 註冊 </Button>
@@ -429,7 +419,7 @@ export default class LandlordSignin extends Component {
            <View>
              <Image source={require('../assets/fuck_cat.jpg')} style={styles.personImage} />
              <View style={{alignSelf: 'center'}}>
-               <Text style={{fontSize: 32,}}>{this.state.name}</Text>
+               <Text style={{fontSize: 32,}}>{this.state.account}</Text>
              </View>
              <Button onPress={this.nextPage.bind(this)} style={styles.submitBtn} block warning> 登入 </Button>
              <View style={{ alignItems: 'center' }}>

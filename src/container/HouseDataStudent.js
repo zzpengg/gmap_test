@@ -17,7 +17,9 @@ import {
   Modal,
   Animated,
   Dimensions,
-  ActivityIndicator
+  ActivityIndicator,
+  BackAndroid,
+  Navigator
 } from 'react-native';
 import {
   Header,
@@ -34,8 +36,8 @@ import CreateHouseData from './CreateHouseData.js';
 import Filter from '../component/Filter/FilterContainer';
 var {height, width} = Dimensions.get('window');
 import DropdownMenu from 'react-native-dropdown-menu';
-
-
+const windowSize = Dimensions.get('window');
+import IconVec from 'react-native-vector-icons/FontAwesome';
 export default class HouseData extends Component {
 
   constructor(props) {
@@ -81,7 +83,7 @@ export default class HouseData extends Component {
 
   loadHouse = async () => {
     try {
-      const url = 'http://test-zzpengg.c9users.io:8080/house'
+      const url = 'http://test-zzpengg.c9users.io:8080/house/findHouseData'
       let res = await fetch(url)
         .then((data) => data.json())
         .catch((e) => console.log(e));
@@ -167,6 +169,40 @@ export default class HouseData extends Component {
     })
   }
 
+  rankStar = (rank) => {
+    const star = [];
+    for (let i = rank; i > 0; i--) {
+      if (i >= 1) {
+        star.push(
+          <IconVec
+            key={i}
+
+            style={{ marginRight: 5 }}
+            name={'star'}
+            size={15}
+            color={'gold'}
+          />
+        );
+      } else if (i < 1 && i >= 0.5) {
+        star.push(
+          <IconVec
+            key={'tail'}
+            style={{ marginRight: 5 }}
+            name={'star-half'}
+            size={15}
+            color={'gold'}
+          />
+        );
+      }
+    }
+    console.log("o");
+    if(rank == 0){
+      console.log("test");
+      return <Text>暫無評分</Text>
+    }
+    return star;
+  };
+
   render() {
 
 
@@ -185,6 +221,8 @@ export default class HouseData extends Component {
           </Header>
           <Content>
         <ScrollView pagingEnabled={true}>
+        <ScrollView pagingEnabled={true}
+        style={{flex:1}}>
           <View style={{flex: 1}} >
             <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
               <Button transparent onPress={this.prePage.bind(this)}>
@@ -252,15 +290,14 @@ export default class HouseData extends Component {
                 return (
                   <View style={styles.dataView} key={index}>
                     <View>
-                      <Image source={require('../assets/fuck_cat.jpg')} style={{width:100, height:100, marginTop:5, marginLeft:5, marginBottom: 5 }} />
-                      <Text style={styles.imageText}>更改圖片</Text>
+                      <Image source={require('../assets/fuck_cat.jpg')} style={{width:100, height:100, marginTop:10, marginLeft:5, marginBottom: 5 }} />
                     </View>
 
                     <View style={{marginTop:10, marginLeft: 10}} >
                       <Text style={styles.detailText}>房屋名稱: {val.title}</Text>
                       <Text style={styles.detailText}>所在區域: {val.area}</Text>
                       <Text style={styles.detailText}>租金: {val.rent} /月</Text>
-                      <Text style={styles.detailText}>評分: {val.score}</Text>
+                      <Text style={styles.detailText}>評分: {this.rankStar(val.score)}</Text>
                       <View style={styles.detailData}>
                         <Button success bordered style={{height: 18}} key={index}
                         onPress={() => {
@@ -271,16 +308,6 @@ export default class HouseData extends Component {
                               component: HouseDetailStudent,
                               params: {
                                 id: val.id,
-                                title: val.title,
-                                area: val.area,
-                                address: val.address,
-                                rent: val.rent,
-                                score: val.score,
-                                vacancy: val.vacancy,
-                                checkwater:val.checkwater,
-                                checkele:val.checkele,
-                                checknet:val.checknet,
-                                type: val.type,
                                 accessToken: this.props.accessToken,
                               }
                             })
@@ -298,14 +325,12 @@ export default class HouseData extends Component {
             </DropdownMenu>
             </View>
         </ScrollView>
-      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-   ...StyleSheet.absoluteFillObject,
    height: 400,
    width: 400,
    justifyContent: 'flex-end',
