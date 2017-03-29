@@ -5,7 +5,6 @@
  */
 
 import React, { Component } from 'react';
-import MapView from 'react-native-maps';
 import {
   AppRegistry,
   StyleSheet,
@@ -176,7 +175,6 @@ export default class HouseData extends Component {
         star.push(
           <IconVec
             key={i}
-
             style={{ marginRight: 5 }}
             name={'star'}
             size={15}
@@ -195,9 +193,7 @@ export default class HouseData extends Component {
         );
       }
     }
-    console.log("o");
     if(rank == 0){
-      console.log("test");
       return <Text>暫無評分</Text>
     }
     return star;
@@ -205,9 +201,7 @@ export default class HouseData extends Component {
 
   render() {
 
-
     const data = [["地區", "寶山", "進德"], ["類型", "套房", "雅房"], ["租金", "3000以下", "3000~4000", "4000~5000", "5000以上"]];
-
 
     const { navigator } = this.props;
     return (

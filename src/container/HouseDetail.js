@@ -5,7 +5,6 @@
  */
 
 import React, { Component } from 'react';
-import MapView from 'react-native-maps';
 import {
   AppRegistry,
   StyleSheet,
@@ -238,6 +237,38 @@ export default class HouseDetail extends Component {
   checkNet=()=>{
     this.setState({checknet:!this.state.checknet});
   }
+
+  rankStar = (rank) => {
+    const star = [];
+    for (let i = rank; i > 0; i--) {
+      if (i >= 1) {
+        star.push(
+          <IconVec
+            key={i}
+            style={{ marginRight: 5 }}
+            name={'star'}
+            size={15}
+            color={'gold'}
+          />
+        );
+      } else if (i < 1 && i >= 0.5) {
+        star.push(
+          <IconVec
+            key={'tail'}
+            style={{ marginRight: 5 }}
+            name={'star-half'}
+            size={15}
+            color={'gold'}
+          />
+        );
+      }
+    }
+    if(rank == 0){
+      return <Text>暫無評分</Text>
+    }
+    return star;
+  };
+
   dataContent = tab => {
     if(tab==1){
       return (
@@ -250,7 +281,7 @@ export default class HouseDetail extends Component {
         <Text style={styles.detailText}>所在區域: {this.state.area}</Text>
         <Text style={styles.detailText}>租金:  {this.state.rent}/月</Text>
         {this.gmap()}
-        <Text style={styles.detailText}>評價: {this.state.score}</Text>
+        <Text style={styles.detailText}>評價: {rankStar(this.state.score)}</Text>
         <Text style={styles.detailText}>連絡房東: </Text>
         </View>
       );

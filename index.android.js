@@ -5,7 +5,6 @@
  */
 
 import React, { Component } from 'react';
-// import MapView from 'react-native-maps';
 import {
   AppRegistry,
   StyleSheet,
@@ -37,23 +36,5 @@ export default class test extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-   ...StyleSheet.absoluteFillObject,
-   height: 400,
-   width: 400,
-   justifyContent: 'flex-end',
-   alignItems: 'center',
- },
- map: {
-   ...StyleSheet.absoluteFillObject,
- },
- center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 AppRegistry.registerComponent('test', () => test);

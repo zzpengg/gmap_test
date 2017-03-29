@@ -5,7 +5,6 @@
  */
 
 import React, { Component } from 'react';
-import MapView from 'react-native-maps';
 import {
   AppRegistry,
   StyleSheet,
@@ -98,9 +97,8 @@ export default class HouseData extends Component {
     for (let i = rank; i > 0; i--) {
       if (i >= 1) {
         star.push(
-          <Icon
+          <IconVec
             key={i}
-
             style={{ marginRight: 5 }}
             name={'star'}
             size={15}
@@ -109,7 +107,7 @@ export default class HouseData extends Component {
         );
       } else if (i < 1 && i >= 0.5) {
         star.push(
-          <Icon
+          <IconVec
             key={'tail'}
             style={{ marginRight: 5 }}
             name={'star-half'}
@@ -118,6 +116,9 @@ export default class HouseData extends Component {
           />
         );
       }
+    }
+    if(rank == 0){
+      return <Text>暫無評分</Text>
     }
     return star;
   };
@@ -164,7 +165,7 @@ export default class HouseData extends Component {
                       <Text style={styles.detailText}>房屋名稱: {val.title}</Text>
                       <Text style={styles.detailText}>所在區域: {val.area}</Text>
                       <Text style={styles.detailText}>租金: {val.rent} /月</Text>
-                      <Text style={styles.detailText}>評分: {val.score}</Text>
+                      <Text style={styles.detailText}>評分: {rankStar(val.score)}</Text>
                       <View style={styles.detailData}>
                         <Button success bordered style={{height: 18}} key={index}
                         onPress={() => {

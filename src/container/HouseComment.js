@@ -5,7 +5,6 @@
  */
 
 import React, { Component } from 'react';
-import MapView from 'react-native-maps';
 import {
   AppRegistry,
   StyleSheet,
@@ -32,7 +31,9 @@ import {
   Picker,
   Item,
 } from 'native-base';
+import IconVec from 'react-native-vector-icons/FontAwesome';
 import CheckBox from 'react-native-checkbox';
+import StarRating from 'react-native-star-rating';
 
 
 import Dimensions from 'Dimensions';
@@ -63,6 +64,7 @@ export default class HouseDetailStudent extends Component {
       loading: true,
       isLogin: 0,
       loadingisLogin: true,
+      starCount: 0,
     }
     this.loadComment = this.loadComment.bind(this);
     this.loadComment();
@@ -206,12 +208,28 @@ export default class HouseDetailStudent extends Component {
     })
   }
 
-
+  onStarRatingPress(rating) {
+    this.setState({
+      starCount: rating
+    });
+  }
 
   commentArea = () => {
     if(this.state.isLogin == 1){
       return (
         <View>
+          <StarRating
+            disabled={false}
+            emptyStar={'star-o'}
+            fullStar={'star'}
+            halfStar={'star-half'}
+            iconSet={'FontAwesome'}
+            maxStars={5}
+            rating={this.state.starCount}
+            selectedStar={(rating) => this.onStarRatingPress(rating)}
+            starColor={'gold'}
+            buttonStyle={{marginLeft: 15, marginRight: 15, marginTop: 10, marginBottom: 10}}
+          />
           <TextInput
             style={{borderColor: 'gray', borderWidth: 1, marginLeft: 10, marginRight: 10}}
             onChangeText={(content) => this.setState({content})}
@@ -312,8 +330,6 @@ export default class HouseDetailStudent extends Component {
       return error;
     }
   }
-
-
 
   render() {
     // const { region } = this.props;
