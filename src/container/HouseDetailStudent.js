@@ -218,29 +218,42 @@ export default class HouseDetailStudent extends Component {
   }
 
   extra = () => {
+    const { checkwater, checkele, checknet } = this.state.house;
     let text = "";
     let check = 0;
-    if(this.state.checkwater){
+    if(checkwater){
       text += "水費";
-      check = 1;
+      check += 1;
     }
-    if(this.state.checkele){
-      text += "電費";
-      check = 1;
+    if(checkele){
+      if(check == 1){
+        text += "、電費";
+      }else{
+        text += "電費";
+      }
+      check += 1;
     }
-    if(this.state.checknet){
-      text += "網路費";
-      check = 1;
+    if(checknet){
+      if(check == 2){
+        text += "、網路費";
+      }else {
+        text += "網路費";
+      }      
+      check += 1;
     }
 
-    if(check == 1){
+    if(check > 0){
       temp = "含" + text;
     }else{
       temp = null;
     }
-    return (
-      <Text style={styles.detailText}>({temp})</Text>
-    )
+    if(temp) {
+      return (
+        <Text style={styles.detailText}>({temp})</Text>
+      )
+    }else {
+      return null
+    }
   }
 
   thumbs_up = async(commentId) => {
@@ -350,7 +363,7 @@ export default class HouseDetailStudent extends Component {
          <Text style={styles.detailText}>地址:  {address}</Text>
          <Text style={styles.detailText}>類型:  {type}</Text>
          {this.gmap()}
-         <Text style={styles.detailText}>評價: {this.rankStar(score)}</Text>
+         <Text style={styles.detailText}>評價: {this.rankStar(score)}{score ? <Text>({score})</Text> : null}</Text>
          <Text style={styles.detailText}>連絡房東: {phone}</Text>
          <TouchableOpacity onPress={ this.commentPage }>
            <Text style={{marginLeft: 33, fontSize: 18, marginTop: 10}}>最佳留言 <IconVec name='chevron-right' /></Text>

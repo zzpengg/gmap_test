@@ -17,12 +17,7 @@ import {
 } from 'react-native';
 
 import HouseDataStudent from './HouseDataStudent.js';
-import StudentRegister from './StudentRegister.js';
-import LandlordRegistion from './LandlordRegistion.js';
-import Comments from './Comments.js';
-import StudentSignin from './StudentSignin.js';
 import LandlordSignin from './LandlordSignin.js';
-import ModalExample from './ModalExample.js';
 
 export default class Index extends Component {
 
@@ -64,20 +59,18 @@ export default class Index extends Component {
   studentButton() {
     const { navigator } = this.props;
     if(navigator) {
-        navigator.push
-        ({
-            name: 'HouseDataStudent',
-            component: HouseDataStudent,
-            initroute: true
-        })
+      navigator.push({
+          name: 'HouseDataStudent',
+          component: HouseDataStudent,
+          initroute: true
+      })
     }
   }
 
   landlordButton() {
     const { navigator } = this.props;
     if(navigator) {
-        navigator.push
-        ({
+        navigator.push({
             name: 'LandlordSignin',
             component: LandlordSignin,
             initroute: true
@@ -88,8 +81,8 @@ export default class Index extends Component {
   render(){
     // const { region } = this.props;
     //console.log(region);
-   return (
-     <View style = {{ flex: 1 }}>
+    return (
+      <View style = {{ flex: 1 }}>
 
         <View style = {styles.center1}>
           <TouchableOpacity onPress = {this.studentButton.bind(this)}>
@@ -104,34 +97,24 @@ export default class Index extends Component {
         </View>
 
       </View>
-   );
+    );
   }
 }
 
 const styles = StyleSheet.create({
-  container:
-  {
-    height: 400,
-    width: 400,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
- map: {},
- center1:
-  {
+  center1: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'cadetblue',
   },
-  center2:
-   {
-     flex: 1,
-     justifyContent: 'center',
-     alignItems: 'center',
-     backgroundColor: 'darksalmon',
-   },
-  text:{
+  center2: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'darksalmon',
+  },
+  text: {
     color: '#fff',
     fontSize: 30,
   }

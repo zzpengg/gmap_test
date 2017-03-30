@@ -109,8 +109,8 @@ export default class HouseDetailStudent extends Component {
         },
         body: JSON.stringify({
           houseId: this.state.houseId,
-          name: this.state.name,
           content: this.state.content,
+          star: this.state.starCount,
         })
       });
       console.log(response);

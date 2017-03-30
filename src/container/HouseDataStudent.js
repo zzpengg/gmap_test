@@ -280,7 +280,7 @@ export default class HouseData extends Component {
                       <Text style={styles.detailText}>房屋名稱: {val.title}</Text>
                       <Text style={styles.detailText}>所在區域: {val.area}</Text>
                       <Text style={styles.detailText}>租金: {val.rent} /月</Text>
-                      <Text style={styles.detailText}>評分: {this.rankStar(val.score)}</Text>
+                      <Text style={styles.detailText}>評分: {this.rankStar(val.score)}{val.score ? <Text>({val.score})</Text> : null}</Text>
                       <View style={styles.detailData}>
                         <Button success bordered style={{height: 18}} key={index}
                         onPress={() => {
