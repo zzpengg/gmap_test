@@ -24,6 +24,7 @@ import {
 } from 'native-base';
 
 import HouseData from './HouseData.js';
+import ImagePicker from 'react-native-image-picker';
 
 const ACCESS_TOKEN = 'access_token';
 
@@ -173,6 +174,63 @@ export default class LandlordRegistion extends Component {
      this.setState({modalVisible: visible});
    }
 
+   selectPhotoTapped() {
+    const options = {
+      quality: 1.0,
+      maxWidth: 500,
+      maxHeight: 500,
+      storageOptions: {
+        skipBackup: true
+      }
+    };
+
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled photo picker');
+      }
+      else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      }
+      else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      }
+      else {
+        let source = { uri: response.uri };
+
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        console.log(source);
+
+        this.setState({
+          avatarSource: source
+        });
+
+        this.upload(source);
+      }
+    });
+  }
+
+   upload = async(source) => {
+    let data = new FormData()
+
+    data.append('avatar', {...source, type: 'image/jpeg', name: 'image.jpg'});
+
+    let url = 'https://test-zzpengg.c9users.io:8080/user/upload';
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'multipart/form-data',
+      },
+      body: data
+    }).then( (res) => res.json() )
+    .catch( (err) => console.log(err) )
+
+    console.log(response);
+  }
+
 
 render() {
     var data= [
@@ -193,7 +251,7 @@ render() {
               <List style={styles.form}>
               <View style={{marginLeft: 50}} >
                 <Image source={require('../assets/fuck_cat.jpg')} style={{width:150, height:150}}/>
-                <Text style={{fontSize: 15, marginLeft: 30}}>新增大頭貼</Text>
+                <TouchableHighlight onPress={this.selectPhotoTapped.bind(this)}><Text style={{fontSize: 15, marginLeft: 30}} >新增大頭貼</Text></TouchableHighlight>
               </View>
                 <Text style={{fontSize: 18}}>基本資料</Text>
                 <ListItem style={{ marginTop: 15 }}>

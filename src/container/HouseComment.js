@@ -250,6 +250,37 @@ export default class HouseDetailStudent extends Component {
 
   }
 
+  rankStar = (rank) => {
+    const star = [];
+    for (let i = rank; i > 0; i--) {
+      if (i >= 1) {
+        star.push(
+          <IconVec
+            key={i}
+            style={{ marginRight: 5 }}
+            name={'star'}
+            size={15}
+            color={'gold'}
+          />
+        );
+      } else if (i < 1 && i >= 0.5) {
+        star.push(
+          <IconVec
+            key={'tail'}
+            style={{ marginRight: 5 }}
+            name={'star-half'}
+            size={15}
+            color={'gold'}
+          />
+        );
+      }
+    }
+    if(rank == 0){
+      return <Text>暫無評分</Text>
+    }
+    return star;
+  };
+
   dataContent = () => {
       return (
         <View>
@@ -272,7 +303,7 @@ export default class HouseDetailStudent extends Component {
           {
             this.state.data.length > 0 ?
             this.state.data.map((val, index) =>
-              <Comment key={index+2} {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)}/>
+              <Comment key={index+2} {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)} />
             ) : <Text style={{alignSelf: 'center'}} >暫無留言</Text>
           }
         </View>
