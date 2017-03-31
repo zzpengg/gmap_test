@@ -47,6 +47,8 @@
 		EB8B3A0FB5B84018B789837D /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3757CBE545241C38F539F62 /* Octicons.ttf */; };
 		FBFF20344BA044D3B258E767 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 79E1DB57DEF7478C91002B25 /* SimpleLineIcons.ttf */; };
 		4C5641C7AACD4B06927FBA89 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B027CAA703064204BAE3273F /* Zocial.ttf */; };
+		CC91F032B98E433CAD9A8C2F /* libRCTFBLogin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 94C955530B65415CB497C502 /* libRCTFBLogin.a */; };
+		EB3425AD25664F0B88BB5B0A /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 208AD25B8D6542DEA3BEDA58 /* libRNImagePicker.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -192,6 +194,10 @@
 		E3757CBE545241C38F539F62 /* Octicons.ttf */ = {isa = PBXFileReference; name = "Octicons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		79E1DB57DEF7478C91002B25 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		B027CAA703064204BAE3273F /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		EDE644D1C1344BA6ADF9902B /* RCTFBLogin.xcodeproj */ = {isa = PBXFileReference; name = "RCTFBLogin.xcodeproj"; path = "../node_modules/react-native-facebook-login/RCTFBLogin.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		94C955530B65415CB497C502 /* libRCTFBLogin.a */ = {isa = PBXFileReference; name = "libRCTFBLogin.a"; path = "libRCTFBLogin.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		8631DFF6A8C240F1A3192F1A /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; name = "RNImagePicker.xcodeproj"; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		208AD25B8D6542DEA3BEDA58 /* libRNImagePicker.a */ = {isa = PBXFileReference; name = "libRNImagePicker.a"; path = "libRNImagePicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -220,6 +226,8 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				8C1AA0B48E8A4E4381D89E12 /* libAirMaps.a in Frameworks */,
 				A13B2A3A08A445B8A50A0996 /* libRNVectorIcons.a in Frameworks */,
+				CC91F032B98E433CAD9A8C2F /* libRCTFBLogin.a in Frameworks */,
+				EB3425AD25664F0B88BB5B0A /* libRNImagePicker.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,6 +362,8 @@
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				5810C04075054B4598D92CBB /* AirMaps.xcodeproj */,
 				453ECC92FAC648FFB42685CA /* RNVectorIcons.xcodeproj */,
+				EDE644D1C1344BA6ADF9902B /* RCTFBLogin.xcodeproj */,
+				8631DFF6A8C240F1A3192F1A /* RNImagePicker.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -740,6 +750,8 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -756,6 +768,8 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/test.app/test";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -777,6 +791,11 @@
 				);
 				PRODUCT_NAME = test;
 				VERSIONING_SYSTEM = "apple-generic";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)\..\node_modules\react-native-facebook-login\RCTFBLogin/**",
+					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
+				);
 			};
 			name = Debug;
 		};
@@ -794,6 +813,11 @@
 				);
 				PRODUCT_NAME = test;
 				VERSIONING_SYSTEM = "apple-generic";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)\..\node_modules\react-native-facebook-login\RCTFBLogin/**",
+					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
+				);
 			};
 			name = Release;
 		};

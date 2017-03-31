@@ -108,6 +108,37 @@ const styles = StyleSheet.create({
   },
 });
 
+rankStar = (rank) => {
+  const star = [];
+  for (let i = rank; i > 0; i--) {
+    if (i >= 1) {
+      star.push(
+        <Icon
+          key={i}
+          style={{ marginRight: 5 }}
+          name={'star'}
+          size={15}
+          color={'gold'}
+        />
+      );
+    } else if (i < 1 && i >= 0.5) {
+      star.push(
+        <Icon
+          key={'tail'}
+          style={{ marginRight: 5 }}
+          name={'star-half'}
+          size={15}
+          color={'gold'}
+        />
+      );
+    }
+  }
+  if(rank == 0){
+    return <Text>暫無評分</Text>
+  }
+  return star;
+};
+
 const Comment = (props) => (
   <View style={styles.commentView}>
     <View style={{flexDirection: 'row'}}>
@@ -117,7 +148,7 @@ const Comment = (props) => (
           <Text style={{fontWeight: 'bold', color: 'black'}}>{props.name}  </Text>
           <Text>{props.time}</Text>
         </View>
-        <Text>評分: {props.score}</Text>
+        <Text>評分: {this.rankStar(props.star)}</Text>
         <Text style={{fontWeight: 'bold', color: 'black'}}>{props.content}</Text>
         <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginTop: 10}}>
           <TouchableOpacity onPress={props.thumbs_up}>

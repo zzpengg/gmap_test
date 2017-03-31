@@ -166,7 +166,7 @@ export default class HouseDetailStudent extends Component {
   }
 
   navigate = () => {
-    Alert.alert('導航',`${this.state.address}`, [
+    Alert.alert('導航',`${this.state.house.address}`, [
       // { text: '進德校區', onPress: () => {
       //   //const url = `http://maps.google.com/maps/?q=@${this.state.myLat},${this.state.myLon}`;
       //   const url = `http://maps.google.com/maps/?saddr=國立彰化師範大學進德校區&daddr=${this.state.address}`;
@@ -187,7 +187,7 @@ export default class HouseDetailStudent extends Component {
       //   }},
         {
           text: '前往',onPress:()=>{
-            const url = `http://maps.google.com/maps/?daddr=${this.state.address}`;
+            const url = `http://maps.google.com/maps/?daddr=${this.state.house.address}`;
             Linking.canOpenURL(url).then(supported => {
               if (supported) {
                 Linking.openURL(url);
@@ -238,7 +238,7 @@ export default class HouseDetailStudent extends Component {
         text += "、網路費";
       }else {
         text += "網路費";
-      }      
+      }
       check += 1;
     }
 
