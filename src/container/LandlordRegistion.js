@@ -8,6 +8,8 @@ import {
   Modal,
   TouchableHighlight,
   AsyncStorage,
+  PixelRatio,
+  TouchableOpacity,
 } from 'react-native';
 import {
   Header,
@@ -47,7 +49,8 @@ export default class LandlordRegistion extends Component {
         password_comfirmed: "",
         error: "",
         checkId:"",
-        modalVisible:true
+        modalVisible:true,
+        avatarSource: null,
     }
   }
   checkIdRepeat = async() => {
@@ -250,8 +253,13 @@ render() {
             <View>
               <List style={styles.form}>
               <View style={{marginLeft: 50}} >
-                <Image source={require('../assets/fuck_cat.jpg')} style={{width:150, height:150}}/>
-                <TouchableHighlight onPress={this.selectPhotoTapped.bind(this)}><Text style={{fontSize: 15, marginLeft: 30}} >新增大頭貼</Text></TouchableHighlight>
+                <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
+                  <View style={[styles.avatar, styles.avatarContainer, {marginBottom: 20}]}>
+                  { this.state.avatarSource === null ? <Text>Select a Photo</Text> :
+                    <Image style={styles.avatar} source={this.state.avatarSource} />
+                  }
+                  </View>
+                </TouchableOpacity>
               </View>
                 <Text style={{fontSize: 18}}>基本資料</Text>
                 <ListItem style={{ marginTop: 15 }}>
@@ -508,4 +516,15 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
   },
+  avatarContainer: {
+    borderColor: '#9B9B9B',
+    borderWidth: 1 / PixelRatio.get(),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  avatar: {
+    borderRadius: 75,
+    width: 150,
+    height: 150
+  }
 });
