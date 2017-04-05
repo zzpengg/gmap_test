@@ -34,6 +34,271 @@ import {
 import HouseData from './HouseData.js';
 import LandlordRegistion from './LandlordRegistion.js';
 import FBLoginView from'../component/FBLoginView'
+
+const ACCESS_TOKEN = 'access_token';
+import {FBLogin, FBLoginManager} from 'react-native-facebook-login';
+export default class LandlordSignin extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: "",
+      account: "",
+      status: "",
+      password: "",
+      accessToken: "",
+      error: "",
+      avatar: '',
+      visiable:true,
+    }
+  }
+
+  componentWillMount() {
+    this.getToken();
+  }
+
+  async getToken() {
+    try {
+      let accessToken = await AsyncStorage.getItem(ACCESS_TOKEN);
+      if(!accessToken) {
+          console.log("not have token");
+          this.setState({visible:false});
+      } else {
+          console.log("accessToken = " + accessToken);
+          let text = await this.checkAuth(accessToken);
+          console.log("TExt = " + text);
+          if(text==='check success'){
+            this.setState({accessToken: accessToken})
+            this.setState({error: 'success'});
+          }
+          else{
+            this.setState({error: text});
+          }
+
+          console.log("nextpage");
+      }
+    } catch(error) {
+        console.log("catch error = " + error);
+    }
+  }
+
+  nextPage(){
+    const { navigator } = this.props;
+    navigator.push({
+      name: 'HouseData',
+      component: HouseData,
+      params: {
+        accessToken: this.state.accessToken
+      }
+    });
+  }
+
+  prePage() {
+      const { navigator } = this.props;
+      if(navigator) {
+          navigator.pop();
+      }
+  }
+
+  storeToken(responseData){
+    AsyncStorage.setItem(ACCESS_TOKEN, responseData, (err)=> {
+      if(err){
+        console.log("an error");
+        throw err;
+      }
+      console.log("success");
+    }).catch((err)=> {
+        console.log("error is: " + err);
+    });
+  }
+
+  async deleteToken() {
+    try {
+        await AsyncStorage.removeItem(ACCESS_TOKEN)
+    } catch(error) {
+        console.log("Something went wrong");
+    }
+  }
+
+  onLogout(){
+    this.deleteToken();
+    this.setState({
+      error: 'logout'
+    })
+  }
+
+  async checkAuth(token) {
+    try{
+      let url = 'http://test-zzpengg.c9users.io:8080/user/islogin';
+      let response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'x-access-token': token,
+        }
+      }).then( (data) => data.json() )
+      console.log("checkAuth");
+      console.log("response = " + response);
+      console.log("name = " + response.name);
+      this.setState({
+        name: response.name,
+        avatar: response.avatar,
+      })
+      this.setState({visible:false});
+      return response.text;
+    }catch(error){
+      console.log("catch error = " + error);
+      this.setState({visible:false});
+      return error;
+    }
+  }
+
+  onLoginPressed = async() => {
+
+    try {
+      let url = 'http://test-zzpengg.c9users.io:8080/user/login';
+      let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          account: this.state.account,
+          password: this.state.password,
+        })
+      }).then( (data) => data.json() )
+      console.log("pressed");
+      console.log(response);
+      this.setState({
+        status: 'pressed'
+      })
+      if(response.text === 'login success'){
+        //Handle success
+        let accessToken = response.token;
+        console.log(accessToken);
+        //On success we will store the access_token in the AsyncStorage
+        this.storeToken(accessToken);
+        this.setState({accessToken: accessToken})
+        this.setState({error: 'success'});
+        this.nextPage();
+      } else {
+            //Handle error
+            let error = res;
+            throw error;
+      }
+    } catch(error){
+      Alert.alert('錯誤訊息',
+      "發生錯誤",
+      [
+        {text:'我知道了',onPress:()=>{}}
+      ]
+    );
+      console.log("error " + error);
+    }
+  }
+
+  nextPageRegister = () => {
+    const { navigator } = this.props;
+    navigator.push({
+      name: 'LandlordRegistion',
+      component: LandlordRegistion,
+      params: {
+        accessToken: this.state.accessToken
+      }
+    });
+  }
+  render() {
+    // const { region } = this.props;
+    //console.log(region);
+
+   return (
+     <View style={styles.container}>
+       <Modal
+       visible={this.state.visible}
+       animationType={"slide"}
+       onRequestClose={() => {}}
+       >
+         <View style={{flex: 1,  flexDirection: 'column',justifyContent: 'center',alignItems: 'center'}}>
+           <View >
+             <Text>載入中...</Text>
+             <Spinner color='blue'/>
+           </View>
+         </View>
+       </Modal>
+       <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
+         <Button transparent onPress={this.prePage.bind(this)}>
+           <Icon name='ios-arrow-back' />
+         </Button>
+         <Title>房東登入</Title>
+       </Header>
+       {
+          (this.state.error != 'success') ?
+          <Content>
+          <List style={styles.form}>
+           <ListItem style={{ marginTop: 15 }}>
+             <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
+               <Icon name="ios-person" />
+               <Input onChangeText={(account) => {this.setState({account})}} placeholder="帳號" />
+             </InputGroup>
+           </ListItem>
+           <ListItem style={{ marginTop: 10 }}>
+             <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
+               <Icon name="ios-unlock" />
+               <Input onChangeText={(password) => {this.setState({password})}} placeholder="密碼" secureTextEntry={true}/>
+             </InputGroup>
+           </ListItem>
+           <Button onPress={this.nextPageRegister.bind(this)} style={styles.submitBtn} block warning> 註冊 </Button>
+           <View style={{ alignItems: 'center' }}>
+             <View style={styles.orWrapper}>
+               <Text style={styles.orText}>or</Text>
+             </View>
+             <View style={styles.hr} />
+           </View>
+           <Button style={styles.submitBtn} onPress={this.onLoginPressed.bind(this)} block info> 登入 </Button>
+           <FBLogin
+              buttonView={<FBLoginView />}
+              ref={(fbLogin) => { this.fbLogin = fbLogin }}
+              loginBehavior={FBLoginManager.LoginBehaviors.Native}
+              permissions={["public_profile","email","user_friends"]}
+              onLogin={function(data){console.log("log in");console.log(data.credentials)}}
+              onLoginFound={function(data){console.log(data.credentials)}}
+              onLoginNotFound={function(e){console.log(e)}}
+              onLogout={function(e){console.log(e)}}
+              onCancel={function(e){console.log(e)}}
+              onPermissionsMissing={function(e){console.log(e)}}/>
+         </List>
+         </Content>
+         :
+         <Content>
+         <View style={styles.loginform}>
+           <View>
+             {
+               this.state.avatar == null ?
+               <Image source={require('../assets/fuck_cat.jpg')} style={styles.personImage} />
+               :
+               <Image source={{uri: `https://test-zzpengg.c9users.io:8080/images/${this.state.avatar}`}} style={styles.personImage} />
+             }
+             <View style={{alignSelf: 'center'}}>
+               <Text style={{fontSize: 32,}}>{this.state.name}</Text>
+             </View>
+             <Button onPress={this.nextPage.bind(this)} style={styles.submitBtn} block warning> 登入 </Button>
+             <View style={{ alignItems: 'center' }}>
+               <View style={styles.orWrapper}>
+                 <Text style={styles.orText}>or</Text>
+               </View>
+               <View style={styles.hr} />
+             </View>
+             <Button style={styles.submitBtn} onPress={this.onLogout.bind(this)} block info> 登出 </Button>
+            </View>
+          </View>
+
+         </Content>
+      }
+      </View>
+   );
+  }
+}
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fffbe2',
@@ -187,269 +452,3 @@ const styles = StyleSheet.create({
     width: 300,
   }
 });
-
-const ACCESS_TOKEN = 'access_token';
-import {FBLogin, FBLoginManager} from 'react-native-facebook-login';
-export default class LandlordSignin extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: "",
-      account: "",
-      status: "",
-      password: "",
-      accessToken: "",
-      error: "",
-      avatar: '',
-      visiable:true,
-    }
-  }
-
-  componentWillMount() {
-    this.getToken();
-  }
-
-  async getToken() {
-    try {
-      let accessToken = await AsyncStorage.getItem(ACCESS_TOKEN);
-      if(!accessToken) {
-          console.log("not have token");
-      } else {
-          console.log("accessToken = " + accessToken);
-          let text = await this.checkAuth(accessToken);
-          console.log("TExt = " + text);
-          if(text==='check success'){
-            this.setState({accessToken: accessToken})
-            this.setState({error: 'success'});
-          }
-          else{
-            this.setState({error: text});
-          }
-
-          console.log("nextpage");
-      }
-    } catch(error) {
-        console.log("catch error = " + error);
-    }
-  }
-
-  nextPage(){
-    const { navigator } = this.props;
-    navigator.push({
-      name: 'HouseData',
-      component: HouseData,
-      params: {
-        accessToken: this.state.accessToken
-      }
-    });
-  }
-
-  prePage() {
-      const { navigator } = this.props;
-      if(navigator) {
-          navigator.pop();
-      }
-  }
-
-  storeToken(responseData){
-    AsyncStorage.setItem(ACCESS_TOKEN, responseData, (err)=> {
-      if(err){
-        console.log("an error");
-        throw err;
-      }
-      console.log("success");
-    }).catch((err)=> {
-        console.log("error is: " + err);
-    });
-  }
-
-  async deleteToken() {
-    try {
-        await AsyncStorage.removeItem(ACCESS_TOKEN)
-    } catch(error) {
-        console.log("Something went wrong");
-    }
-  }
-
-  onLogout(){
-    this.deleteToken();
-    this.setState({
-      error: 'logout'
-    })
-  }
-
-  async checkAuth(token) {
-    try{
-      let url = 'http://test-zzpengg.c9users.io:8080/user/islogin';
-      let response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'x-access-token': token,
-        }
-      }).then( (data) => data.json() )
-      console.log("checkAuth");
-      console.log("response = " + response);
-      console.log("name = " + response.name);
-      this.setState({
-        name: response.name,
-        avatar: response.avatar,
-      })
-      return response.text;
-    }catch(error){
-      console.log("catch error = " + error);
-      return error;
-    }
-  }
-
-  onLoginPressed = async() => {
-
-    try {
-      let url = 'http://test-zzpengg.c9users.io:8080/user/login';
-      let response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          account: this.state.account,
-          password: this.state.password,
-        })
-      }).then( (data) => data.json() )
-      console.log("pressed");
-      console.log(response);
-      this.setState({
-        status: 'pressed'
-      })
-      if(response.text === 'login success'){
-        //Handle success
-        let accessToken = response.token;
-        console.log(accessToken);
-        //On success we will store the access_token in the AsyncStorage
-        this.storeToken(accessToken);
-        this.setState({accessToken: accessToken})
-        this.setState({error: 'success'});
-        await setTimeout(()=>{},10000);
-        this.nextPage();
-      } else {
-            //Handle error
-            let error = res;
-            throw error;
-      }
-    } catch(error){
-      Alert.alert('錯誤訊息',
-      "發生錯誤",
-      [
-        {text:'我知道了',onPress:()=>{}}
-      ]
-    );
-      console.log("error " + error);
-    }
-  }
-
-  nextPageRegister = () => {
-    const { navigator } = this.props;
-    navigator.push({
-      name: 'LandlordRegistion',
-      component: LandlordRegistion,
-      params: {
-        accessToken: this.state.accessToken
-      }
-    });
-  }
-  time=(sec)=>{
-    setTimeout(()=>{this.setState({visible:false});},1100);
-  }
-  render() {
-    // const { region } = this.props;
-    //console.log(region);
-
-   return (
-     <View style={styles.container}>
-       <Modal
-       visible={this.state.visible}
-       animationType={"slide"}
-       onRequestClose={() => {}}
-       >
-         <View style={{flex: 1,  flexDirection: 'column',justifyContent: 'center',alignItems: 'center'}}>
-           <View >
-             <Text>載入中...</Text>
-             <Spinner color='blue'/>
-           </View>
-         </View>
-       </Modal>
-       {this.time()}
-       <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
-         <Button transparent onPress={this.prePage.bind(this)}>
-           <Icon name='ios-arrow-back' />
-         </Button>
-         <Title>房東登入</Title>
-       </Header>
-       {
-          (this.state.error != 'success') ?
-          <Content>
-          <List style={styles.form}>
-           <ListItem style={{ marginTop: 15 }}>
-             <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-               <Icon name="ios-person" />
-               <Input onChangeText={(account) => {this.setState({account})}} placeholder="帳號" />
-             </InputGroup>
-           </ListItem>
-           <ListItem style={{ marginTop: 10 }}>
-             <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-               <Icon name="ios-unlock" />
-               <Input onChangeText={(password) => {this.setState({password})}} placeholder="密碼" secureTextEntry={true}/>
-             </InputGroup>
-           </ListItem>
-           <Button onPress={this.nextPageRegister.bind(this)} style={styles.submitBtn} block warning> 註冊 </Button>
-           <View style={{ alignItems: 'center' }}>
-             <View style={styles.orWrapper}>
-               <Text style={styles.orText}>or</Text>
-             </View>
-             <View style={styles.hr} />
-           </View>
-           <Button style={styles.submitBtn} onPress={this.onLoginPressed.bind(this)} block info> 登入 </Button>
-           <FBLogin
-              buttonView={<FBLoginView />}
-              ref={(fbLogin) => { this.fbLogin = fbLogin }}
-              loginBehavior={FBLoginManager.LoginBehaviors.Native}
-              permissions={["public_profile","email","user_friends"]}
-              onLogin={function(data){console.log("log in");console.log(data.credentials)}}
-              onLoginFound={function(data){console.log(data.credentials)}}
-              onLoginNotFound={function(e){console.log(e)}}
-              onLogout={function(e){console.log(e)}}
-              onCancel={function(e){console.log(e)}}
-              onPermissionsMissing={function(e){console.log(e)}}/>
-         </List>
-         </Content>
-         :
-         <Content>
-         <View style={styles.loginform}>
-           <View>
-             {
-               this.state.avatar == null ?
-               <Image source={require('../assets/fuck_cat.jpg')} style={styles.personImage} />
-               :
-               <Image source={{uri: `https://test-zzpengg.c9users.io:8080/images/${this.state.avatar}`}} style={styles.personImage} />
-             }
-             <View style={{alignSelf: 'center'}}>
-               <Text style={{fontSize: 32,}}>{this.state.name}</Text>
-             </View>
-             <Button onPress={this.nextPage.bind(this)} style={styles.submitBtn} block warning> 登入 </Button>
-             <View style={{ alignItems: 'center' }}>
-               <View style={styles.orWrapper}>
-                 <Text style={styles.orText}>or</Text>
-               </View>
-               <View style={styles.hr} />
-             </View>
-             <Button style={styles.submitBtn} onPress={this.onLogout.bind(this)} block info> 登出 </Button>
-            </View>
-          </View>
-
-         </Content>
-      }
-      </View>
-   );
-  }
-}
