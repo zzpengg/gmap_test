@@ -200,6 +200,7 @@ export default class LandlordSignin extends Component {
       password: "",
       accessToken: "",
       error: "",
+      avatar: '',
       visiable:true,
     }
   }
@@ -291,7 +292,8 @@ export default class LandlordSignin extends Component {
       console.log("response = " + response);
       console.log("name = " + response.name);
       this.setState({
-        name: response.name
+        name: response.name,
+        avatar: response.avatar,
       })
       return response.text;
     }catch(error){
@@ -425,7 +427,12 @@ export default class LandlordSignin extends Component {
          <Content>
          <View style={styles.loginform}>
            <View>
-             <Image source={require('../assets/fuck_cat.jpg')} style={styles.personImage} />
+             {
+               this.state.avatar == null ?
+               <Image source={require('../assets/fuck_cat.jpg')} style={styles.personImage} />
+               :
+               <Image source={{uri: `https://test-zzpengg.c9users.io:8080/images/${this.state.avatar}`}} style={styles.personImage} />
+             }
              <View style={{alignSelf: 'center'}}>
                <Text style={{fontSize: 32,}}>{this.state.name}</Text>
              </View>

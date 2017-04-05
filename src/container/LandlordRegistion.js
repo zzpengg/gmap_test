@@ -49,8 +49,10 @@ export default class LandlordRegistion extends Component {
         password_comfirmed: "",
         error: "",
         checkId:"",
-        modalVisible:true,
+        modalVisible: true,
         avatarSource: null,
+        uploadState: '預設照片',
+        avatar: '',
     }
   }
   checkIdRepeat = async() => {
@@ -149,6 +151,7 @@ export default class LandlordRegistion extends Component {
                    address: this.state.address,
                    account: this.state.account,
                    password: this.state.password,
+                   avatar: this.state.avatar,
                  })
                }).then( (data) => data.json() )
 
@@ -179,6 +182,10 @@ export default class LandlordRegistion extends Component {
 
    selectPhotoTapped() {
     const options = {
+      title: '取得照片',
+      cancelButtonTitle: '取消',
+      takePhotoButtonTitle: '開啟相機',
+      chooseFromLibraryButtonTitle: '從圖片庫尋找',
       quality: 1.0,
       maxWidth: 500,
       maxHeight: 500,
@@ -207,7 +214,8 @@ export default class LandlordRegistion extends Component {
         console.log(source);
 
         this.setState({
-          avatarSource: source
+          avatarSource: source,
+          uploadState: '上傳中...'
         });
 
         this.upload(source);
@@ -221,6 +229,7 @@ export default class LandlordRegistion extends Component {
     data.append('avatar', {...source, type: 'image/jpeg', name: 'image.jpg'});
 
     let url = 'https://test-zzpengg.c9users.io:8080/user/upload';
+    let check = 1;
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -229,7 +238,20 @@ export default class LandlordRegistion extends Component {
       },
       body: data
     }).then( (res) => res.json() )
-    .catch( (err) => console.log(err) )
+    .catch( (err) => {
+      console.log(err);
+      this.setState({
+        uploadState: '上傳失敗'
+      })
+      check = 0;
+    })
+    console.log(response);
+    if(response.message == "1 file(s) uploaded successfully!" && check == 1){
+      this.setState({
+        uploadState: '上傳成功',
+        avatar: response.file,
+      })
+    }
 
     console.log(response);
   }
@@ -255,10 +277,11 @@ render() {
               <View style={{marginLeft: 50}} >
                 <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
                   <View style={[styles.avatar, styles.avatarContainer, {marginBottom: 20}]}>
-                  { this.state.avatarSource === null ? <Text>Select a Photo</Text> :
+                  { this.state.avatarSource === null ? <Text>更換照片</Text> :
                     <Image style={styles.avatar} source={this.state.avatarSource} />
                   }
                   </View>
+                  <Text style={{marginLeft: 50}}>{this.state.uploadState}</Text>
                 </TouchableOpacity>
               </View>
                 <Text style={{fontSize: 18}}>基本資料</Text>
