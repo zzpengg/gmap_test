@@ -112,7 +112,8 @@ export default class HouseDetailStudent extends Component {
           content: this.state.content,
           star: this.state.starCount,
         })
-      });
+      }).then( (res) => res.json() )
+      .catch( (err) => console.log(err))
       console.log(response);
       this.loadComment();
     } catch (errors) {

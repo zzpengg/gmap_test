@@ -142,13 +142,23 @@ rankStar = (rank) => {
 const Comment = (props) => (
   <View style={styles.commentView}>
     <View style={{flexDirection: 'row'}}>
-      <Image source={require('../assets/fuck_cat.jpg')} style={styles.personImage} />
+      {
+        props.avatar == null ?
+        <Image source={require('../assets/fuck_cat.jpg')} style={styles.personImage} />
+        :
+        <Image source={{uri: `https://test-zzpengg.c9users.io:8080/images/${props.avatar}`}} style={styles.personImage} />
+      }
       <View style={{width: 300}}>
         <View style={{flexDirection: 'row'}}>
           <Text style={{fontWeight: 'bold', color: 'black'}}>{props.name}  </Text>
           <Text>{props.time}</Text>
         </View>
-        <Text>評分: {this.rankStar(props.star)}</Text>
+        {
+          props.star != null ?
+          <Text>評分: {this.rankStar(props.star)}</Text>
+          :
+          <Text>房東回復</Text>
+        }
         <Text style={{fontWeight: 'bold', color: 'black'}}>{props.content}</Text>
         <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginTop: 10}}>
           <TouchableOpacity onPress={props.thumbs_up}>

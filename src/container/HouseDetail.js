@@ -32,7 +32,7 @@ import {
 } from 'native-base';
 import CheckBox from 'react-native-checkbox';
 
-
+import IconVec from 'react-native-vector-icons/FontAwesome';
 import Dimensions from 'Dimensions';
 const windowSize = Dimensions.get('window');
 import Comment from '../component/Comment.js';
@@ -56,11 +56,13 @@ export default class HouseDetail extends Component {
       vacancy: this.props.vacancy,
       rent: this.props.rent,
       type: this.props.type,
+      score: this.props.score,
       accessToken: this.props.accessToken,
       checkwater:this.props.checkwater,
       checkele:this.props.checkele,
       checknet:this.props.checknet,
-      houseId: 0,
+      phone: this.props.phone,
+      houseId: this.props.id,
       userId: 0,
       name: "develop",
       content: "",
@@ -73,26 +75,8 @@ export default class HouseDetail extends Component {
 
   loadComment = async () => {
     try {
-      const url = 'http://test-zzpengg.c9users.io:8080/comment'
+      const url = 'http://test-zzpengg.c9users.io:8080/comment/findHouseComment'
       let res = await fetch(url,{
-      method: 'GET',
-    }).then((data) => data.json())
-      .catch((e) => console.log(e));
-
-      this.setState({
-        data: res,
-        loading: false,
-      });
-      console.log(res);
-    } catch (errors) {
-      console.log(errors);
-    }
-  }
-
-  async onCommentPressed () {
-    try {
-      let url = 'http://test-zzpengg.c9users.io:8080/comment'
-      let response = await fetch(url, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -100,12 +84,38 @@ export default class HouseDetail extends Component {
         },
         body: JSON.stringify({
           houseId: this.state.houseId,
-          userId: this.state.userId,
-          name: this.state.name,
+        })
+    }).then((data) => data.json())
+      .catch((e) => console.log(e));
+      console.log(res);
+      this.setState({
+        data: res.data,
+        loading: false,
+      });
+
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
+
+  onCommentPressed = async() => {
+    try {
+      let url = 'http://test-zzpengg.c9users.io:8080/comment/createLandlordComment'
+      let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'x-access-token': this.state.accessToken,
+        },
+        body: JSON.stringify({
+          houseId: this.state.houseId,
           content: this.state.content,
         })
-      });
+      }).then( (res) => res.json() )
+      .catch( (err) => console.log(err))
       console.log(response);
+      this.loadComment();
     } catch (errors) {
       console.log(errors);
     }
@@ -269,20 +279,65 @@ export default class HouseDetail extends Component {
     return star;
   };
 
+  extra = () => {
+    const { checkwater, checkele, checknet } = this.props;
+    let text = "";
+    let check = 0;
+    if(checkwater){
+      text += "水費";
+      check += 1;
+    }
+    if(checkele){
+      if(check == 1){
+        text += "、電費";
+      }else{
+        text += "電費";
+      }
+      check += 1;
+    }
+    if(checknet){
+      if(check == 2){
+        text += "、網路費";
+      }else {
+        text += "網路費";
+      }
+      check += 1;
+    }
+
+    if(check > 0){
+      temp = "含" + text;
+    }else{
+      temp = null;
+    }
+    if(temp) {
+      return (
+        <Text style={styles.detailText}>({temp})</Text>
+      )
+    }else {
+      return null
+    }
+  }
+
   dataContent = tab => {
     if(tab==1){
+      const { title, area, address, vacancy, rent, type, score, phone } = this.props;
       return (
         <View>
         <Image
           source={require('../assets/house.jpg')}
           style={{width:300, height:100, marginTop: 10, alignSelf: 'center' }}
         />
-        <Text style={styles.detailText}>房屋名稱: {this.state.title}</Text>
-        <Text style={styles.detailText}>所在區域: {this.state.area}</Text>
-        <Text style={styles.detailText}>租金:  {this.state.rent}/月</Text>
+        <Text style={styles.detailText}>房屋名稱: {title}</Text>
+        <Text style={styles.detailText}>所在區域: {area}</Text>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={styles.detailText}>租金:  {rent}/月</Text>
+          {this.extra()}
+        </View>
+        <Text style={styles.detailText}>地址:  {address}</Text>
+        <Text style={styles.detailText}>類型:  {type}</Text>
         {this.gmap()}
-        <Text style={styles.detailText}>評價: {rankStar(this.state.score)}</Text>
-        <Text style={styles.detailText}>連絡房東: </Text>
+        <Text style={styles.detailText}>評價: {this.rankStar(score)}{score ? <Text>({score})</Text> : null}</Text>
+        <Text style={styles.detailText}>連絡房東: {phone}</Text>
         </View>
       );
     }
@@ -369,20 +424,6 @@ export default class HouseDetail extends Component {
       )
     }
     if(tab==3){
-      let tmp_array = [
-       { name: "彰師大", score: 3 ,content: '越叫福應層道定對絕常建白去件的頭她'+
-       '主一直它記教為半做長我關：著到形入他道法間效像反。動起創中投自滿政不現樹！'+
-       '人好代急區機長下同道；處越星地性大以散的會車臺我道還寶定苦的建不什？有城'+
-       '機遠取然，提有發年。發樣麼。樣程給式緊這界流聲！能數的應司往見保爭南子：來四母我只受久美一。'},
-       { name: "煞氣A", score: 1,content: '越叫福應層道定對絕常建白去件的頭她'+
-       '主一直它記教為半做長我關：著到形入他道法間效像反。動起創中投自滿政不現樹！'+
-       '人好代急區機長下同道；處越星地性大以散的會車臺我道還寶定苦的建不什？有城'+
-       '機遠取然，提有發年。發樣麼。樣程給式緊這界流聲！能數的應司往見保爭南子：來四母我只受久美一。'},
-       { name: "霸氣B", score: 5,content: '越叫福應層道定對絕常建白去件的頭她'+
-       '主一直它記教為半做長我關：著到形入他道法間效像反。動起創中投自滿政不現樹！'+
-       '人好代急區機長下同道；處越星地性大以散的會車臺我道還寶定苦的建不什？有城'+
-       '機遠取然，提有發年。發樣麼。樣程給式緊這界流聲！能數的應司往見保爭南子：來四母我只受久美一。' }
-      ];
       return (
         <View>
           <Text style={styles.houseTitle}>房屋名稱: </Text>
@@ -396,25 +437,18 @@ export default class HouseDetail extends Component {
               /> : null
           }
           {
-            tmp_array.map((val, index) => {
-              return (<Comment key={index+2} name={val.name} content={val.content} score={val.score}/>)
-            })
-          }
-          {
-            this.state.data.map((val, index) => {
-              return (<Comment key={index+2} name={val.name} content={val.content} score={val.score}/>)
-            })
+            this.state.data.length > 0 ?
+            this.state.data.map((val, index) =>
+              <Comment key={index+2} {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)} />
+            ) : <Text style={{alignSelf: 'center'}} >暫無留言</Text>
           }
 
-
-          <Text style={styles.houseTitle}>{this.state.userId}</Text>
           <TextInput
             onChangeText = { (content) => this.setState({content: content})}
             editable = {true}
             numberOfLines = {4}
             multiline = {true}
           />
-          <Text style={styles.houseTitle}>content:{this.state.content}</Text>
           <Button style={styles.submitBtn} onPress={this.onCommentPressed.bind(this)} block warning> 確認送出 </Button>
         </View>
       )

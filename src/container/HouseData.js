@@ -175,17 +175,7 @@ export default class HouseData extends Component {
                               name: 'HouseDetail',
                               component: HouseDetail,
                               params: {
-                                id: val.id,
-                                title: val.title,
-                                area: val.area,
-                                address: val.address,
-                                rent: val.rent,
-                                score: val.score,
-                                vacancy: val.vacancy,
-                                checkwater:val.checkwater,
-                                checkele:val.checkele,
-                                checknet:val.checknet,
-                                type: val.type,
+                                ...val,
                                 accessToken: this.props.accessToken,
                               }
                             })
