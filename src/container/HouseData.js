@@ -199,6 +199,7 @@ export default class HouseData extends Component {
                       component: CreateHouseData,
                       params: {
                         accessToken: this.props.accessToken,
+                        account:this.props.account,
                         callback: this.callback,
                       }
                     })
