@@ -31,17 +31,13 @@ import {
   Spinner,
 } from 'native-base';
 
-import HouseData from './HouseData.js';
-import LandlordRegistion from './LandlordRegistion.js';
-import FBLoginView from'../component/FBLoginView'
+import HouseDetailStudent from './HouseDetailStudent.js';
+import StudentRegister from './StudentRegister.js';
+import HouseComment from './HouseComment.js';
 
 const ACCESS_TOKEN = 'access_token';
-import {FBLogin, FBLoginManager} from 'react-native-facebook-login';
 
-import IconVec from 'react-native-vector-icons/FontAwesome';
-import PersonInfoLandlord from './PersonInfoLandlord.js';
-
-export default class LandlordSignin extends Component {
+export default class PersonInfoLandlord extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -51,7 +47,6 @@ export default class LandlordSignin extends Component {
       password: "",
       accessToken: "",
       error: "",
-      avatar: '',
       visiable:true,
     }
   }
@@ -60,53 +55,32 @@ export default class LandlordSignin extends Component {
     this.getToken();
   }
 
-  async getToken() {
+  getToken = async() => {
     try {
       let accessToken = await AsyncStorage.getItem(ACCESS_TOKEN);
       if(!accessToken) {
           console.log("not have token");
           this.setState({visible:false});
       } else {
+          this.setState({accessToken: accessToken});
           console.log("accessToken = " + accessToken);
-          let text = await this.checkAuth(accessToken);
-          console.log("TExt = " + text);
-          if(text==='check success'){
-            this.setState({accessToken: accessToken})
+          let text = await this.getMyInfo(accessToken);
+          console.log("text = " + text);
+          if(text == 'getMyInfo success'){
             this.setState({error: 'success'});
+            this.setState({visible: false});
+            console.log('success');
           }
           else{
+            console.log(text);
+            this.setState({visible: false});
             this.setState({error: text});
           }
 
-          console.log("nextpage");
       }
     } catch(error) {
         console.log("catch error = " + error);
-    }
-  }
-
-  nextPage(){
-    const { navigator } = this.props;
-    navigator.push({
-      name: 'HouseData',
-      component: HouseData,
-      params: {
-        accessToken: this.state.accessToken
-      }
-    });
-  }
-
-  personPage() {
-    const { navigator } = this.props;
-    //为什么这里可以取得 props.navigator?请看上文:
-    //<Component {...route.params} navigator={navigator} />
-    //这里传递了navigator作为props
-    console.log("person page pressed");
-    if(navigator) {
-        navigator.push({
-            name: 'PersonInfoLandlord',
-            component: PersonInfoLandlord,
-        })
+        this.setState({visible: false});
     }
   }
 
@@ -144,9 +118,9 @@ export default class LandlordSignin extends Component {
     })
   }
 
-  async checkAuth(token) {
+  async getMyInfo(token) {
     try{
-      let url = 'http://test-zzpengg.c9users.io:8080/user/islogin';
+      let url = 'http://test-zzpengg.c9users.io:8080/user/getMyInfo';
       let response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -154,24 +128,24 @@ export default class LandlordSignin extends Component {
           'x-access-token': token,
         }
       }).then( (data) => data.json() )
-      console.log("checkAuth");
-      console.log("response = " + response);
-      console.log("name = " + response.name);
-      this.setState({
-        name: response.name,
-        avatar: response.avatar,
+      .catch( (err) => console.log(err) )
+      console.log("getMyInfo");
+      console.log("response");
+      console.log(response);
+      await this.setState({
+        name: response.data.name,
+        account: response.data.account,
+        password: response.data.password,
+        avatar: response.data.avatar,
       })
-      this.setState({visible:false});
       return response.text;
     }catch(error){
       console.log("catch error = " + error);
-      this.setState({visible:false});
       return error;
     }
   }
 
   onLoginPressed = async() => {
-
     try {
       let url = 'http://test-zzpengg.c9users.io:8080/user/login';
       let response = await fetch(url, {
@@ -198,15 +172,15 @@ export default class LandlordSignin extends Component {
         this.storeToken(accessToken);
         this.setState({accessToken: accessToken})
         this.setState({error: 'success'});
-        this.nextPage();
       } else {
             //Handle error
             let error = res;
             throw error;
       }
     } catch(error){
+      let str=""+error;
       Alert.alert('錯誤訊息',
-      "發生錯誤",
+      str,
       [
         {text:'我知道了',onPress:()=>{}}
       ]
@@ -225,10 +199,52 @@ export default class LandlordSignin extends Component {
       }
     });
   }
-  render() {
-    // const { region } = this.props;
-    //console.log(region);
 
+  updateMyInfo = async() => {
+    try {
+      let url = 'http://test-zzpengg.c9users.io:8080/user/updateMyInfo';
+      let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'x-access-token': this.state.accessToken,
+        },
+        body: JSON.stringify({
+          name: this.state.name,
+          password: this.state.password,
+        })
+      }).then( (data) => data.json() )
+      console.log("pressed");
+      console.log(response);
+      if(response.text === 'updateMyInfo success'){
+        //Handle success
+        //On success we will store the access_token in the AsyncStorage
+        this.setState({error: 'success'});
+        Alert.alert('訊息',
+          '修改成功',
+          [
+            {text:'我知道了',onPress:()=>{}}
+          ]
+        );
+      } else {
+            //Handle error
+            let error = res;
+            throw error;
+      }
+    } catch(error){
+      let str=""+error;
+      Alert.alert('錯誤訊息',
+      str,
+      [
+        {text:'我知道了',onPress:()=>{}}
+      ]
+    );
+      console.log("error " + error);
+    }
+  }
+
+  render() {
    return (
      <View style={styles.container}>
        <Modal
@@ -247,10 +263,7 @@ export default class LandlordSignin extends Component {
          <Button transparent onPress={this.prePage.bind(this)}>
            <Icon name='ios-arrow-back' />
          </Button>
-         <Title>房東登入</Title>
-         <Button transparent onPress={this.personPage.bind(this)}>
-           <IconVec name="user-circle" style={{fontSize: 30}}/>
-         </Button>
+         <Title>個人資料</Title>
        </Header>
        {
           (this.state.error != 'success') ?
@@ -276,17 +289,6 @@ export default class LandlordSignin extends Component {
              <View style={styles.hr} />
            </View>
            <Button style={styles.submitBtn} onPress={this.onLoginPressed.bind(this)} block info> 登入 </Button>
-           <FBLogin
-              buttonView={<FBLoginView />}
-              ref={(fbLogin) => { this.fbLogin = fbLogin }}
-              loginBehavior={FBLoginManager.LoginBehaviors.Native}
-              permissions={["public_profile","email","user_friends"]}
-              onLogin={function(data){console.log("log in");console.log(data.credentials)}}
-              onLoginFound={function(data){console.log(data.credentials)}}
-              onLoginNotFound={function(e){console.log(e)}}
-              onLogout={function(e){console.log(e)}}
-              onCancel={function(e){console.log(e)}}
-              onPermissionsMissing={function(e){console.log(e)}}/>
          </List>
          </Content>
          :
@@ -300,17 +302,18 @@ export default class LandlordSignin extends Component {
                <Image source={{uri: `https://test-zzpengg.c9users.io:8080/images/${this.state.avatar}`}} style={styles.personImage} />
              }
              <View style={{alignSelf: 'center'}}>
-               <Text style={{fontSize: 32,}}>{this.state.name}</Text>
+               <Text style={{fontSize: 32}}>{this.state.account}</Text>
              </View>
-             <Button onPress={this.nextPage.bind(this)} style={styles.submitBtn} block warning> 登入 </Button>
-             <View style={{ alignItems: 'center' }}>
-               <View style={styles.orWrapper}>
-                 <Text style={styles.orText}>or</Text>
-               </View>
-               <View style={styles.hr} />
+             <View style={{alignSelf: 'center', flexDirection: 'row'}}>
+               <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>名字</Text>
+               <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (name) => this.setState({ name: name }) } value={this.state.name}></Input>
              </View>
-             <Button style={styles.submitBtn} onPress={this.onLogout.bind(this)} block info> 登出 </Button>
+             <View style={{alignSelf: 'center', flexDirection: 'row'}}>
+               <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>密碼</Text>
+               <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (password) => this.setState({ password: password }) } value={this.state.password}></Input>
+             </View>
             </View>
+            <Button style={styles.submitBtn}  onPress={this.updateMyInfo} block warning> 確認送出 </Button>
           </View>
 
          </Content>

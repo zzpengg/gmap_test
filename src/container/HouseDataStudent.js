@@ -37,6 +37,7 @@ var {height, width} = Dimensions.get('window');
 import DropdownMenu from 'react-native-dropdown-menu';
 const windowSize = Dimensions.get('window');
 import IconVec from 'react-native-vector-icons/FontAwesome';
+import PersonInfoStudent from './PersonInfoStudent.js';
 export default class HouseData extends Component {
 
   constructor(props) {
@@ -68,6 +69,20 @@ export default class HouseData extends Component {
         navigator.push({
             name: 'HouseDetailStudent',
             component: HouseDetailStudent,
+        })
+    }
+  }
+
+  personPage() {
+    const { navigator } = this.props;
+    //为什么这里可以取得 props.navigator?请看上文:
+    //<Component {...route.params} navigator={navigator} />
+    //这里传递了navigator作为props
+    console.log("person page pressed");
+    if(navigator) {
+        navigator.push({
+            name: 'PersonInfoStudent',
+            component: PersonInfoStudent,
         })
     }
   }
@@ -213,6 +228,9 @@ export default class HouseData extends Component {
                 <Icon name='ios-arrow-back' />
               </Button>
               <Title>房屋資訊</Title>
+              <Button transparent onPress={this.personPage.bind(this)}>
+                <IconVec name="user-circle" style={{fontSize: 30}}/>
+              </Button>
             </Header>
           <DropdownMenu style={{flex: 1}}
             arrowImg={require('../assets/dropdown_arrow.png')}      //set the arrow icon, default is a triangle
@@ -291,7 +309,6 @@ export default class HouseData extends Component {
                               component: HouseDetailStudent,
                               params: {
                                 id: val.id,
-                                accessToken: this.props.accessToken,
                               }
                             })
                           }
