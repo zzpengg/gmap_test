@@ -17,6 +17,7 @@ import {
   ScrollView,
   TextInput,
   ActivityIndicator,
+  PixelRatio
 } from 'react-native';
 import {
   Header,
@@ -31,7 +32,7 @@ import {
   Item,
 } from 'native-base';
 import CheckBox from 'react-native-checkbox';
-
+import ImagePicker from 'react-native-image-picker';
 import IconVec from 'react-native-vector-icons/FontAwesome';
 import Dimensions from 'Dimensions';
 const windowSize = Dimensions.get('window');
@@ -63,16 +64,92 @@ export default class HouseDetail extends Component {
       checknet:this.props.checknet,
       phone: this.props.phone,
       houseId: this.props.id,
+      landlordId:this.props.landlordId,
       userId: 0,
       name: "develop",
       content: "",
       data: [],
       loading: true,
+      houseSource:null
     }
+    console.log(this.props.id);
+    console.log(this.props.landlordId);
     this.loadComment = this.loadComment.bind(this);
     this.loadComment();
   }
+   selectPhotoTapped() {
+    const options = {
+      title: '取得照片',
+      cancelButtonTitle: '取消',
+      takePhotoButtonTitle: '開啟相機',
+      chooseFromLibraryButtonTitle: '從圖片庫尋找',
+      quality: 1.0,
+      maxWidth: 500,
+      maxHeight: 500,
+      storageOptions: {
+        skipBackup: true
+      }
+    };
 
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled photo picker');
+      }
+      else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      }
+      else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      }
+      else {
+        let source = { uri: response.uri };
+
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        console.log(source);
+       this.setState({
+          houseSource: source,
+          uploadState: "上傳中..."
+        })}
+    });
+  }
+
+   upload = async() => {
+    let data = new FormData()
+    let id=JSON.stringify(this.props.id);
+    let landlordId=JSON.stringify(this.props.landlordId);
+    data.append('house', {...this.state.houseSource, type: 'image/jpeg', name: 'image.jpg',});
+    data.append('id',id);
+    data.append('landlordId',landlordId);
+    let url = 'https://test-zzpengg.c9users.io:8080/user/uploadhouse';
+    let check = 1;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'multipart/form-data',
+      },
+      body: data
+    }).then( (res) => res.json() )
+    .catch( (err) => {
+      console.log(err);
+      this.setState({
+        uploadState: '上傳失敗'
+      })
+      check = 0;
+    })
+    console.log(response);
+    if(response.message == "1 file(s) uploaded successfully!" && check == 1){
+      this.setState({
+        uploadState: '上傳成功',
+        avatar: response.file,
+      })
+    }
+
+    console.log(response);
+  }
   loadComment = async () => {
     try {
       const url = 'http://test-zzpengg.c9users.io:8080/comment/findHouseComment'
@@ -345,12 +422,28 @@ export default class HouseDetail extends Component {
       return(
         <ScrollView>
           <View style={styles.viewFlexRow} >
-            <Image source={require('../assets/fuck_cat.jpg')} style={styles.bgImg} />
+            {/*<Image source={require('../assets/fuck_cat.jpg')} style={styles.bgImg} />
             <Image source={require('../assets/pusheen.jpg')} style={styles.bgImg} />
-            <View style={{padding:10}}>
+             <View style={{padding:10}}>
               <Image source={require('../assets/space.jpg')} style={{width:80, height:80}} />
               <Text>新增圖片</Text>
-            </View>
+            </View>*/}
+             <View style={{padding:10}}>
+                {/*<Image source={require('../assets/space.jpg')} style={{width:80, height:80}} />*/}
+                <View style={{marginLeft: 100}} >
+                <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
+                  <View style={[styles.avatar, styles.avatarContainer, {marginBottom: 20}]}>
+                  { this.state.houseSource === null ? <Text>選擇照片</Text> :
+                    <Image style={styles.avatar} source={this.state.houseSource} />
+                  }
+                  </View>
+                  <Text style={{marginLeft: 150}}>{this.state.uploadState}</Text>
+                </TouchableOpacity>
+                </View>
+                <TouchableOpacity style={{marginLeft:150}} onPress={this.upload}>
+                  <Text >上傳圖片</Text>
+                </TouchableOpacity>
+              </View>
           </View>
           <List style={styles.form}>
            <View style={styles.viewFlexRow}>
@@ -677,5 +770,16 @@ const styles = StyleSheet.create({
     marginLeft: 18,
     marginRight: 0,
     marginTop: 20,
+  },
+    avatar: {
+    borderRadius: 75,
+    width: 150,
+    height: 150
+  },
+     avatarContainer: {
+    borderColor: '#9B9B9B',
+    borderWidth: 1 / PixelRatio.get(),
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 });

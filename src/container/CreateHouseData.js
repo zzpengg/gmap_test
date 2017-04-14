@@ -284,77 +284,7 @@ export default class CreateHouseData extends Component {
       console.log(errors);
     }
   }
-    selectPhotoTapped() {
-    const options = {
-      title: '取得照片',
-      cancelButtonTitle: '取消',
-      takePhotoButtonTitle: '開啟相機',
-      chooseFromLibraryButtonTitle: '從圖片庫尋找',
-      quality: 1.0,
-      maxWidth: 500,
-      maxHeight: 500,
-      storageOptions: {
-        skipBackup: true
-      }
-    };
-
-    ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response);
-
-      if (response.didCancel) {
-        console.log('User cancelled photo picker');
-      }
-      else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      }
-      else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      }
-      else {
-        let source = { uri: response.uri };
-
-        // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        console.log(source);
-       this.setState({
-          houseSource: source,
-          uploadState: "上傳中..."
-        })}
-    });
-  }
-
-   upload = async() => {
-    let data = new FormData()
-    let acc=this.props.account;
-    data.append('house', {...this.state.houseSource, type: 'image/jpeg', name: 'image.jpg',});
-    data.append('acc',acc);
-    let url = 'https://test-zzpengg.c9users.io:8080/user/uploadhouse';
-    let check = 1;
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-      body: data
-    }).then( (res) => res.json() )
-    .catch( (err) => {
-      console.log(err);
-      this.setState({
-        uploadState: '上傳失敗'
-      })
-      check = 0;
-    })
-    console.log(response);
-    if(response.message == "1 file(s) uploaded successfully!" && check == 1){
-      this.setState({
-        uploadState: '上傳成功',
-        avatar: response.file,
-      })
-    }
-
-    console.log(response);
-  }
+ 
   render() {
     // const { region } = this.props;
     //console.log(region);
@@ -370,12 +300,12 @@ export default class CreateHouseData extends Component {
         <Content>
 
           <ScrollView>
-            <View style={styles.viewFlexRow} >
-            {/*{ <Image source={require('../assets/fuck_cat.jpg')} style={styles.bgImg} />
-              <Image source={require('../assets/pusheen.jpg')} style={styles.bgImg} />}*/}
+{/*            <View style={styles.viewFlexRow} >
+            { <Image source={require('../assets/fuck_cat.jpg')} style={styles.bgImg} />
+              <Image source={require('../assets/pusheen.jpg')} style={styles.bgImg} />}
               
               <View style={{padding:10}}>
-                {/*<Image source={require('../assets/space.jpg')} style={{width:80, height:80}} />*/}
+    
                 <View style={{marginLeft: 100}} >
                 <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
                   <View style={[styles.avatar, styles.avatarContainer, {marginBottom: 20}]}>
@@ -390,7 +320,7 @@ export default class CreateHouseData extends Component {
                   <Text >上傳圖片</Text>
                 </TouchableOpacity>
               </View>
-            </View>
+            </View>*/}
             <List style={styles.form}>
              <View style={styles.viewFlexRow}>
                <Text style={styles.houseTitle}>房屋名稱</Text>
