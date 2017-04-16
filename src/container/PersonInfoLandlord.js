@@ -45,43 +45,12 @@ export default class PersonInfoLandlord extends Component {
       account: "",
       status: "",
       password: "",
-      accessToken: "",
+      accessToken: this.props.accessToken,
       error: "",
       visiable:true,
     }
-  }
-
-  componentWillMount() {
-    this.getToken();
-  }
-
-  getToken = async() => {
-    try {
-      let accessToken = await AsyncStorage.getItem(ACCESS_TOKEN);
-      if(!accessToken) {
-          console.log("not have token");
-          this.setState({visible:false});
-      } else {
-          this.setState({accessToken: accessToken});
-          console.log("accessToken = " + accessToken);
-          let text = await this.getMyInfo(accessToken);
-          console.log("text = " + text);
-          if(text == 'getMyInfo success'){
-            this.setState({error: 'success'});
-            this.setState({visible: false});
-            console.log('success');
-          }
-          else{
-            console.log(text);
-            this.setState({visible: false});
-            this.setState({error: text});
-          }
-
-      }
-    } catch(error) {
-        console.log("catch error = " + error);
-        this.setState({visible: false});
-    }
+    this.getMyInfo = this.getMyInfo.bind(this);
+    this.getMyInfo();
   }
 
   prePage() {
@@ -89,18 +58,6 @@ export default class PersonInfoLandlord extends Component {
       if(navigator) {
           navigator.pop();
       }
-  }
-
-  storeToken(responseData){
-    AsyncStorage.setItem(ACCESS_TOKEN, responseData, (err)=> {
-      if(err){
-        console.log("an error");
-        throw err;
-      }
-      console.log("success");
-    }).catch((err)=> {
-        console.log("error is: " + err);
-    });
   }
 
   async deleteToken() {
@@ -120,6 +77,7 @@ export default class PersonInfoLandlord extends Component {
 
   async getMyInfo(token) {
     try{
+      let token = this.state.accessToken;
       let url = 'http://test-zzpengg.c9users.io:8080/user/getMyInfo';
       let response = await fetch(url, {
         method: 'GET',
@@ -132,72 +90,20 @@ export default class PersonInfoLandlord extends Component {
       console.log("getMyInfo");
       console.log("response");
       console.log(response);
+
+      console.log(response.data.avatar);
       await this.setState({
         name: response.data.name,
         account: response.data.account,
         password: response.data.password,
         avatar: response.data.avatar,
+        visible: false,
       })
       return response.text;
     }catch(error){
       console.log("catch error = " + error);
       return error;
     }
-  }
-
-  onLoginPressed = async() => {
-    try {
-      let url = 'http://test-zzpengg.c9users.io:8080/user/login';
-      let response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          account: this.state.account,
-          password: this.state.password,
-        })
-      }).then( (data) => data.json() )
-      console.log("pressed");
-      console.log(response);
-      this.setState({
-        status: 'pressed'
-      })
-      if(response.text === 'login success'){
-        //Handle success
-        let accessToken = response.token;
-        console.log(accessToken);
-        //On success we will store the access_token in the AsyncStorage
-        this.storeToken(accessToken);
-        this.setState({accessToken: accessToken})
-        this.setState({error: 'success'});
-      } else {
-            //Handle error
-            let error = res;
-            throw error;
-      }
-    } catch(error){
-      let str=""+error;
-      Alert.alert('錯誤訊息',
-      str,
-      [
-        {text:'我知道了',onPress:()=>{}}
-      ]
-    );
-      console.log("error " + error);
-    }
-  }
-
-  nextPageRegister = () => {
-    const { navigator } = this.props;
-    navigator.push({
-      name: 'LandlordRegistion',
-      component: LandlordRegistion,
-      params: {
-        accessToken: this.state.accessToken
-      }
-    });
   }
 
   updateMyInfo = async() => {
@@ -265,33 +171,6 @@ export default class PersonInfoLandlord extends Component {
          </Button>
          <Title>個人資料</Title>
        </Header>
-       {
-          (this.state.error != 'success') ?
-          <Content>
-          <List style={styles.form}>
-           <ListItem style={{ marginTop: 15 }}>
-             <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-               <Icon name="ios-person" />
-               <Input onChangeText={(account) => {this.setState({account})}} placeholder="帳號" />
-             </InputGroup>
-           </ListItem>
-           <ListItem style={{ marginTop: 10 }}>
-             <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-               <Icon name="ios-unlock" />
-               <Input onChangeText={(password) => {this.setState({password})}} placeholder="密碼" secureTextEntry={true}/>
-             </InputGroup>
-           </ListItem>
-           <Button onPress={this.nextPageRegister.bind(this)} style={styles.submitBtn} block warning> 註冊 </Button>
-           <View style={{ alignItems: 'center' }}>
-             <View style={styles.orWrapper}>
-               <Text style={styles.orText}>or</Text>
-             </View>
-             <View style={styles.hr} />
-           </View>
-           <Button style={styles.submitBtn} onPress={this.onLoginPressed.bind(this)} block info> 登入 </Button>
-         </List>
-         </Content>
-         :
          <Content>
          <View style={styles.loginform}>
            <View>
@@ -299,7 +178,10 @@ export default class PersonInfoLandlord extends Component {
                this.state.avatar == null ?
                <Image source={require('../assets/fuck_cat.jpg')} style={styles.personImage} />
                :
+               this.state.avatar.length < 50 ?
                <Image source={{uri: `https://test-zzpengg.c9users.io:8080/images/${this.state.avatar}`}} style={styles.personImage} />
+               :
+               <Image source={{uri: this.state.avatar}} style={styles.personImage} />
              }
              <View style={{alignSelf: 'center'}}>
                <Text style={{fontSize: 32}}>{this.state.account}</Text>
@@ -317,7 +199,6 @@ export default class PersonInfoLandlord extends Component {
           </View>
 
          </Content>
-      }
       </View>
    );
   }

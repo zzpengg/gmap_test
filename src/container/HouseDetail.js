@@ -248,6 +248,42 @@ export default class HouseDetail extends Component {
     this.setState({checknet:!this.state.checknet});
   }
 
+  thumbs_up = async(commentId) => {
+    try {
+      if(!this.state.accessToken){
+        Alert.alert(
+          '錯誤訊息',
+          '尚未登入',
+          [
+            {text:'我知道了',onPress:()=>{}}
+          ]
+        );
+      }
+      else{
+        console.log("commentId = " + commentId);
+        const url = 'http://test-zzpengg.c9users.io:8080/like/addLike'
+        let res = await fetch(url,{
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'x-access-token': this.state.accessToken,
+          },
+          body: JSON.stringify({
+            commentId: commentId,
+          })
+        }).then( (data) => data.json() )
+          .catch((e) => console.log(e));
+
+        console.log(res);
+        this.loadComment();
+      }
+
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
+
   rankStar = (rank) => {
     const star = [];
     for (let i = rank; i > 0; i--) {

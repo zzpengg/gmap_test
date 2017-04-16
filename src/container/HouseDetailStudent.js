@@ -74,6 +74,7 @@ export default class HouseDetailStudent extends Component {
 
   loadBestComment = async () => {
     try {
+      console.log('****loadBestComment****');
       const url = 'http://test-zzpengg.c9users.io:8080/comment/findBestComment'
       let res = await fetch(url,{
         method: 'POST',
@@ -146,8 +147,8 @@ export default class HouseDetailStudent extends Component {
         navigator.pop();
     }
   }
-  callback = () => {
-    this.loadBestComment();
+  callback = async() => {
+    await this.loadBestComment();
   }
 
   commentPage = () => {

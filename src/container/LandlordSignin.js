@@ -106,6 +106,9 @@ export default class LandlordSignin extends Component {
         navigator.push({
             name: 'PersonInfoLandlord',
             component: PersonInfoLandlord,
+            params: {
+              accessToken: this.state.accessToken
+            }
         })
     }
   }
@@ -225,6 +228,55 @@ export default class LandlordSignin extends Component {
       }
     });
   }
+
+  onFBLogin = async(data) => {
+    console.log("log in");
+    console.log(data.credentials);
+    const { token, userId } = data.credentials;
+    console.log(token);
+    console.log(userId);
+    try {
+      let url = `https://graph.facebook.com/v2.8/${userId}?access_token=${token}&fields=name,picture,gender,email`;
+      let response = await fetch(url).then( (data) => data.json() )
+      console.log('response = ');
+      console.log(response);
+      console.log(response.name);
+      console.log(response.gender);
+      console.log(response.picture.data.url);
+
+      // fb login
+      let url2 = 'http://test-zzpengg.c9users.io:8080/user/FBLogin';
+      let response2 = await fetch(url2, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: response.name,
+          phone: '尚未取得',
+          gender: response.gender,
+          address: '尚未取得',
+          email: response.email,
+          account: userId,
+          password: token,
+          avatar: response.picture.data.url
+        })
+      }).then( (data) => data.json() );
+      console.log(response2);
+      let accessToken = response2.token;
+      console.log(accessToken);
+      //On success we will store the access_token in the AsyncStorage
+      this.storeToken(accessToken);
+      this.setState({accessToken: accessToken})
+      this.setState({error: 'success'});
+      this.nextPage();
+
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
   render() {
     // const { region } = this.props;
     //console.log(region);
@@ -281,7 +333,7 @@ export default class LandlordSignin extends Component {
               ref={(fbLogin) => { this.fbLogin = fbLogin }}
               loginBehavior={FBLoginManager.LoginBehaviors.Native}
               permissions={["public_profile","email","user_friends"]}
-              onLogin={function(data){console.log("log in");console.log(data.credentials)}}
+              onLogin={this.onFBLogin}
               onLoginFound={function(data){console.log(data.credentials)}}
               onLoginNotFound={function(e){console.log(e)}}
               onLogout={function(e){console.log(e)}}
@@ -297,7 +349,10 @@ export default class LandlordSignin extends Component {
                this.state.avatar == null ?
                <Image source={require('../assets/fuck_cat.jpg')} style={styles.personImage} />
                :
+               this.state.avatar.length < 50 ?
                <Image source={{uri: `https://test-zzpengg.c9users.io:8080/images/${this.state.avatar}`}} style={styles.personImage} />
+               :
+               <Image source={{uri: this.state.avatar}} style={styles.personImage} />
              }
              <View style={{alignSelf: 'center'}}>
                <Text style={{fontSize: 32,}}>{this.state.name}</Text>
