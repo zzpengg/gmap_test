@@ -35,6 +35,8 @@ import HouseDetailStudent from './HouseDetailStudent.js';
 import StudentRegister from './StudentRegister.js';
 import HouseComment from './HouseComment.js';
 
+import { FBLoginManager } from 'react-native-facebook-login';
+
 const ACCESS_TOKEN = 'access_token';
 
 export default class PersonInfoLandlord extends Component {
@@ -69,10 +71,14 @@ export default class PersonInfoLandlord extends Component {
   }
 
   onLogout(){
+    FBLoginManager.logout( (data) => {console.log(data) });
     this.deleteToken();
     this.setState({
       error: 'logout'
     })
+    console.log('callback called');
+    this.props.callBack();
+    this.prePage();
   }
 
   async getMyInfo(token) {
@@ -196,6 +202,7 @@ export default class PersonInfoLandlord extends Component {
              </View>
             </View>
             <Button style={styles.submitBtn}  onPress={this.updateMyInfo} block warning> 確認送出 </Button>
+            <Button style={styles.submitBtn} onPress={this.onLogout.bind(this)} block info> 登出 </Button>
           </View>
 
          </Content>

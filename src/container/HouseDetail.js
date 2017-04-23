@@ -49,28 +49,84 @@ export default class HouseDetail extends Component {
       results: {
           items: []
       },
-      id: this.props.id,
-      title: this.props.title,
-      area: this.props.area,
-      address: this.props.address,
-      vacancy: this.props.vacancy,
-      rent: this.props.rent,
-      type: this.props.type,
-      score: this.props.score,
-      accessToken: this.props.accessToken,
-      checkwater:this.props.checkwater,
-      checkele:this.props.checkele,
-      checknet:this.props.checknet,
-      phone: this.props.phone,
       houseId: this.props.id,
-      userId: 0,
+      accessToken: this.props.accessToken,
+      title: '',
+      area: '',
+      address: '',
+      vacancy: '',
+      rent: '',
+      type: '',
+      score: '',
+      phone: '',
+      checkwater: '',
+      checkele: '',
+      checknet: '',
       name: "develop",
       content: "",
       data: [],
       loading: true,
     }
+    this.loadTheHouse = this.loadTheHouse.bind(this);
+    this.loadTheHouse();
     this.loadComment = this.loadComment.bind(this);
     this.loadComment();
+  }
+
+  loadTheHouse = async () => {
+    try {
+      const url = 'http://test-zzpengg.c9users.io:8080/house/findTheUserHouse'
+      let res = await fetch(url,{
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          houseId: this.state.houseId,
+        })
+      }).then( (data) => data.json() )
+        .catch((e) => console.log(e));
+
+      console.log(res);
+
+      const {
+        address,
+        area,
+        checkele,
+        checknet,
+        checkwater,
+        createdAt,
+        id,
+        landlordId,
+        phone,
+        rent,
+        score,
+        title,
+        type,
+        updatedAt,
+        vacancy
+      } = res.data;
+
+      await this.setState({
+        address,
+        area,checkele,
+        checknet,
+        checkwater,
+        createdAt,
+        houseId: id,
+        landlordId,
+        phone,
+        rent,
+        score,
+        title,
+        type,
+        updatedAt,
+        vacancy
+      });
+    } catch (errors) {
+      console.log(errors);
+    }
   }
 
   loadComment = async () => {
@@ -149,7 +205,7 @@ export default class HouseDetail extends Component {
           'x-access-token': this.state.accessToken,
         },
         body: JSON.stringify({
-          id: this.state.id,
+          id: this.state.houseId,
           title: this.state.title,
           area: this.state.area,
           address: this.state.address,
@@ -180,10 +236,11 @@ export default class HouseDetail extends Component {
   }
 
   prePage() {
-      const { navigator } = this.props;
-      if(navigator) {
-          navigator.pop();
-      }
+    this.props.callBack();
+    const { navigator } = this.props;
+    if(navigator) {
+        navigator.pop();
+    }
   }
 
   navigate = () => {
@@ -225,15 +282,17 @@ export default class HouseDetail extends Component {
 
     return (
       <TouchableOpacity  style={{flex: 1, paddingTop: 20,alignItems:'center' }} onPress={this.navigate}>
-        <Image
-          resizeMode="cover"
-          source={{
-            uri: `https://maps.googleapis.com/maps/api/staticmap?center=${this.state.address}&zoom=16.85&size=${imgWidth}x${imgHeight}&scale=8&language=zh-tw&markers=size:mid%7Ccolor:blue%7C${this.state.address}&key=AIzaSyBiwSQUTr6brsJoPHcliZ3TVFYgYf7ulbw` }}
-          style={{
-            width: imgWidth,
-            height: imgHeight,
-          }}
-        />
+        <View>
+          <Image
+            resizeMode="cover"
+            source={{
+              uri: `https://maps.googleapis.com/maps/api/staticmap?center=${this.state.address}&zoom=16.85&size=${imgWidth}x${imgHeight}&scale=8&language=zh-tw&markers=size:mid%7Ccolor:blue%7C${this.state.address}&key=AIzaSyBiwSQUTr6brsJoPHcliZ3TVFYgYf7ulbw` }}
+            style={{
+              width: imgWidth,
+              height: imgHeight,
+            }}
+          />
+        </View>
       </TouchableOpacity>
     );
   }
@@ -316,7 +375,7 @@ export default class HouseDetail extends Component {
   };
 
   extra = () => {
-    const { checkwater, checkele, checknet } = this.props;
+    const { checkwater, checkele, checknet } = this.state;
     let text = "";
     let check = 0;
     if(checkwater){
@@ -355,8 +414,8 @@ export default class HouseDetail extends Component {
   }
 
   dataContent = tab => {
+    const { title, area, address, vacancy, rent, type, score, phone, checkwater, checkele, checknet } = this.state;
     if(tab==1){
-      const { title, area, address, vacancy, rent, type, score, phone } = this.props;
       return (
         <View>
         <Image
@@ -391,7 +450,7 @@ export default class HouseDetail extends Component {
           <List style={styles.form}>
            <View style={styles.viewFlexRow}>
              <Text style={styles.houseTitle}>房屋名稱</Text>
-             <Input style={styles.houseTitleInput} onChangeText={ (title) => this.setState({ title: title }) } value={this.state.title} ></Input>
+             <Input style={styles.houseTitleInput} onChangeText={ (title) => this.setState({ title: title }) } value={title} ></Input>
            </View>
            <View style={styles.viewFlexRow}>
              <Text style={styles.areaText}>所在區域</Text>
@@ -399,7 +458,7 @@ export default class HouseDetail extends Component {
                 style={{ width: 120, marginLeft: 50, marginTop: 6}}
                 iosHeader="Select one"
                 mode="dropdown"
-                selectedValue={this.state.area}
+                selectedValue={area}
                 onValueChange={this.onAreaChange.bind(this)}>
                 <Item label="寶山" value="寶山" />
                 <Item label="進德" value="進德" />
@@ -409,17 +468,17 @@ export default class HouseDetail extends Component {
 
           <View style={styles.viewFlexRow}>
             <Text style={styles.addrText} >彰化縣彰化市</Text>
-            <Input style={{borderColor: 'red', borderWidth: 5}} onChangeText={ (address) => this.setState({ address: `彰化縣彰化市${address}` }) } value={this.state.address.slice(6,this.state.address.length)}></Input>
+            <Input style={{borderColor: 'red', borderWidth: 5}} onChangeText={ (address) => this.setState({ address: `彰化縣彰化市${address}` }) } value={address.slice(6,address.length)}></Input>
           </View>
 
           <View style={styles.viewFlexRow}>
             <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>剩餘空房</Text>
-            <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (vacancy) => this.setState({ vacancy: vacancy }) } value={this.state.vacancy}></Input>
+            <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (vacancy) => this.setState({ vacancy: vacancy }) } value={vacancy}></Input>
           </View>
 
           <View style={styles.viewFlexRow}>
             <Text style={{paddingTop:16, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>租金</Text>
-            <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15, textAlign: 'right',marginRight: 5}} onChangeText={ (rent) => this.setState({ rent: rent }) } value={this.state.rent}></Input>
+            <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15, textAlign: 'right',marginRight: 5}} onChangeText={ (rent) => this.setState({ rent: rent }) } value={rent}></Input>
             <Text style={{paddingTop:10, fontSize: 15, color: '#7b7d85'}} >/月</Text>
           </View>
 
@@ -429,7 +488,7 @@ export default class HouseDetail extends Component {
                 style={{ width: 120, marginLeft: 50, height: 45}}
                 iosHeader="Select one"
                 mode="dropdown"
-                selectedValue={this.state.type}
+                selectedValue={type}
                 onValueChange={this.onTypeChange.bind(this)}>
                 <Item label="雅房" value="雅房" />
                 <Item label="套房" value="套房" />
@@ -438,17 +497,17 @@ export default class HouseDetail extends Component {
            <View>
            <CheckBox
              label='包水'
-             checked={this.state.checkwater}
+             checked={checkwater}
              onChange={this.checkWater}
            />
            <CheckBox
              label='包電'
-             checked={this.state.checkele}
+             checked={checkele}
              onChange={this.checkEle}
            />
            <CheckBox
              label='網路'
-             checked={this.state.checknet}
+             checked={checknet}
              onChange={this.checkNet}
            />
 

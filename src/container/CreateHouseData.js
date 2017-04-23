@@ -174,9 +174,9 @@ export default class CreateHouseData extends Component {
       address: "",
       vacancy: 0,
       rent: 0,
-      checkwater:false,
-      checkele:false,
-      checknet:false,
+      checkwater: false,
+      checkele: false,
+      checknet: false,
       type: "套房",
       accessToken: this.props.accessToken,
     }
@@ -185,19 +185,19 @@ export default class CreateHouseData extends Component {
 
   onAreaChange (value: string) {
     this.setState({
-        area : value
+        area: value
     });
   }
 
   onWaterAndElecChange (value: string) {
     this.setState({
-        waterandelec : value
+        waterandelec: value
     });
   }
 
   onTypeChange (value: string) {
     this.setState({
-        type : value
+        type: value
     });
   }
 
@@ -221,15 +221,18 @@ export default class CreateHouseData extends Component {
       navigator.pop();
     }
   }
-  checkWater=()=>{
+
+  checkWater = () => {
     this.setState({checkwater:!this.state.checkwater});
-}
-checkEle=()=>{
-  this.setState({checkele:!this.state.checkele});
-}
-checkNet=()=>{
-  this.setState({checknet:!this.state.checknet});
-}
+  }
+
+  checkEle = () => {
+    this.setState({checkele:!this.state.checkele});
+  }
+
+  checkNet = () => {
+    this.setState({checknet:!this.state.checknet});
+  }
   onHousePressed = async() => {
     try {
       console.log("testtest");
@@ -282,18 +285,7 @@ checkNet=()=>{
           <Title>新增房屋資訊</Title>
         </Header>
         <Content>
-
           <ScrollView>
-            <View style={styles.viewFlexRow} >
-              <Image source={require('../assets/fuck_cat.jpg')} style={styles.bgImg} />
-              <Image source={require('../assets/pusheen.jpg')} style={styles.bgImg} />
-              <View style={{padding:10}}>
-                <Image source={require('../assets/space.jpg')} style={{width:80, height:80}} />
-                <TouchableOpacity onPress={()=>{}}>
-                  <Text>新增圖片</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
             <List style={styles.form}>
              <View style={styles.viewFlexRow}>
                <Text style={styles.houseTitle}>房屋名稱</Text>

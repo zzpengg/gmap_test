@@ -42,7 +42,7 @@ export default class HouseData extends Component {
   }
 
 
-  nextPage() {
+  nextPage = (id) => {
     const { navigator } = this.props;
     //为什么这里可以取得 props.navigator?请看上文:
     //<Component {...route.params} navigator={navigator} />
@@ -52,16 +52,21 @@ export default class HouseData extends Component {
         navigator.push({
             name: 'HouseDetail',
             component: HouseDetail,
+            params: {
+              id: id,
+              accessToken: this.props.accessToken,
+              callBack: this.callBack,
+            }
         })
     }
   }
 
-
   prePage() {
-      const { navigator } = this.props;
-      if(navigator) {
-          navigator.pop();
-      }
+    this.props.callBack();
+    const { navigator } = this.props;
+    if(navigator) {
+        navigator.pop();
+    }
   }
 
   loadHouse = async () => {
@@ -88,7 +93,7 @@ export default class HouseData extends Component {
     }
   }
 
-  callback = () => {
+  callBack = () => {
     this.loadHouse();
   }
 
@@ -168,19 +173,7 @@ export default class HouseData extends Component {
                       <Text style={styles.detailText}>評分: {rankStar(val.score)}</Text>
                       <View style={styles.detailData}>
                         <Button success bordered style={{height: 18}} key={index}
-                        onPress={() => {
-                          const { navigator } = this.props;
-                          if(navigator){
-                            navigator.push({
-                              name: 'HouseDetail',
-                              component: HouseDetail,
-                              params: {
-                                ...val,
-                                accessToken: this.props.accessToken,
-                              }
-                            })
-                          }
-                        }}>
+                          onPress={() => this.nextPage(val.id)}>
                             <Text>詳細資料</Text>
                         </Button>
                       </View>
@@ -199,7 +192,7 @@ export default class HouseData extends Component {
                       component: CreateHouseData,
                       params: {
                         accessToken: this.props.accessToken,
-                        callback: this.callback,
+                        callBack: this.callBack,
                       }
                     })
                   }

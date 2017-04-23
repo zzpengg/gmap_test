@@ -18,7 +18,8 @@ import {
   Dimensions,
   ActivityIndicator,
   BackAndroid,
-  Navigator
+  Navigator,
+  AsyncStorage
 } from 'react-native';
 import {
   Header,
@@ -38,6 +39,9 @@ import DropdownMenu from 'react-native-dropdown-menu';
 const windowSize = Dimensions.get('window');
 import IconVec from 'react-native-vector-icons/FontAwesome';
 import PersonInfoStudent from './PersonInfoStudent.js';
+
+const STUDENT_ACCESS_TOKEN = 'student_access_token';
+
 export default class HouseData extends Component {
 
   constructor(props) {
@@ -58,6 +62,19 @@ export default class HouseData extends Component {
     this.loadHouse();
   }
 
+  getToken = async() => {
+    try {
+      let accessToken = await AsyncStorage.getItem(STUDENT_ACCESS_TOKEN);
+      if(!accessToken) {
+          console.log("not have token");
+      } else {
+          console.log("accessToken = " + accessToken);
+          this.setState({accessToken: accessToken});
+      }
+    } catch(error) {
+        console.log("catch error = " + error);
+    }
+  }
 
   nextPage() {
     const { navigator } = this.props;

@@ -65,7 +65,10 @@ export default class LandlordSignin extends Component {
       let accessToken = await AsyncStorage.getItem(ACCESS_TOKEN);
       if(!accessToken) {
           console.log("not have token");
-          this.setState({visible:false});
+          this.setState({
+            visible: false,
+            error: 'error',
+          });
       } else {
           console.log("accessToken = " + accessToken);
           let text = await this.checkAuth(accessToken);
@@ -91,7 +94,8 @@ export default class LandlordSignin extends Component {
       name: 'HouseData',
       component: HouseData,
       params: {
-        accessToken: this.state.accessToken
+        accessToken: this.state.accessToken,
+        callBack: this.callback,
       }
     });
   }
@@ -107,10 +111,16 @@ export default class LandlordSignin extends Component {
             name: 'PersonInfoLandlord',
             component: PersonInfoLandlord,
             params: {
-              accessToken: this.state.accessToken
+              accessToken: this.state.accessToken,
+              callBack: this.callback,
             }
         })
     }
+  }
+
+  callback = async() => {
+    console.log('i am callback');
+    await this.getToken();
   }
 
   prePage() {
@@ -254,11 +264,11 @@ export default class LandlordSignin extends Component {
         },
         body: JSON.stringify({
           name: response.name,
-          phone: '尚未取得',
+          phone: response.phone || '尚未取得',
           gender: response.gender,
-          address: '尚未取得',
+          address: response.address || '尚未取得',
           email: response.email,
-          account: userId,
+          account: response.name,
           password: token,
           avatar: response.picture.data.url
         })
@@ -300,9 +310,14 @@ export default class LandlordSignin extends Component {
            <Icon name='ios-arrow-back' />
          </Button>
          <Title>房東登入</Title>
-         <Button transparent onPress={this.personPage.bind(this)}>
-           <IconVec name="user-circle" style={{fontSize: 30}}/>
-         </Button>
+         {
+            this.state.accessToken != 0 ?
+              <Button transparent onPress={this.personPage.bind(this)}>
+                <IconVec name="user-circle" style={{fontSize: 30}}/>
+              </Button>
+            :
+            null
+         }
        </Header>
        {
           (this.state.error != 'success') ?
