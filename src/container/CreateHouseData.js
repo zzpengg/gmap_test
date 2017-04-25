@@ -260,7 +260,7 @@ export default class CreateHouseData extends Component {
       console.log( (res != null) );
       if(res != null){
         console.log("in");
-        this.props.callback();
+        this.props.callBack();
         this.prePage();
       }
       else{

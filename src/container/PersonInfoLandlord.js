@@ -47,6 +47,7 @@ export default class PersonInfoLandlord extends Component {
       account: "",
       status: "",
       password: "",
+      phone: '',
       accessToken: this.props.accessToken,
       error: "",
       visiable:true,
@@ -102,6 +103,7 @@ export default class PersonInfoLandlord extends Component {
         name: response.data.name,
         account: response.data.account,
         password: response.data.password,
+        phone: response.data.phone,
         avatar: response.data.avatar,
         visible: false,
       })
@@ -125,6 +127,7 @@ export default class PersonInfoLandlord extends Component {
         body: JSON.stringify({
           name: this.state.name,
           password: this.state.password,
+          phone: this.state.phone,
         })
       }).then( (data) => data.json() )
       console.log("pressed");
@@ -199,6 +202,10 @@ export default class PersonInfoLandlord extends Component {
              <View style={{alignSelf: 'center', flexDirection: 'row'}}>
                <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>密碼</Text>
                <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (password) => this.setState({ password: password }) } value={this.state.password}></Input>
+             </View>
+             <View style={{alignSelf: 'center', flexDirection: 'row'}}>
+               <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>電話</Text>
+               <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (phone) => this.setState({ phone: phone }) } value={this.state.phone}></Input>
              </View>
             </View>
             <Button style={styles.submitBtn}  onPress={this.updateMyInfo} block warning> 確認送出 </Button>

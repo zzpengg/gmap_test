@@ -43,7 +43,199 @@ import Comment from '../component/Comment.js';
 import CreateHouseData from './CreateHouseData.js';
 import StudentSignin from './StudentSignin.js';
 
+import Swiper from 'react-native-swiper';
+
 const STUDENT_ACCESS_TOKEN = 'student_access_token';
+
+const styles = StyleSheet.create({
+  container: {
+   ...StyleSheet.absoluteFillObject,
+   height: 400,
+   width: 400,
+   justifyContent: 'flex-end',
+   alignItems: 'center',
+ },
+ map: {
+   ...StyleSheet.absoluteFillObject,
+ },
+ center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  detailText: {
+    marginTop: 5,
+    marginLeft: 30,
+  },
+  container: {
+    backgroundColor: '#FBFAFA',
+  },
+ map: {
+   ...StyleSheet.absoluteFillObject,
+ },
+ center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  mb: {
+    marginBottom: 15,
+  },
+  bgImg: {
+    width:150,
+    height:150,
+  },
+  footerItem: {
+    flex: 1,
+    marginRight: 10,
+    marginLeft: 10,
+  },
+  disabledBtn: {
+    backgroundColor: 'rgb(255, 201, 150)',
+    elevation: 0,
+  },
+  spinner: {
+    height: 38,
+    width: 38,
+    borderRadius: 100,
+    backgroundColor: 'white',
+    elevation: 2,
+    position: 'absolute',
+    top: 85,
+    left: 38 / 2 - 19,
+  },
+  floatingBtn: {
+    position: 'absolute',
+    bottom: 23,
+    right: 18,
+    borderRadius: 100,
+    width: 58,
+    height: 58,
+  },
+  form: {
+    marginLeft: 20,
+    marginRight: 20,
+    padding: 20,
+    paddingTop: 30,
+    paddingRight: 33,
+    paddingBottom: 28,
+    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    borderRadius: 5,
+    elevation: 2,
+  },
+  title: {
+    height: 40,
+  },
+  titleText: {
+    position: 'absolute',
+    top: -10,
+    left: 50,
+    fontSize: 54,
+    zIndex: 1000,
+    elevation: 2,
+    color: 'rgb(55, 27, 8)',
+  },
+  submitBtn: {
+    elevation: 1,
+    marginLeft: 18,
+    marginRight: 10,
+    marginTop: 20,
+  },
+  hr: {
+    flex: 1,
+    borderBottomWidth: 1,
+    borderColor: 'gray',
+    marginTop: 15,
+    marginBottom: 15,
+    width: 230,
+    marginRight: -18,
+  },
+  orText: {
+    textAlign: 'center',
+    fontSize: 18,
+  },
+  orWrapper: {
+    // backgroundColor: 'rgba(255, 255, 255, 0.54)',
+    transform: [
+      {translateY: 23},
+    ],
+    width: 25,
+    height: 25,
+    zIndex: 10000,
+    padding: 2,
+    paddingLeft: 4,
+  },
+  houseTitle: {
+    paddingTop:10,
+    paddingLeft: 30,
+    fontSize: 15,
+    color: '#7b7d85'
+  },
+  houseTitleInput: {
+    borderColor: 'red',
+    borderWidth: 5,
+    marginLeft: 15,
+  },
+  viewFlexRow: {
+    flexDirection: 'row'
+  },
+  areaText: {
+    paddingTop:20,
+    paddingLeft: 30,
+    fontSize: 15,
+    color: '#7b7d85'
+  },
+  addrText: {
+    paddingTop:10,
+    paddingLeft: 30,
+    fontSize: 15,
+    color: '#7b7d85'
+  },
+  container: {
+   ...StyleSheet.absoluteFillObject,
+   height: 400,
+   width: 400,
+   justifyContent: 'flex-end',
+   alignItems: 'center',
+ },
+ map: {
+   ...StyleSheet.absoluteFillObject,
+ },
+ center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  houseTitle: {
+    marginTop: 10,
+    marginLeft: 10,
+
+  },
+  houseImage: {
+    width: 300,
+    height: 100,
+    marginTop: 5,
+    marginLeft: 5,
+    marginBottom: 5,
+    alignSelf: 'center'
+  },
+  wrapper: {
+    height: 300,
+  },
+  slide1: {
+    height: 300,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#9DD6EB',
+  },
+  slide2: {
+    height: 300,
+    backgroundColor: '#97CAE5',
+  },
+  commentSubmitBtn: {
+    backgroundColor: 'blue',
+  }
+});
 
 export default class HouseDetailStudent extends Component {
   constructor(props)
@@ -232,6 +424,7 @@ export default class HouseDetailStudent extends Component {
   }
 
   onStarRatingPress(rating) {
+    this._swiper.scrollBy(1);
     this.setState({
       starCount: rating
     });
@@ -240,7 +433,8 @@ export default class HouseDetailStudent extends Component {
   commentArea = () => {
     if(this.state.isLogin == 1){
       return (
-        <View>
+        <Swiper style={styles.wrapper} showsButtons={true} ref={(swiper) => {this._swiper = swiper;}} height={300}>
+        <View style={styles.slide1}>
           <StarRating
             disabled={false}
             emptyStar={'star-o'}
@@ -253,16 +447,22 @@ export default class HouseDetailStudent extends Component {
             starColor={'gold'}
             buttonStyle={{marginLeft: 15, marginRight: 15, marginTop: 10, marginBottom: 10}}
           />
-          <TextInput
-            style={{borderColor: 'gray', borderWidth: 1, marginLeft: 10, marginRight: 10}}
-            onChangeText={(content) => this.setState({content})}
-            value={this.state.content}
-            multiline={true}
-          />
-          <Text style={styles.houseTitle}> {this.state.content.length}/100</Text>
-          <Button style={styles.submitBtn} onPress={this.onCommentPressed.bind(this)} block warning> 確認送出 </Button>
-          <Button style={styles.submitBtn} onPress={ this.onLogout } block warning> 登出 </Button>
         </View>
+        <View style={styles.slide2}>
+          <View>
+            <TextInput
+              style={{borderColor: 'gray', borderWidth: 1, marginLeft: 10, marginRight: 10, width: 350}}
+              onChangeText={(content) => this.setState({content})}
+              value={this.state.content}
+              multiline={true}
+            />
+            <Text style={styles.houseTitle}> {this.state.content.length}/100</Text>
+          </View>
+          <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+            <Button style={styles.commentSubmitBtn} onPress={this.onCommentPressed.bind(this)} > 確認送出 </Button>
+          </View>
+        </View>
+        </Swiper>
       );
     }
     else{
@@ -403,177 +603,3 @@ export default class HouseDetailStudent extends Component {
    );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-   ...StyleSheet.absoluteFillObject,
-   height: 400,
-   width: 400,
-   justifyContent: 'flex-end',
-   alignItems: 'center',
- },
- map: {
-   ...StyleSheet.absoluteFillObject,
- },
- center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  detailText: {
-    marginTop: 5,
-    marginLeft: 30,
-  },
-  container: {
-    backgroundColor: '#FBFAFA',
-  },
- map: {
-   ...StyleSheet.absoluteFillObject,
- },
- center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  mb: {
-    marginBottom: 15,
-  },
-  bgImg: {
-    width:150,
-    height:150,
-  },
-  footerItem: {
-    flex: 1,
-    marginRight: 10,
-    marginLeft: 10,
-  },
-  disabledBtn: {
-    backgroundColor: 'rgb(255, 201, 150)',
-    elevation: 0,
-  },
-  spinner: {
-    height: 38,
-    width: 38,
-    borderRadius: 100,
-    backgroundColor: 'white',
-    elevation: 2,
-    position: 'absolute',
-    top: 85,
-    left: 38 / 2 - 19,
-  },
-  floatingBtn: {
-    position: 'absolute',
-    bottom: 23,
-    right: 18,
-    borderRadius: 100,
-    width: 58,
-    height: 58,
-  },
-  form: {
-    marginLeft: 20,
-    marginRight: 20,
-    padding: 20,
-    paddingTop: 30,
-    paddingRight: 33,
-    paddingBottom: 28,
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
-    borderRadius: 5,
-    elevation: 2,
-  },
-  title: {
-    height: 40,
-  },
-  titleText: {
-    position: 'absolute',
-    top: -10,
-    left: 50,
-    fontSize: 54,
-    zIndex: 1000,
-    elevation: 2,
-    color: 'rgb(55, 27, 8)',
-  },
-  submitBtn: {
-    elevation: 1,
-    marginLeft: 18,
-    marginRight: 10,
-    marginTop: 20,
-  },
-  hr: {
-    flex: 1,
-    borderBottomWidth: 1,
-    borderColor: 'gray',
-    marginTop: 15,
-    marginBottom: 15,
-    width: 230,
-    marginRight: -18,
-  },
-  orText: {
-    textAlign: 'center',
-    fontSize: 18,
-  },
-  orWrapper: {
-    // backgroundColor: 'rgba(255, 255, 255, 0.54)',
-    transform: [
-      {translateY: 23},
-    ],
-    width: 25,
-    height: 25,
-    zIndex: 10000,
-    padding: 2,
-    paddingLeft: 4,
-  },
-  houseTitle: {
-    paddingTop:10,
-    paddingLeft: 30,
-    fontSize: 15,
-    color: '#7b7d85'
-  },
-  houseTitleInput: {
-    borderColor: 'red',
-    borderWidth: 5,
-    marginLeft: 15,
-  },
-  viewFlexRow: {
-    flexDirection: 'row'
-  },
-  areaText: {
-    paddingTop:20,
-    paddingLeft: 30,
-    fontSize: 15,
-    color: '#7b7d85'
-  },
-  addrText: {
-    paddingTop:10,
-    paddingLeft: 30,
-    fontSize: 15,
-    color: '#7b7d85'
-  },
-  container: {
-   ...StyleSheet.absoluteFillObject,
-   height: 400,
-   width: 400,
-   justifyContent: 'flex-end',
-   alignItems: 'center',
- },
- map: {
-   ...StyleSheet.absoluteFillObject,
- },
- center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  houseTitle: {
-    marginTop: 10,
-    marginLeft: 10,
-
-  },
-  houseImage: {
-    width: 300,
-    height: 100,
-    marginTop: 5,
-    marginLeft: 5,
-    marginBottom: 5,
-    alignSelf: 'center'
-  },
-});

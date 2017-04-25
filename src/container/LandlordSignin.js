@@ -153,8 +153,12 @@ export default class LandlordSignin extends Component {
   onLogout(){
     this.deleteToken();
     this.setState({
+      accessToken: ''
+    })
+    this.setState({
       error: 'logout'
     })
+    FBLoginManager.logout( (data) => {console.log(data) });
   }
 
   async checkAuth(token) {
@@ -311,7 +315,7 @@ export default class LandlordSignin extends Component {
          </Button>
          <Title>房東登入</Title>
          {
-            this.state.accessToken != 0 ?
+            this.state.accessToken.length != 0 ?
               <Button transparent onPress={this.personPage.bind(this)}>
                 <IconVec name="user-circle" style={{fontSize: 30}}/>
               </Button>
