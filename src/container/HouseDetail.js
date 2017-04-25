@@ -123,8 +123,8 @@ export default class HouseDetail extends Component {
     let data = new FormData()
     let id = JSON.stringify(this.props.id);
     console.log(id);
-    data.append('house', {...this.state.houseSource, type: 'image/jpeg', name: 'image.jpg',});
     data.append('id', id);
+    data.append('house', {...this.state.houseSource, type: 'image/jpeg', name: 'image.jpg',});
     let url = 'https://test-zzpengg.c9users.io:8080/user/uploadhouse';
     let check = 1;
     console.log(data);
