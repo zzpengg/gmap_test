@@ -95,7 +95,10 @@ export default class LandlordSignin extends Component {
       component: HouseData,
       params: {
         accessToken: this.state.accessToken,
-        callBack: this.callback,
+
+      account:this.state.account
+       callBack: this.callback,
+
       }
     });
   }
@@ -177,6 +180,7 @@ export default class LandlordSignin extends Component {
       this.setState({
         name: response.name,
         avatar: response.avatar,
+        account: response.account
       })
       this.setState({visible:false});
       return response.text;
@@ -238,7 +242,7 @@ export default class LandlordSignin extends Component {
       name: 'LandlordRegistion',
       component: LandlordRegistion,
       params: {
-        accessToken: this.state.accessToken
+        accessToken: this.state.accessToken,
       }
     });
   }

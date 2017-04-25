@@ -13,6 +13,7 @@ import {
   Text,
   Navigator,
   TouchableOpacity,
+  PixelRatio
 } from 'react-native';
 import {
   Container,
@@ -33,7 +34,7 @@ import {
 } from 'native-base';
 import CheckBox from 'react-native-checkbox';
 import HouseData from './HouseData.js';
-
+import ImagePicker from 'react-native-image-picker';
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FBFAFA',
@@ -158,6 +159,17 @@ const styles = StyleSheet.create({
     paddingLeft: 30,
     fontSize: 15,
     color: '#7b7d85'
+  },
+   avatarContainer: {
+    borderColor: '#9B9B9B',
+    borderWidth: 1 / PixelRatio.get(),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  avatar: {
+    borderRadius: 75,
+    width: 150,
+    height: 150
   }
 });
 
@@ -179,6 +191,9 @@ export default class CreateHouseData extends Component {
       checknet: false,
       type: "套房",
       accessToken: this.props.accessToken,
+      houseSource:null,
+      uploadState:"",
+      account:this.props.account
     }
 
   }
@@ -226,6 +241,7 @@ export default class CreateHouseData extends Component {
     this.setState({checkwater:!this.state.checkwater});
   }
 
+
   checkEle = () => {
     this.setState({checkele:!this.state.checkele});
   }
@@ -272,6 +288,7 @@ export default class CreateHouseData extends Component {
       console.log(errors);
     }
   }
+ 
   render() {
     // const { region } = this.props;
     //console.log(region);
