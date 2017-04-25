@@ -121,18 +121,19 @@ export default class HouseDetail extends Component {
 
    upload = async() => {
     let data = new FormData()
-    let id=JSON.stringify(this.props.id);
-    let landlordId=JSON.stringify(this.props.landlordId);
+    let id = JSON.stringify(this.props.id);
+    console.log(id);
     data.append('house', {...this.state.houseSource, type: 'image/jpeg', name: 'image.jpg',});
-    data.append('id',id);
-    data.append('landlordId',landlordId);
+    data.append('id', id);
     let url = 'https://test-zzpengg.c9users.io:8080/user/uploadhouse';
     let check = 1;
+    console.log(data);
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'multipart/form-data',
+        'x-access-token': this.state.accessToken,
       },
       body: data
     }).then( (res) => res.json() )

@@ -47,6 +47,7 @@ export default class HouseData extends Component {
     //为什么这里可以取得 props.navigator?请看上文:
     //<Component {...route.params} navigator={navigator} />
     //这里传递了navigator作为props
+    console.log('house id = ' + id);
     console.log("next page pressed");
     if(navigator) {
         navigator.push({

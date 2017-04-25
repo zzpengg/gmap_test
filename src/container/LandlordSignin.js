@@ -95,10 +95,8 @@ export default class LandlordSignin extends Component {
       component: HouseData,
       params: {
         accessToken: this.state.accessToken,
-
-      account:this.state.account
-       callBack: this.callback,
-
+        account:this.state.account,
+        callBack: this.callback,
       }
     });
   }
