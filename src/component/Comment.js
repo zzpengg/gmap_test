@@ -146,7 +146,10 @@ const Comment = (props) => (
         props.avatar == null ?
         <Image source={require('../assets/fuck_cat.jpg')} style={styles.personImage} />
         :
+        props.avatar.length < 50 ?
         <Image source={{uri: `https://test-zzpengg.c9users.io:8080/images/${props.avatar}`}} style={styles.personImage} />
+        :
+        <Image source={{uri: props.avatar}} style={styles.personImage} />
       }
       <View style={{width: 300}}>
         <View style={{flexDirection: 'row'}}>

@@ -186,9 +186,9 @@ export default class CreateHouseData extends Component {
       address: "",
       vacancy: 0,
       rent: 0,
-      checkwater:false,
-      checkele:false,
-      checknet:false,
+      checkwater: false,
+      checkele: false,
+      checknet: false,
       type: "套房",
       accessToken: this.props.accessToken,
       houseSource:null,
@@ -200,19 +200,19 @@ export default class CreateHouseData extends Component {
 
   onAreaChange (value: string) {
     this.setState({
-        area : value
+        area: value
     });
   }
 
   onWaterAndElecChange (value: string) {
     this.setState({
-        waterandelec : value
+        waterandelec: value
     });
   }
 
   onTypeChange (value: string) {
     this.setState({
-        type : value
+        type: value
     });
   }
 
@@ -236,13 +236,17 @@ export default class CreateHouseData extends Component {
       navigator.pop();
     }
   }
-  checkWater=()=>{
+
+  checkWater = () => {
     this.setState({checkwater:!this.state.checkwater});
   }
-  checkEle=()=>{
+
+
+  checkEle = () => {
     this.setState({checkele:!this.state.checkele});
   }
-  checkNet=()=>{  
+
+  checkNet = () => {
     this.setState({checknet:!this.state.checknet});
   }
   onHousePressed = async() => {
@@ -272,7 +276,7 @@ export default class CreateHouseData extends Component {
       console.log( (res != null) );
       if(res != null){
         console.log("in");
-        this.props.callback();
+        this.props.callBack();
         this.prePage();
       }
       else{
@@ -298,29 +302,7 @@ export default class CreateHouseData extends Component {
           <Title>新增房屋資訊</Title>
         </Header>
         <Content>
-
           <ScrollView>
-{/*            <View style={styles.viewFlexRow} >
-            { <Image source={require('../assets/fuck_cat.jpg')} style={styles.bgImg} />
-              <Image source={require('../assets/pusheen.jpg')} style={styles.bgImg} />}
-              
-              <View style={{padding:10}}>
-    
-                <View style={{marginLeft: 100}} >
-                <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
-                  <View style={[styles.avatar, styles.avatarContainer, {marginBottom: 20}]}>
-                  { this.state.houseSource === null ? <Text>選擇照片</Text> :
-                    <Image style={styles.avatar} source={this.state.houseSource} />
-                  }
-                  </View>
-                  <Text style={{marginLeft: 150}}>{this.state.uploadState}</Text>
-                </TouchableOpacity>
-                </View>
-                <TouchableOpacity style={{marginLeft:150}} onPress={this.upload}>
-                  <Text >上傳圖片</Text>
-                </TouchableOpacity>
-              </View>
-            </View>*/}
             <List style={styles.form}>
              <View style={styles.viewFlexRow}>
                <Text style={styles.houseTitle}>房屋名稱</Text>

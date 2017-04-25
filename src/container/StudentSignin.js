@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
 
 const STUDENT_ACCESS_TOKEN = 'student_access_token';
 
-export default class LandlordSignin extends Component {
+export default class StudentSignin extends Component {
   constructor(props) {
     super(props);
     this.state = {
