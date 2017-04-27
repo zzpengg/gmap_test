@@ -31,6 +31,7 @@ import {
   Picker,
   Item,
 } from 'native-base';
+import Swiper from 'react-native-swiper'
 import CheckBox from 'react-native-checkbox';
 import ImagePicker from 'react-native-image-picker';
 import IconVec from 'react-native-vector-icons/FontAwesome';
@@ -67,7 +68,7 @@ export default class HouseDetail extends Component {
       checkwater: '',
       checkele: '',
       checknet: '',
-
+      path:[],
       name: "develop",
       content: "",
       data: [],
@@ -114,18 +115,17 @@ export default class HouseDetail extends Component {
         console.log(source);
        this.setState({
           houseSource: source,
-          uploadState: "上傳中..."
+          uploadState: ""
         })}
     });
   }
 
    upload = async() => {
     let data = new FormData()
-    let id=JSON.stringify(this.props.id);
-    let landlordId=JSON.stringify(this.props.landlordId);
+    let id = JSON.stringify(this.props.id);
+    console.log(id);
+    data.append('id', id);
     data.append('house', {...this.state.houseSource, type: 'image/jpeg', name: 'image.jpg',});
-    data.append('id',id);
-    data.append('landlordId',landlordId);
     let url = 'https://test-zzpengg.c9users.io:8080/user/uploadhouse';
     let check = 1;
     const response = await fetch(url, {
@@ -186,7 +186,8 @@ export default class HouseDetail extends Component {
         title,
         type,
         updatedAt,
-        vacancy
+        vacancy,
+        path,
       } = res.data;
 
       await this.setState({
@@ -203,7 +204,8 @@ export default class HouseDetail extends Component {
         title,
         type,
         updatedAt,
-        vacancy
+        vacancy,
+        path
       });
     } catch (errors) {
       console.log(errors);
@@ -326,24 +328,7 @@ export default class HouseDetail extends Component {
 
   navigate = () => {
     Alert.alert('導航',`${this.state.address}`, [
-      // { text: '進德校區', onPress: () => {
-      //   //const url = `http://maps.google.com/maps/?q=@${this.state.myLat},${this.state.myLon}`;
-      //   const url = `http://maps.google.com/maps/?saddr=國立彰化師範大學進德校區&daddr=${this.state.address}`;
-      //   Linking.canOpenURL(url).then(supported => {
-      //     if (supported) {
-      //       Linking.openURL(url);
-      //     }
-      //   });
-      // } },
-      // {
-      //   text: '寶山校區',onPress:()=>{
-      //     const url = `http://maps.google.com/maps/?saddr=國立彰化師範大學寶山校區&daddr=${this.state.address}`;
-      //     Linking.canOpenURL(url).then(supported => {
-      //       if (supported) {
-      //         Linking.openURL(url);
-      //       }
-      //     });
-      //   }},
+
         {
           text: '前往',onPress:()=>{
             const url = `http://maps.google.com/maps/?daddr=${this.state.address}`;
@@ -497,12 +482,24 @@ export default class HouseDetail extends Component {
   dataContent = tab => {
     const { title, area, address, vacancy, rent, type, score, phone, checkwater, checkele, checknet } = this.state;
     if(tab==1){
+       let url=`http://test-zzpengg.c9users.io:8080/images/house/${this.state.landlordId}/${this.state.houseId}/`;
       return (
         <View>
-        <Image
+          <Swiper style={styles.wrapper} height={200}  autoplay>
+            {(this.state.path!=null)&&
+              (this.state.path.map((val)=>{
+                return(
+                        <View style={styles.slide}>
+                            <Image resizeMode='stretch' style={styles.image} source={{uri:url+val}}/>
+                        </View>
+                )
+              }))
+            }
+        </Swiper>
+ {       /*<Image
           source={require('../assets/house.jpg')}
           style={{width:300, height:100, marginTop: 10, alignSelf: 'center' }}
-        />
+        />*/}
         <Text style={styles.detailText}>房屋名稱: {title}</Text>
         <Text style={styles.detailText}>所在區域: {area}</Text>
         <View style={{flexDirection: 'row'}}>
@@ -528,8 +525,7 @@ export default class HouseDetail extends Component {
               <Text>新增圖片</Text>
             </View>*/}
              <View style={{padding:10}}>
-                {/*<Image source={require('../assets/space.jpg')} style={{width:80, height:80}} />*/}
-                <View style={{marginLeft: 100}} >
+               <View style={{marginLeft: 100}} >
                 <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
                   <View style={[styles.avatar, styles.avatarContainer, {marginBottom: 20}]}>
                   { this.state.houseSource === null ? <Text>選擇照片</Text> :
@@ -540,7 +536,7 @@ export default class HouseDetail extends Component {
                 </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={{marginLeft:150}} onPress={this.upload}>
-                  <Text >上傳圖片</Text>
+                  <Text >按此上傳圖片</Text>
                 </TouchableOpacity>
               </View>
           </View>
@@ -767,6 +763,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.85)',
     borderRadius: 5,
     elevation: 2,
+  },
+  slide: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'transparent'
+  },
+  image:{
+    flex:1
   },
   title: {
     height: 40,
