@@ -115,7 +115,7 @@ export default class HouseDetail extends Component {
         console.log(source);
        this.setState({
           houseSource: source,
-          uploadState: "上傳中..."
+          uploadState: ""
         })}
     });
   }
@@ -538,7 +538,7 @@ export default class HouseDetail extends Component {
                 </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={{marginLeft:150}} onPress={this.upload}>
-                  <Text >上傳圖片</Text>
+                  <Text >按此上傳圖片</Text>
                 </TouchableOpacity>
               </View>
           </View>
