@@ -28,7 +28,7 @@ export default class test extends Component {
       initialRoute={{ name: defaultName, component: defaultComponent }}
       configureScene={(route) => {
         Navigator.SceneConfigs.PushFromRight.gestures=null;
-        return Navigator.SceneConfigs.PushFromRight;
+        return Navigator.SceneConfigs.FadeAndroid;
       }}
       renderScene={(route, navigator) => {
         let Component = route.component;
