@@ -318,8 +318,8 @@ export default class HouseDetail extends Component {
     }
   }
 
-  prePage() {
-    this.props.callBack();
+  prePage = async() => {
+    await this.props.callBack();
     const { navigator } = this.props;
     if(navigator) {
         navigator.pop();
@@ -643,6 +643,40 @@ export default class HouseDetail extends Component {
     }
   }
 
+  deleteMyHouse = () => {
+    Alert.alert('是否刪除','', [
+      {
+        text: '確認', onPress: async() => {
+          await this.success();
+          await this.prePage();
+        }
+      },
+      { text: '取消', onPress: () => {} }
+    ]);
+  }
+
+  success = async() => {
+    try{
+      const url = 'http://test-zzpengg.c9users.io:8080/house/deleteMyHouse'
+      let res = await fetch(url,{
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'x-access-token': this.state.accessToken,
+        },
+        body: JSON.stringify({
+          id: this.state.houseId,
+        })
+      }).then( (data) => data.json() )
+        .catch((e) => console.log(e));
+
+        console.log(res);
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
+
   render() {
     // const { region } = this.props;
     //console.log(region);
@@ -654,6 +688,14 @@ export default class HouseDetail extends Component {
            <Icon name='ios-arrow-back' />
          </Button>
          <Title>房屋資訊</Title>
+         {
+            this.state.accessToken.length != 0 ?
+              <Button transparent onPress={this.deleteMyHouse.bind(this)}>
+                <IconVec name="trash" style={{fontSize: 30}}/>
+              </Button>
+            :
+            null
+         }
        </Header>
         <View style={{flexDirection: 'row'}}>
           <Button
