@@ -343,7 +343,14 @@ export default class HouseDetail extends Component {
       { text: '取消', onPress: () => {} }
     ]);
   }
+  deleteHousePhoto = async(path) => {
+    try{
+      let url = ""
+    }
+    catch(err){
 
+    }
+  }
   gmap = () => {
     const imgWidth = parseInt(windowSize.width/5*4);
     const imgHeight = parseInt(imgWidth / 16.0 * 9.0, 10);
@@ -487,17 +494,21 @@ export default class HouseDetail extends Component {
        let url=`http://test-zzpengg.c9users.io:8080/images/house/${this.state.landlordId}/${this.state.houseId}/`;
       return (
         <View>
-          <Swiper style={styles.wrapper} height={200}  autoplay>
-            {(this.state.path!=null)&&
+          {(this.state.path!=null)&&
+          (<Swiper style={styles.wrapper} height={250}>
+            {
               (this.state.path.map((val)=>{
                 return(
                         <View style={styles.slide}>
-                            <Image resizeMode='stretch' style={styles.image} source={{uri:url+val}}/>
+                            <Image resizeMode='cover' style={styles.image} source={{uri:url+val}}/>
+                            <Image style={styles.delete} onPress={()=>{}} source={require('../assets/delete.png')}/>
                         </View> 
                 )
               }))
             }
-        </Swiper>
+          
+        </Swiper>)
+          }
  {       /*<Image
           source={require('../assets/house.jpg')}
           style={{width:300, height:100, marginTop: 10, alignSelf: 'center' }}
@@ -887,4 +898,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  delete:{
+    position:'absolute',
+    top:10,
+    right:10,
+    width:30,
+    height:30
+  }
 });
