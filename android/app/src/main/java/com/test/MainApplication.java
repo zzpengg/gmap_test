@@ -2,7 +2,7 @@ package com.test;
 
 import android.app.Application;
 import android.util.Log;
-
+import com.test.opensettings.*;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
@@ -27,14 +27,14 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
+            new MainReactPackage(),
             new VectorIconsPackage(),
             new ImagePickerPackage(),
-            new FacebookLoginPackage()
+            new FacebookLoginPackage(),
+            new OpenSettingsPackage() 
       );
     }
   };
-
   @Override
   public ReactNativeHost getReactNativeHost() {
     return mReactNativeHost;
@@ -44,6 +44,7 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    
   }
 
 }

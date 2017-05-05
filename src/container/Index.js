@@ -13,7 +13,11 @@ import {
   Navigator,
   BackAndroid,
   AppState,
-  ToastAndroid
+  ToastAndroid,
+  NetInfo,
+  Alert,
+  Linking,
+  NativeModules
 } from 'react-native';
 
 import HouseDataStudent from './HouseDataStudent.js';
@@ -30,9 +34,17 @@ export default class Index extends Component {
     await BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
     console.disableYellowBox = true;
     console.warn('YellowBox is disabled.');
+    NetInfo.addEventListener(
+        'change',
+        this.handleConnectionInfoChange
+    );
   }
   async componentWillUnmount() {
     await BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+     NetInfo.removeEventListener(
+        'change',
+        this.handleConnectionInfoChange
+    );
   }
 
   onBackAndroid = () => {
@@ -55,7 +67,18 @@ export default class Index extends Component {
     }
     return true
   }
-
+  handleConnectionInfoChange = async (connectionInfo) => {
+    console.log("connectionInfo="+connectionInfo);
+    if(connectionInfo=="NONE"){
+      Alert.alert("網路錯誤","網路未連接",[
+        { text:"開啟網路", onPress: ()=>{ NativeModules.OpenSettings.openNetworkSettings(data => {
+          console.log('call back data', data);
+        });}},
+          { text:"取消", onPress: () => {}},  
+      ]
+      )
+    }
+  }
   studentButton() {
     const { navigator } = this.props;
     if(navigator) {
