@@ -33,7 +33,7 @@ import {
 } from 'native-base';
 import CheckBox from 'react-native-checkbox';
 import IconVec from 'react-native-vector-icons/FontAwesome';
-
+import Swiper from 'react-native-swiper'
 import Dimensions from 'Dimensions';
 const windowSize = Dimensions.get('window');
 import Comment from '../component/Comment.js';
@@ -61,6 +61,7 @@ export default class HouseDetailStudent extends Component {
       content: "",
       data: [],
       house: [],
+      path:[],
       loading: true,
       comment: [],
     }
@@ -132,9 +133,10 @@ export default class HouseDetailStudent extends Component {
         .catch((e) => console.log(e));
 
       console.log(res);
-
+      console.log("path="+res.data.path)
       await this.setState({
         house: res.data,
+        path:res.data.path
       });
     } catch (errors) {
       console.log(errors);
@@ -168,24 +170,6 @@ export default class HouseDetailStudent extends Component {
 
   navigate = () => {
     Alert.alert('導航',`${this.state.house.address}`, [
-      // { text: '進德校區', onPress: () => {
-      //   //const url = `http://maps.google.com/maps/?q=@${this.state.myLat},${this.state.myLon}`;
-      //   const url = `http://maps.google.com/maps/?saddr=國立彰化師範大學進德校區&daddr=${this.state.address}`;
-      //   Linking.canOpenURL(url).then(supported => {
-      //     if (supported) {
-      //       Linking.openURL(url);
-      //     }
-      //   });
-      // } },
-      // {
-      //   text: '寶山校區',onPress:()=>{
-      //     const url = `http://maps.google.com/maps/?saddr=國立彰化師範大學寶山校區&daddr=${this.state.address}`;
-      //     Linking.canOpenURL(url).then(supported => {
-      //       if (supported) {
-      //         Linking.openURL(url);
-      //       }
-      //     });
-      //   }},
         {
           text: '前往',onPress:()=>{
             const url = `http://maps.google.com/maps/?daddr=${this.state.house.address}`;
@@ -363,7 +347,8 @@ export default class HouseDetailStudent extends Component {
   render() {
     // const { region } = this.props;
     //console.log(region);
-   const { title, area, address, vacancy, rent, type, checkwater, checkele, checknet, score, phone } = this.state.house;
+   const { title, area, address, vacancy, rent, type, checkwater, checkele, checknet, score, phone,landlordId} = this.state.house;
+   let url=`http://test-zzpengg.c9users.io:8080/images/house/${landlordId}/${this.state.houseId}/`;
    return (
      <ScrollView>
        <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
@@ -373,10 +358,24 @@ export default class HouseDetailStudent extends Component {
          <Title>房屋資訊</Title>
        </Header>
        <View>
-         <Image
+          {(this.state.path.length>0)&&
+          (<Swiper style={styles.wrapper} height={250}>
+            {
+              (this.state.path.map((val)=>{
+                return(
+                        <View style={styles.slide}>
+                            <Image resizeMode='contain' style={styles.image} source={{uri:url+val}}/>
+                        </View> 
+                )
+              }))
+            }
+          
+        </Swiper>)
+          }
+          {/*<Image
            source={require('../assets/house.jpg')}
            style={{width:300, height:100, marginTop: 10, alignSelf: 'center' }}
-         />
+         />*/}
          <Text style={styles.detailText}>房屋名稱: {title}</Text>
          <Text style={styles.detailText}>所在區域: {area}</Text>
          <View style={{flexDirection: 'row'}}>
@@ -585,5 +584,13 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginBottom: 5,
     alignSelf: 'center'
+  },
+    slide: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'transparent'
+  },
+  image:{
+    flex:1
   },
 });

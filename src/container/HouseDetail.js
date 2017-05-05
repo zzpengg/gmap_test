@@ -11,6 +11,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  TouchableHighlight,
   Alert,
   Linking,
   Image,
@@ -119,20 +120,53 @@ export default class HouseDetail extends Component {
         })}
     });
   }
-
+  confirmtodeletephoto = async (path)=>{
+    
+    Alert.alert("刪除照片","是否刪除",[
+       {
+        text: '確認', onPress: async() => {
+          console.log("path="+path);
+          await this.deletephoto(path);
+        }
+      },
+      { text: '取消', onPress: () => {} }
+    ])
+  }
+  deletephoto = async(path) =>{
+    try{
+          let url ='https://test-zzpengg.c9users.io:8080/house/deletehousephoto';
+          const res = await fetch(url,{
+            method :'POST',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': this.state.accessToken,
+            },
+            body:JSON.stringify({
+              'id':this.props.id,
+              'path':path
+            })
+          })
+          await this.loadTheHouse();
+    }
+    catch(err){
+      console.log("err="+err);
+    }
+  }
    upload = async() => {
     let data = new FormData()
     let id = JSON.stringify(this.props.id);
     console.log(id);
     data.append('id', id);
     data.append('house', {...this.state.houseSource, type: 'image/jpeg', name: 'image.jpg',});
-    let url = 'https://test-zzpengg.c9users.io:8080/user/uploadhouse';
+    let url = 'https://test-zzpengg.c9users.io:8080/house/uploadhousephoto';
     let check = 1;
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'multipart/form-data',
+        'x-access-token': this.state.accessToken
       },
       body: data
     }).then( (res) => res.json() )
@@ -150,7 +184,7 @@ export default class HouseDetail extends Component {
         avatar: response.file,
       })
     }
-
+    await this.loadTheHouse();
     console.log(response);
   }
 
@@ -341,14 +375,7 @@ export default class HouseDetail extends Component {
       { text: '取消', onPress: () => {} }
     ]);
   }
-  deleteHousePhoto = async(path) => {
-    try{
-      let url = ""
-    }
-    catch(err){
 
-    }
-  }
   gmap = () => {
     const imgWidth = parseInt(windowSize.width/5*4);
     const imgHeight = parseInt(imgWidth / 16.0 * 9.0, 10);
@@ -492,14 +519,16 @@ export default class HouseDetail extends Component {
        let url=`http://test-zzpengg.c9users.io:8080/images/house/${this.state.landlordId}/${this.state.houseId}/`;
       return (
         <View>
-          {(this.state.path!=null)&&
+          {(this.state.path.length>0)&&
           (<Swiper style={styles.wrapper} height={250}>
             {
               (this.state.path.map((val)=>{
                 return(
                         <View style={styles.slide}>
-                            <Image resizeMode='cover' style={styles.image} source={{uri:url+val}}/>
-                            <Image style={styles.delete} onPress={()=>{}} source={require('../assets/delete.png')}/>
+                            <Image resizeMode='contain' style={styles.image} source={{uri:url+val}}/>
+                          <TouchableOpacity  style={styles.delete} onPress={()=>{this.confirmtodeletephoto(val)}}>
+                            <Image   style={{width:30,height:30}} source={require('../assets/delete.png')}/>
+                          </TouchableOpacity>
                         </View> 
                 )
               }))
