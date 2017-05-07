@@ -139,7 +139,7 @@ export default class PersonInfoLandlord extends Component {
         Alert.alert('訊息',
           '修改成功',
           [
-            {text:'我知道了',onPress:()=>{}}
+            {text:'我知道了', onPress:() => { this.prePage() }}
           ]
         );
       } else {

@@ -136,7 +136,7 @@ export default class HouseDetailStudent extends Component {
       console.log("path="+res.data.path)
       await this.setState({
         house: res.data,
-        path:res.data.path
+        path:res.data.path || ''
       });
     } catch (errors) {
       console.log(errors);
@@ -365,11 +365,11 @@ export default class HouseDetailStudent extends Component {
                 return(
                         <View style={styles.slide}>
                             <Image resizeMode='contain' style={styles.image} source={{uri:url+val}}/>
-                        </View> 
+                        </View>
                 )
               }))
             }
-          
+
         </Swiper>)
           }
           {/*<Image
