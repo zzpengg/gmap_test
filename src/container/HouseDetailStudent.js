@@ -43,6 +43,8 @@ import StudentSignin from './StudentSignin.js';
 
 import HouseComment from './HouseComment.js';
 
+import PersonInfoStudent from './PersonInfoStudent.js';
+
 const STUDENT_ACCESS_TOKEN = 'student_access_token';
 
 export default class HouseDetailStudent extends Component {
@@ -54,7 +56,7 @@ export default class HouseDetailStudent extends Component {
       results: {
           items: []
       },
-      accessToken: this.props.accessToken,
+      accessToken: this.props.accessToken || '',
       houseId: this.props.id,
       userId: this.props.userId||0,
       name: "develop",
@@ -64,6 +66,7 @@ export default class HouseDetailStudent extends Component {
       path:[],
       loading: true,
       comment: [],
+      toggle: 'null',
     }
     this.loadBestComment = this.loadBestComment.bind(this);
     this.loadBestComment();
@@ -71,6 +74,40 @@ export default class HouseDetailStudent extends Component {
     this.getToken();
     this.loadTheHouse = this.loadTheHouse.bind(this);
     this.loadTheHouse();
+  }
+
+  loadLove = async () => {
+    console.log('****loadLove****');
+    console.log(this.state.accessToken);
+    if(this.state.accessToken.length != 0){
+      try {
+        console.log("loading Love");
+        const url = 'http://test-zzpengg.c9users.io:8080/love/findLove'
+        let res = await fetch(url,{
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'x-access-token': this.state.accessToken,
+          },
+          body: JSON.stringify({
+            houseId: this.state.houseId,
+          })
+        }).then( (data) => data.json() )
+          .catch((e) => console.log(e));
+
+        console.log(res);
+
+        await this.setState({
+          toggle: res.text
+        });
+      } catch (errors) {
+        console.log(errors);
+      }
+    }else{
+
+    }
+
   }
 
   loadBestComment = async () => {
@@ -107,7 +144,7 @@ export default class HouseDetailStudent extends Component {
           console.log("not have token");
       } else {
           console.log("accessToken = " + accessToken);
-          this.setState({accessToken: accessToken});
+          await this.setState({accessToken: accessToken});
           this.setState({error: 'success'});
           this.setState({isLogin: 1});
           this.setState({loadingisLogin: false});
@@ -118,6 +155,7 @@ export default class HouseDetailStudent extends Component {
   }
 
   loadTheHouse = async () => {
+    console.log("***load the house***");
     try {
       const url = 'http://test-zzpengg.c9users.io:8080/house/findTheHouse'
       let res = await fetch(url,{
@@ -138,6 +176,7 @@ export default class HouseDetailStudent extends Component {
         house: res.data,
         path:res.data.path || ''
       });
+      this.loadLove();
     } catch (errors) {
       console.log(errors);
     }
@@ -344,6 +383,57 @@ export default class HouseDetailStudent extends Component {
     return star;
   };
 
+  personInfoPage = () => {
+    const { navigator } = this.props;
+    console.log("going to personInfoPage");
+    if(navigator) {
+      navigator.push({
+        name: 'PersonInfoStudent',
+        component: PersonInfoStudent,
+      });
+    }
+  }
+
+  toggleLove = async() => {
+    try{
+      if(!this.state.accessToken){
+        Alert.alert('發生錯誤',`尚未登入`, [
+          { text: '登入', onPress: () => {this.personInfoPage()} },
+          { text: '取消', onPress: () => {} },
+        ]);
+      }else {
+        console.log("toggleLove");
+        const url = 'http://test-zzpengg.c9users.io:8080/love/addLove'
+        let res = await fetch(url,{
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'x-access-token': this.state.accessToken,
+          },
+          body: JSON.stringify({
+            houseId: this.state.houseId
+          })
+        }).then( (data) => data.json() )
+          .catch((e) => console.log(e));
+          console.log(res);
+        if(this.state.toggle == 'null'){
+          this.setState({
+            toggle: 'love'
+          })
+        }else{
+          this.setState({
+            toggle: 'null'
+          })
+        }
+      }
+    }
+    catch(e){
+      console.log(e);
+    }
+
+  }
+
   render() {
     // const { region } = this.props;
     //console.log(region);
@@ -356,6 +446,16 @@ export default class HouseDetailStudent extends Component {
            <Icon name='ios-arrow-back' />
          </Button>
          <Title>房屋資訊</Title>
+         {
+           this.state.toggle == 'love' ?
+             <Button transparent onPress={this.toggleLove.bind(this)}>
+               <IconVec name="heart" style={{fontSize: 30}} color= 'red' />
+             </Button>
+           :
+             <Button transparent onPress={this.toggleLove.bind(this)}>
+               <IconVec name="heart-o" style={{fontSize: 30}} />
+             </Button>
+         }
        </Header>
        <View>
           {(this.state.path.length>0)&&
@@ -390,7 +490,6 @@ export default class HouseDetailStudent extends Component {
          <TouchableOpacity onPress={ this.commentPage }>
            <Text style={{marginLeft: 33, fontSize: 18, marginTop: 10}}>最佳留言 <IconVec name='chevron-right' /></Text>
          </TouchableOpacity>
-         <View style={styles.hr}></View>
          {
            this.state.loading ?
              <ActivityIndicator
@@ -402,7 +501,6 @@ export default class HouseDetailStudent extends Component {
              return (
                <View key={index}>
                <Comment {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)}/>
-               <View style={styles.hr}></View>
                </View>
              )
            }) : <Text style={{alignSelf: 'center'}}>暫無留言</Text>
