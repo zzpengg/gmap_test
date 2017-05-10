@@ -318,7 +318,7 @@ export default class PersonInfoStudent extends Component {
                <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (password) => this.setState({ password: password }) } value={this.state.password}></Input>
              </View>
             </View>
-            <Button style={styles.submitBtn}  onPress={this.updateMyInfo} block warning> 確認送出 </Button>
+            <Button style={styles.submitBtn}  onPress={this.updateMyInfo} block warning> 確認修改 </Button>
             <Button style={styles.submitBtn} onPress={this.onLogout.bind(this)} block info> 登出 </Button>
           </View>
 

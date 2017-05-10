@@ -306,6 +306,20 @@ export default class HouseData extends Component {
             {
                 this.state.updateData.map((val, index) => {
                 return (
+                  <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    const { navigator } = this.props;
+                    if(navigator){
+                      navigator.push({
+                        name: 'HouseDetailStudent',
+                        component: HouseDetailStudent,
+                        params: {
+                          id: val.id,
+                        }
+                      })
+                    }
+                  }}>
                   <View style={styles.dataView} key={index}>
                     <View>
                       <Image source={require('../assets/fuck_cat.jpg')} style={{width:100, height:100, marginTop:10, marginLeft:5, marginBottom: 5 }} />
@@ -316,25 +330,9 @@ export default class HouseData extends Component {
                       <Text style={styles.detailText}>所在區域: {val.area}</Text>
                       <Text style={styles.detailText}>租金: {val.rent} /月</Text>
                       <Text style={styles.detailText}>評分: {this.rankStar(val.score)}{val.score ? <Text>({val.score})</Text> : null}</Text>
-                      <View style={styles.detailData}>
-                        <Button success bordered style={{height: 18}} key={index}
-                        onPress={() => {
-                          const { navigator } = this.props;
-                          if(navigator){
-                            navigator.push({
-                              name: 'HouseDetailStudent',
-                              component: HouseDetailStudent,
-                              params: {
-                                id: val.id,
-                              }
-                            })
-                          }
-                        }}>
-                            <Text>詳細資料</Text>
-                        </Button>
-                      </View>
                     </View>
                   </View>
+                  </TouchableOpacity>
                 )
               })
             }

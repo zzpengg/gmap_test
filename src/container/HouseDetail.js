@@ -135,7 +135,7 @@ export default class HouseDetail extends Component {
     ])
   }
   confirmtodeletephoto = async (path)=>{
-    
+
     Alert.alert("刪除照片","是否刪除",[
        {
         text: '確認', onPress: async() => {
@@ -216,6 +216,7 @@ export default class HouseDetail extends Component {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
+          'x-access-token': this.state.accessToken,
         },
         body: JSON.stringify({
           houseId: this.state.houseId,
@@ -551,11 +552,11 @@ export default class HouseDetail extends Component {
                           <TouchableOpacity  style={styles.delete} onPress={()=>{this.confirmtodeletephoto(val)}}>
                             <Image   style={{width:30,height:30}} source={require('../assets/delete.png')}/>
                           </TouchableOpacity>
-                        </View> 
+                        </View>
                 )
               }))
             }
-          
+
         </Swiper>)
           }
  {       /*<Image

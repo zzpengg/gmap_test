@@ -91,9 +91,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginLeft: 5,
     marginBottom: 5,
-    borderColor: 'red',
-    borderRadius: 2,
-    borderWidth: 5,
     width: 350,
     alignSelf: 'center'
   },
@@ -140,7 +137,9 @@ rankStar = (rank) => {
 };
 
 const Comment = (props) => (
+
   <View style={styles.commentView}>
+    <View style={styles.hr}></View>
     <View style={{flexDirection: 'row'}}>
       {
         props.avatar == null ?
@@ -165,15 +164,15 @@ const Comment = (props) => (
         <Text style={{fontWeight: 'bold', color: 'black'}}>{props.content}</Text>
         <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginTop: 10}}>
           <TouchableOpacity onPress={props.thumbs_up}>
-            <View style={{flexDirection: 'row'}}>
-              <Icon name="thumbs-up" />
-              <Text>讚{props.like}</Text>
+            <View style={{flexDirection: 'row', marginRight: 10, backgroundColor: '#DDDDDD', height: 23}}>
+              <Icon name="thumbs-up" style={{fontSize: 17, marginRight: 5}} color= {'#AAAAAA'}/>
+              <Text>{props.like}</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={props.thumbs_down}>
-            <View style={{flexDirection: 'row'}}>
-              <Icon name="thumbs-down" />
-              <Text>爛{props.dislike}</Text>
+            <View style={{flexDirection: 'row', backgroundColor: '#DDDDDD', height: 23}}>
+              <Icon name="thumbs-down" style={{fontSize: 17, marginRight: 5}} color={'#AAAAAA'}/>
+              <Text>{props.dislike}</Text>
             </View>
           </TouchableOpacity>
         </View>
