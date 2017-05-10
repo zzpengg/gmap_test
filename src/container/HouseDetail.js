@@ -74,7 +74,8 @@ export default class HouseDetail extends Component {
       content: "",
       data: [],
       loading: true,
-      houseSource:null
+      houseSource:null,
+      fileType:""
     }
 
     this.loadTheHouse = this.loadTheHouse.bind(this);
@@ -96,7 +97,7 @@ export default class HouseDetail extends Component {
       }
     };
 
-    ImagePicker.showImagePicker(options, (response) => {
+    ImagePicker.showImagePicker(options, async (response) => {
       console.log('Response = ', response);
 
       if (response.didCancel) {
@@ -110,7 +111,8 @@ export default class HouseDetail extends Component {
       }
       else {
         let source = { uri: response.uri };
-
+        console.log(response.type);
+        await this.setState({fileType:response.type});
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
         console.log(source);
@@ -119,6 +121,18 @@ export default class HouseDetail extends Component {
           uploadState: ""
         })}
     });
+  }
+  LinkToPhotoUrl = async (url) =>{
+    Alert.alert("查看相片","是否查看",[
+      {text:"是",onPress:()=>{
+            Linking.canOpenURL(url).then(supported => {
+              if (supported) {
+                Linking.openURL(url);
+              }
+            });
+      }},
+      {text:"否",onPress:()=>{}}
+    ])
   }
   confirmtodeletephoto = async (path)=>{
     
@@ -154,9 +168,14 @@ export default class HouseDetail extends Component {
     }
   }
    upload = async() => {
+    if(this.state.fileType!="image/jpeg"){
+      Alert.alert("檔案型態錯誤","照片格式僅限jpg檔",[
+        {text:"我知道了",onPress:()=>{this.setState({houseSource:null})}}
+      ]);
+    }
+    else{
     let data = new FormData()
-    let id = JSON.stringify(this.props.id);
-    console.log(id);
+    let id = this.props.id;
     data.append('id', id);
     data.append('house', {...this.state.houseSource, type: 'image/jpeg', name: 'image.jpg',});
     let url = 'https://test-zzpengg.c9users.io:8080/house/uploadhousephoto';
@@ -186,6 +205,7 @@ export default class HouseDetail extends Component {
     }
     await this.loadTheHouse();
     console.log(response);
+    }
   }
 
   loadTheHouse = async () => {
@@ -525,7 +545,9 @@ export default class HouseDetail extends Component {
               (this.state.path.map((val)=>{
                 return(
                         <View style={styles.slide}>
-                            <Image resizeMode='contain' style={styles.image} source={{uri:url+val}}/>
+                          <TouchableOpacity onPress={()=>{this.LinkToPhotoUrl(url+val)}}style={styles.image} >
+                            <Image resizeMode='contain' style={{width:windowSize.width,height:250}}source={{uri:url+val}}/>
+                          </TouchableOpacity>
                           <TouchableOpacity  style={styles.delete} onPress={()=>{this.confirmtodeletephoto(val)}}>
                             <Image   style={{width:30,height:30}} source={require('../assets/delete.png')}/>
                           </TouchableOpacity>
