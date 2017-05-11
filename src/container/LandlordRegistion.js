@@ -46,13 +46,11 @@ export default class LandlordRegistion extends Component {
         address: "",
         account: "",
         password: "",
+        email:"",
         password_comfirmed: "",
         error: "",
         checkId:"",
         modalVisible: true,
-        avatarSource: null,
-        uploadState: '預設照片',
-        avatar: '',
     }
   }
   checkIdRepeat = async() => {
@@ -117,7 +115,7 @@ export default class LandlordRegistion extends Component {
   async onRegisterPressed () {
     try {
 
-        if(this.isempty(this.state.name)||this.isempty(this.state.phone)||this.isempty(this.state.account)||this.isempty(this.state.address)||this.isempty(this.state.password)){
+        if(this.isempty(this.state.name)||this.isempty(this.state.phone)||this.isempty(this.state.account)||this.isempty(this.state.address)||this.isempty(this.state.password)||this.isempty(this.state.email)){
           Alert.alert(
             "錯誤訊息",
             "欄位值不能為空",
@@ -151,7 +149,7 @@ export default class LandlordRegistion extends Component {
                    address: this.state.address,
                    account: this.state.account,
                    password: this.state.password,
-                   avatar: this.state.avatar,
+                   email: this.state.email
                  })
                }).then( (data) => data.json() )
 
@@ -161,16 +159,21 @@ export default class LandlordRegistion extends Component {
                })
                this.storeToken(response.token);
                const { navigator } = this.props;
-               if(navigator){
-                 navigator.push({
-                   name: 'HouseData',
-                   component: HouseData,
-                   params: {
-                     accessToken: this.state.accessToken
-                   }
-                 })
-               }
-
+              //  if(navigator){
+              //    navigator.push({
+              //      name: 'HouseData',
+              //      component: HouseData,
+              //      params: {
+              //        accessToken: this.state.accessToken
+              //      }
+              //    })
+              //  }
+              Alert.alert('註冊成功',
+                "請至信箱驗證",
+                [
+                  {text:'我知道了',onPress:()=>{navigator.pop()}}
+                ]
+              );
              }
          } catch (errors) {
            console.log(errors);
@@ -180,82 +183,7 @@ export default class LandlordRegistion extends Component {
      this.setState({modalVisible: visible});
    }
 
-   selectPhotoTapped() {
-    const options = {
-      title: '取得照片',
-      cancelButtonTitle: '取消',
-      takePhotoButtonTitle: '開啟相機',
-      chooseFromLibraryButtonTitle: '從圖片庫尋找',
-      quality: 1.0,
-      maxWidth: 500,
-      maxHeight: 500,
-      storageOptions: {
-        skipBackup: true
-      }
-    };
-
-    ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response);
-
-      if (response.didCancel) {
-        console.log('User cancelled photo picker');
-      }
-      else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      }
-      else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      }
-      else {
-        let source = { uri: response.uri };
-
-        // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        console.log(source);
-
-        this.setState({
-          avatarSource: source,
-          uploadState: '上傳中...'
-        });
-
-        this.upload(source);
-      }
-    });
-  }
-
-   upload = async(source) => {
-    let data = new FormData()
-
-    data.append('avatar', {...source, type: 'image/jpeg', name: 'image.jpg'});
-
-    let url = 'https://test-zzpengg.c9users.io:8080/user/upload';
-    let check = 1;
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-      body: data
-    }).then( (res) => res.json() )
-    .catch( (err) => {
-      console.log(err);
-      this.setState({
-        uploadState: '上傳失敗'
-      })
-      check = 0;
-    })
-    console.log(response);
-    if(response.message == "1 file(s) uploaded successfully!" && check == 1){
-      this.setState({
-        uploadState: '上傳成功',
-        avatar: response.file,
-      })
-    }
-
-    console.log(response);
-  }
-
+  
 
 render() {
     var data= [
@@ -274,16 +202,6 @@ render() {
         <Content>
             <View>
               <List style={styles.form}>
-              <View style={{marginLeft: 50}} >
-                <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
-                  <View style={[styles.avatar, styles.avatarContainer, {marginBottom: 20}]}>
-                  { this.state.avatarSource === null ? <Text>更換照片</Text> :
-                    <Image style={styles.avatar} source={this.state.avatarSource} />
-                  }
-                  </View>
-                  <Text style={{marginLeft: 50}}>{this.state.uploadState}</Text>
-                </TouchableOpacity>
-              </View>
                 <Text style={{fontSize: 18}}>基本資料</Text>
                 <ListItem style={{ marginTop: 15 }}>
                   <InputGroup borderType="regular" style={{ borderRadius: 5}} >
@@ -303,6 +221,26 @@ render() {
                       }}}
                     value={this.state.name}
                     />
+                  </InputGroup>
+                </ListItem>
+                 <ListItem style={{ marginTop: 10 }}>
+                  <InputGroup borderType="regular" style={{ borderRadius: 5}} >
+                    <Input placeholder="信箱" onChangeText={(val)=>{this.setState({email:val})}}
+                      onBlur={ async() =>{
+                      const emailRule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
+                      if(this.state.email.search(emailRule)==-1)
+                      {
+                        Alert.alert(
+                          "型態錯誤",
+                          "請輸入正確信箱",
+                          [
+                            {text:'我知道了',onPress:()=>{}}
+                          ]
+                        )
+                        this.setState({email:""})
+                      }
+                    }}
+                      value={this.state.email}/>
                   </InputGroup>
                 </ListItem>
                 <ListItem style={{ marginTop: 10 }}>

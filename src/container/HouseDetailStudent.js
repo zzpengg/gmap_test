@@ -75,7 +75,18 @@ export default class HouseDetailStudent extends Component {
     this.loadTheHouse = this.loadTheHouse.bind(this);
     this.loadTheHouse();
   }
-
+   LinkToPhotoUrl = async (url) =>{
+    Alert.alert("查看相片","是否查看",[
+      {text:"是",onPress:()=>{
+            Linking.canOpenURL(url).then(supported => {
+              if (supported) {
+                Linking.openURL(url);
+              }
+            });
+      }},
+      {text:"否",onPress:()=>{}}
+    ])
+  }
   loadLove = async () => {
     console.log('****loadLove****');
     console.log(this.state.accessToken);
@@ -464,7 +475,9 @@ export default class HouseDetailStudent extends Component {
               (this.state.path.map((val)=>{
                 return(
                         <View style={styles.slide}>
-                            <Image resizeMode='contain' style={styles.image} source={{uri:url+val}}/>
+                          <TouchableOpacity onPress={()=>{this.LinkToPhotoUrl(url+val)}}style={styles.image} >
+                            <Image resizeMode='contain' style={{width:windowSize.width,height:250}}source={{uri:url+val}}/>
+                          </TouchableOpacity>
                         </View>
                 )
               }))
