@@ -178,7 +178,8 @@ export default class LandlordSignin extends Component {
       this.setState({
         name: response.name,
         avatar: response.avatar,
-        account: response.account
+        account: response.account,
+        id:response.id
       })
       this.setState({visible:false});
       return response.text;
@@ -221,11 +222,11 @@ export default class LandlordSignin extends Component {
       }
       else if(response.text=== "validate error"){
         Alert.alert('錯誤訊息',
-        "信箱尚未驗證\n請至信箱驗證帳戶",
-        [
-          {text:'我知道了',onPress:()=>{}}
-        ]
-    );
+          "信箱尚未驗證\n請至信箱驗證帳戶",
+          [
+            {text:'我知道了',onPress:()=>{}}
+          ]
+        );
       } 
       else {
             //Handle error
@@ -380,7 +381,7 @@ export default class LandlordSignin extends Component {
                <Image source={require('../assets/fuck_cat.jpg')} style={styles.personImage} />
                :
                this.state.avatar.length < 50 ?
-               <Image source={{uri: `https://test-zzpengg.c9users.io:8080/images/${this.state.avatar}`}} style={styles.personImage} />
+               <Image source={{uri: `https://test-zzpengg.c9users.io:8080/images/avatar/${this.state.id}/${this.state.avatar}`}} style={styles.personImage} />
                :
                <Image source={{uri: this.state.avatar}} style={styles.personImage} />
              }

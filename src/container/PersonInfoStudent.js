@@ -177,9 +177,17 @@ export default class PersonInfoStudent extends Component {
         this.setState({accessToken: accessToken})
         this.setState({error: 'success'});
         this.getToken(accessToken);
-      } else {
+      } else if(response.text=== "validate error"){
+        Alert.alert('錯誤訊息',
+          "信箱尚未驗證\n請至信箱驗證帳戶",
+          [
+            {text:'我知道了',onPress:()=>{}}
+          ]
+        );
+      }  
+      else {
             //Handle error
-            let error = res;
+            let error = response;
             throw error;
       }
     } catch(error){

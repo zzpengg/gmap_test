@@ -331,7 +331,15 @@ export default class StudentSignin extends Component {
         this.setState({error: 'success'});
         await setTimeout(()=>{},10000);
         this.nextPage();
-      } else {
+      }else if(response.text=== "validate error"){
+        Alert.alert('錯誤訊息',
+          "信箱尚未驗證\n請至信箱驗證帳戶",
+          [
+            {text:'我知道了',onPress:()=>{}}
+          ]
+        );
+      }  
+      else {
             //Handle error
             let error = res;
             throw error;

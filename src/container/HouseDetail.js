@@ -18,7 +18,8 @@ import {
   ScrollView,
   TextInput,
   ActivityIndicator,
-  PixelRatio
+  PixelRatio,
+  Modal
 } from 'react-native';
 import {
   Header,
@@ -31,6 +32,7 @@ import {
   Input,
   Picker,
   Item,
+  Spinner
 } from 'native-base';
 import Swiper from 'react-native-swiper'
 import CheckBox from 'react-native-checkbox';
@@ -75,7 +77,8 @@ export default class HouseDetail extends Component {
       data: [],
       loading: true,
       houseSource:null,
-      fileType:""
+      fileType:"",
+      upload:false
     }
 
     this.loadTheHouse = this.loadTheHouse.bind(this);
@@ -118,7 +121,6 @@ export default class HouseDetail extends Component {
         console.log(source);
        this.setState({
           houseSource: source,
-          uploadState: ""
         })}
     });
   }
@@ -174,6 +176,7 @@ export default class HouseDetail extends Component {
       ]);
     }
     else{
+    this.setState({upload:true})
     let data = new FormData()
     let id = this.props.id;
     data.append('id', id);
@@ -189,19 +192,20 @@ export default class HouseDetail extends Component {
       },
       body: data
     }).then( (res) => res.json() )
-    .catch( (err) => {
+    .catch( async(err) => {
       console.log(err);
-      this.setState({
-        uploadState: '上傳失敗'
+      await this.setState({
+        upload: false
       })
+      Alert.alert("上傳訊息","上傳失敗",[{text:"我知道了",onPress:()=>{}}]);
       check = 0;
     })
     console.log(response);
-    if(response.message == "1 file(s) uploaded successfully!" && check == 1){
-      this.setState({
-        uploadState: '上傳成功',
-        avatar: response.file,
+    if(response.text === "success upload" && check == 1){
+      await this.setState({
+        upload: false,
       })
+       Alert.alert("上傳訊息","上傳成功",[{text:"我知道了",onPress:()=>{}}]);
     }
     await this.loadTheHouse();
     console.log(response);
@@ -580,13 +584,19 @@ export default class HouseDetail extends Component {
     if(tab==2){
       return(
         <ScrollView>
+          <Modal
+            visible={this.state.upload}
+            animationType={"slide"}
+            onRequestClose={() => {}}
+          >
+         <View style={{flex: 1, flexDirection: 'column',justifyContent: 'center',alignItems: 'center'}}>
+           <View >
+             <Text>上傳中...</Text>
+             <Spinner color='blue'/>
+           </View>
+         </View>
+       </Modal>
           <View style={styles.viewFlexRow} >
-            {/*<Image source={require('../assets/fuck_cat.jpg')} style={styles.bgImg} />
-            <Image source={require('../assets/pusheen.jpg')} style={styles.bgImg} />
-             <View style={{padding:10}}>
-              <Image source={require('../assets/space.jpg')} style={{width:80, height:80}} />
-              <Text>新增圖片</Text>
-            </View>*/}
              <View style={{padding:10}}>
                <View style={{marginLeft: 100}} >
                 <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
@@ -598,7 +608,7 @@ export default class HouseDetail extends Component {
                   <Text style={{marginLeft: 150}}>{this.state.uploadState}</Text>
                 </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={{marginLeft:150}} onPress={this.upload}>
+                <TouchableOpacity style={{marginLeft:130}} onPress={this.upload}>
                   <Text >按此上傳圖片</Text>
                 </TouchableOpacity>
               </View>
@@ -678,7 +688,6 @@ export default class HouseDetail extends Component {
       return (
         <View>
           <Text style={styles.houseTitle}>房屋名稱: </Text>
-          <Image source={require('../assets/house.jpg')} style={styles.houseImage} />
           {
             this.state.loading ?
               <ActivityIndicator
