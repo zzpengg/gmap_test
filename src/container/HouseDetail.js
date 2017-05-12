@@ -18,7 +18,8 @@ import {
   ScrollView,
   TextInput,
   ActivityIndicator,
-  PixelRatio
+  PixelRatio,
+  Modal
 } from 'react-native';
 import {
   Header,
@@ -31,6 +32,7 @@ import {
   Input,
   Picker,
   Item,
+  Spinner
 } from 'native-base';
 import Swiper from 'react-native-swiper'
 import CheckBox from 'react-native-checkbox';
@@ -74,7 +76,9 @@ export default class HouseDetail extends Component {
       content: "",
       data: [],
       loading: true,
-      houseSource:null
+      houseSource:null,
+      fileType:"",
+      upload:false
     }
 
     this.loadTheHouse = this.loadTheHouse.bind(this);
@@ -96,7 +100,7 @@ export default class HouseDetail extends Component {
       }
     };
 
-    ImagePicker.showImagePicker(options, (response) => {
+    ImagePicker.showImagePicker(options, async (response) => {
       console.log('Response = ', response);
 
       if (response.didCancel) {
@@ -110,15 +114,27 @@ export default class HouseDetail extends Component {
       }
       else {
         let source = { uri: response.uri };
-
+        console.log(response.type);
+        await this.setState({fileType:response.type});
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
         console.log(source);
        this.setState({
           houseSource: source,
-          uploadState: ""
         })}
     });
+  }
+  LinkToPhotoUrl = async (url) =>{
+    Alert.alert("查看相片","是否查看",[
+      {text:"是",onPress:()=>{
+            Linking.canOpenURL(url).then(supported => {
+              if (supported) {
+                Linking.openURL(url);
+              }
+            });
+      }},
+      {text:"否",onPress:()=>{}}
+    ])
   }
   confirmtodeletephoto = async (path)=>{
 
@@ -154,9 +170,15 @@ export default class HouseDetail extends Component {
     }
   }
    upload = async() => {
+    if(this.state.fileType!="image/jpeg"){
+      Alert.alert("檔案型態錯誤","照片格式僅限jpg檔",[
+        {text:"我知道了",onPress:()=>{this.setState({houseSource:null})}}
+      ]);
+    }
+    else{
+    this.setState({upload:true})
     let data = new FormData()
-    let id = JSON.stringify(this.props.id);
-    console.log(id);
+    let id = this.props.id;
     data.append('id', id);
     data.append('house', {...this.state.houseSource, type: 'image/jpeg', name: 'image.jpg',});
     let url = 'https://test-zzpengg.c9users.io:8080/house/uploadhousephoto';
@@ -170,22 +192,24 @@ export default class HouseDetail extends Component {
       },
       body: data
     }).then( (res) => res.json() )
-    .catch( (err) => {
+    .catch( async(err) => {
       console.log(err);
-      this.setState({
-        uploadState: '上傳失敗'
+      await this.setState({
+        upload: false
       })
+      Alert.alert("上傳訊息","上傳失敗",[{text:"我知道了",onPress:()=>{}}]);
       check = 0;
     })
     console.log(response);
-    if(response.message == "1 file(s) uploaded successfully!" && check == 1){
-      this.setState({
-        uploadState: '上傳成功',
-        avatar: response.file,
+    if(response.text === "success upload" && check == 1){
+      await this.setState({
+        upload: false,
       })
+       Alert.alert("上傳訊息","上傳成功",[{text:"我知道了",onPress:()=>{}}]);
     }
     await this.loadTheHouse();
     console.log(response);
+    }
   }
 
   loadTheHouse = async () => {
@@ -526,7 +550,9 @@ export default class HouseDetail extends Component {
               (this.state.path.map((val)=>{
                 return(
                         <View style={styles.slide}>
-                            <Image resizeMode='contain' style={styles.image} source={{uri:url+val}}/>
+                          <TouchableOpacity onPress={()=>{this.LinkToPhotoUrl(url+val)}}style={styles.image} >
+                            <Image resizeMode='contain' style={{width:windowSize.width,height:250}}source={{uri:url+val}}/>
+                          </TouchableOpacity>
                           <TouchableOpacity  style={styles.delete} onPress={()=>{this.confirmtodeletephoto(val)}}>
                             <Image   style={{width:30,height:30}} source={require('../assets/delete.png')}/>
                           </TouchableOpacity>
@@ -558,13 +584,19 @@ export default class HouseDetail extends Component {
     if(tab==2){
       return(
         <ScrollView>
+          <Modal
+            visible={this.state.upload}
+            animationType={"slide"}
+            onRequestClose={() => {}}
+          >
+         <View style={{flex: 1, flexDirection: 'column',justifyContent: 'center',alignItems: 'center'}}>
+           <View >
+             <Text>上傳中...</Text>
+             <Spinner color='blue'/>
+           </View>
+         </View>
+       </Modal>
           <View style={styles.viewFlexRow} >
-            {/*<Image source={require('../assets/fuck_cat.jpg')} style={styles.bgImg} />
-            <Image source={require('../assets/pusheen.jpg')} style={styles.bgImg} />
-             <View style={{padding:10}}>
-              <Image source={require('../assets/space.jpg')} style={{width:80, height:80}} />
-              <Text>新增圖片</Text>
-            </View>*/}
              <View style={{padding:10}}>
                <View style={{marginLeft: 100}} >
                 <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
@@ -576,7 +608,7 @@ export default class HouseDetail extends Component {
                   <Text style={{marginLeft: 150}}>{this.state.uploadState}</Text>
                 </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={{marginLeft:150}} onPress={this.upload}>
+                <TouchableOpacity style={{marginLeft:130}} onPress={this.upload}>
                   <Text >按此上傳圖片</Text>
                 </TouchableOpacity>
               </View>
@@ -656,7 +688,6 @@ export default class HouseDetail extends Component {
       return (
         <View>
           <Text style={styles.houseTitle}>房屋名稱: </Text>
-          <Image source={require('../assets/house.jpg')} style={styles.houseImage} />
           {
             this.state.loading ?
               <ActivityIndicator

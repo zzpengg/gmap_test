@@ -129,15 +129,21 @@ export default class StudentRegister extends Component {
                 this.onLogout.bind(this);
                 this.storeToken(response.token);
                 const { navigator } = this.props;
-                if(navigator){
-                  navigator.push({
-                    name: 'HouseComment',
-                    component: HouseComment,
-                    params: {
-                      accessToken: this.state.accessToken
-                    }
-                  })
-                }
+                // if(navigator){
+                //   navigator.push({
+                //     name: 'HouseComment',
+                //     component: HouseComment,
+                //     params: {
+                //       accessToken: this.state.accessToken
+                //     }
+                //   })
+                // }
+                 Alert.alert('註冊成功',
+                "請至信箱驗證",
+                [
+                  {text:'我知道了',onPress:()=>{navigator.pop()}}
+                ]
+              );
         }
     } catch (errors) {
       console.log(errors);
@@ -145,7 +151,10 @@ export default class StudentRegister extends Component {
   }
 
   render() {
-    var data = ["男","女","其他"];
+        const data= [
+              { sex:"男", type:"male"},
+              { sex:"女",type:"female"}
+            ];
     return (
       <View style={styles.container}>
         <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
@@ -157,10 +166,6 @@ export default class StudentRegister extends Component {
         <Content>
             <View>
               <List style={styles.form}>
-              <View style={{marginLeft: 80}} >
-                <Image source={require('../assets/fuck_cat.jpg')} style={{width:150, height:150}}/>
-                <Text style={{fontSize: 15, marginLeft: 30}}>新增大頭貼</Text>
-              </View>
                 <Text style={{fontSize: 18}}>基本資料</Text>
                 <ListItem style={{ marginTop: 15 }}>
                   <InputGroup borderType="regular" style={{ borderRadius: 5}} >
@@ -182,34 +187,45 @@ export default class StudentRegister extends Component {
 
                   </InputGroup>
                 </ListItem>
+                <ListItem style={{ marginTop: 10 }}>
+                  <InputGroup borderType="regular" style={{ borderRadius: 5}} >
+                    <Input placeholder="信箱" onChangeText={(val)=>{this.setState({email:val})}}
+                      onBlur={ async() =>{
+                      const emailRule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
+                      if(this.state.email.search(emailRule)==-1)
+                      {
+                        Alert.alert(
+                          "型態錯誤",
+                          "請輸入正確信箱",
+                          [
+                            {text:'我知道了',onPress:()=>{}}
+                          ]
+                        )
+                        this.setState({email:""})
+                      }
+                    }}
+                      value={this.state.email}/>
+                  </InputGroup>
+                </ListItem>
                <View style={{flexDirection:'row'}}>
                  <Text style={{paddingTop:20, paddingLeft: 30, fontSize: 18}}>性別</Text>
-                 {
-                   data.length > 0 ?
-                      <Picker
-                        iosHeader="Select one"
-                        mode="dropdown"
-                        selectedValue={this.state.selected1}
-                        onValueChange={this.onValueChange.bind(this)}>
-                        {
-                          data.map( (val, index) => <Item key={index} label={val} value={val} /> )
-                        }
-                      </Picker> : null
-                  }
+                 <Picker
+                    style={{ width: 120, marginLeft: 50, marginTop: 10}}
+                    iosHeader="Select one"
+                    mode="dropdown"
+                    selectedValue={this.state.selected1}
+                    onValueChange={this.onValueChange.bind(this)}>
+                    {data.map(function(val, index)  {
+                        return (<Item key={index} label={val.sex} value={val.type}/>)
+                    })}
+
+                 </Picker>
                </View>
-               <ListItem style={{ marginTop: 15 }}>
-                 <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="信箱"
-                     maxLength={50}
-                     onChangeText={ (val) => this.setState({email: val}) }
-                     value={this.state.email}/>
-                 </InputGroup>
-               </ListItem>
                <Text style={{fontSize: 18, marginTop: 40}}>帳號密碼</Text>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
 
-                   <Input placeholder="帳號" onBlur={()=>{
+                   <Input placeholder="帳號(長度4~16)" onBlur={()=>{
                      if(this.state.account.length<4&&this.state.account.length!=0){
                        Alert.alert(
                          "長度不符",
@@ -241,7 +257,7 @@ export default class StudentRegister extends Component {
                </ListItem>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="密碼" secureTextEntry={true}
+                   <Input placeholder="密碼(長度6~20)" secureTextEntry={true}
                    value={this.state.password}
                    onBlur={()=>{
                      if(this.state.password.length<6 &&this.state.password.length!=0){
