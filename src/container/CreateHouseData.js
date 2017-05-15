@@ -13,7 +13,8 @@ import {
   Text,
   Navigator,
   TouchableOpacity,
-  PixelRatio
+  PixelRatio,
+  Alert
 } from 'react-native';
 import {
   Container,
@@ -329,12 +330,33 @@ export default class CreateHouseData extends Component {
 
             <View style={styles.viewFlexRow}>
               <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>剩餘空房</Text>
-              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (vacancy) => this.setState({ vacancy: vacancy }) }></Input>
+              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}}
+                value={this.state.vacancy}  
+                onChangeText={ (vacancy) => {
+                  if(isNaN(vacancy)){
+                    Alert.alert("型態錯誤","請輸入數字",[{text:"我知道了",onPress:()=>{}}]);
+                    this.setState({vacancy:""});
+                  }
+                  else{
+                     this.setState({ vacancy: vacancy });
+                  }}}>
+              </Input>
             </View>
 
             <View style={styles.viewFlexRow}>
               <Text style={{paddingTop:16, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>租金</Text>
-              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15, textAlign: 'right',marginRight: 5}} onChangeText={ (rent) => this.setState({ rent: rent }) }></Input>
+              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15, textAlign: 'right',marginRight: 5}}
+                value={this.state.rent} 
+                onChangeText={ (rent) => {
+                  if(isNaN(rent)){
+                    Alert.alert("型態錯誤","請輸入數字",[{text:"我知道了",onPress:()=>{}}]);
+                    this.setState({rent:""});
+                  }
+                  else{
+                    this.setState({ rent: rent })
+                  }
+                  }}>
+              </Input>
               <Text style={{paddingTop:10, fontSize: 15, color: '#7b7d85'}} >/月</Text>
             </View>
 
