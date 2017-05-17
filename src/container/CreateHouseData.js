@@ -192,8 +192,6 @@ export default class CreateHouseData extends Component {
       checknet: false,
       type: "套房",
       accessToken: this.props.accessToken,
-      houseSource:null,
-      uploadState:"",
       account:this.props.account
     }
 
@@ -252,14 +250,25 @@ export default class CreateHouseData extends Component {
   }
   onHousePressed = async() => {
     try {
-      console.log("testtest");
-      let url = 'http://test-zzpengg.c9users.io:8080/house/createMyHouse'
-      let res = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'x-access-token': this.state.accessToken,
-        },
+      
+        if(this.state.title.length==0||this.state.address.length==0||this.state.address){
+          Alert.alert(
+            "錯誤訊息",
+            "欄位值不能為空",
+            [
+              {text:'我知道了',onPress:()=>{}}
+            ]
+          )
+        }
+      else {
+         console.log("testtest");
+        let url = 'http://test-zzpengg.c9users.io:8080/house/createMyHouse'
+        let res = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'x-access-token': this.state.accessToken,
+          },
         body: JSON.stringify({
           title: this.state.title,
           area: this.state.area,
@@ -275,6 +284,7 @@ export default class CreateHouseData extends Component {
         .catch( (e) => console.log(e) );
       console.log("res = " + res);
       console.log( (res != null) );
+      }
       if(res != null){
         console.log("in");
         this.props.callBack();
@@ -331,7 +341,6 @@ export default class CreateHouseData extends Component {
             <View style={styles.viewFlexRow}>
               <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>剩餘空房</Text>
               <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}}
-                value={this.state.vacancy}  
                 onChangeText={ (vacancy) => {
                   if(isNaN(vacancy)){
                     Alert.alert("型態錯誤","請輸入數字",[{text:"我知道了",onPress:()=>{}}]);
@@ -339,14 +348,13 @@ export default class CreateHouseData extends Component {
                   }
                   else{
                      this.setState({ vacancy: vacancy });
-                  }}}>
-              </Input>
+                  }}}
+                  value={this.state.vacancy} />
             </View>
 
             <View style={styles.viewFlexRow}>
               <Text style={{paddingTop:16, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>租金</Text>
               <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15, textAlign: 'right',marginRight: 5}}
-                value={this.state.rent} 
                 onChangeText={ (rent) => {
                   if(isNaN(rent)){
                     Alert.alert("型態錯誤","請輸入數字",[{text:"我知道了",onPress:()=>{}}]);
@@ -355,8 +363,8 @@ export default class CreateHouseData extends Component {
                   else{
                     this.setState({ rent: rent })
                   }
-                  }}>
-              </Input>
+                  }}
+                    value={this.state.rent} />
               <Text style={{paddingTop:10, fontSize: 15, color: '#7b7d85'}} >/月</Text>
             </View>
 

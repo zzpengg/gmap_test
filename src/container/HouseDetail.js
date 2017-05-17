@@ -587,10 +587,11 @@ export default class HouseDetail extends Component {
           <Modal
             visible={this.state.upload}
             animationType={"slide"}
+            transparent={true}
             onRequestClose={() => {}}
           >
-         <View style={{flex: 1, flexDirection: 'column',justifyContent: 'center',alignItems: 'center'}}>
-           <View >
+        <View style={styles.modalcontainer}>
+           <View style={styles.innerContainer}>
              <Text>上傳中...</Text>
              <Spinner color='blue'/>
            </View>
@@ -810,6 +811,17 @@ const styles = StyleSheet.create({
    justifyContent: 'flex-end',
    alignItems: 'center',
  },
+   modalcontainer: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+  },
+  innerContainer: {
+    borderRadius: 10,
+    alignItems: 'center',
+    backgroundColor: '#fff', padding: 20
+  },
  map: {
    ...StyleSheet.absoluteFillObject,
  },

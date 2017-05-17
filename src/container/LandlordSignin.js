@@ -311,11 +311,12 @@ export default class LandlordSignin extends Component {
      <View style={styles.container}>
        <Modal
        visible={this.state.visible}
-       animationType={"slide"}
+       animationType={"fade"}
+       transparent={true}
        onRequestClose={() => {}}
        >
-         <View style={{flex: 1,  flexDirection: 'column',justifyContent: 'center',alignItems: 'center'}}>
-           <View >
+         <View style={styles.modalcontainer}>
+           <View style={styles.innerContainer}>
              <Text>載入中...</Text>
              <Spinner color='blue'/>
            </View>
@@ -411,6 +412,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#fffbe2',
     flex: 1,
     justifyContent: 'center',
+  },
+  modalcontainer: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+  },
+  innerContainer: {
+    borderRadius: 10,
+    alignItems: 'center',
+    backgroundColor: '#fff', padding: 20
   },
   footerItem: {
     flex: 1,
