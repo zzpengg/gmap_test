@@ -27,6 +27,8 @@ import {
 import HouseDetail from './HouseDetail.js';
 import CreateHouseData from './CreateHouseData.js';
 
+import HouseDataComponent from '../component/HouseDataComponent.js';
+
 export default class HouseData extends Component {
 
   constructor(props) {
@@ -48,6 +50,8 @@ export default class HouseData extends Component {
     //<Component {...route.params} navigator={navigator} />
     //这里传递了navigator作为props
     console.log('house id = ' + id);
+    console.log(this.props.accessToken);
+    console.log("heyhey");
     console.log("next page pressed");
     if(navigator) {
         navigator.push({
@@ -129,6 +133,20 @@ export default class HouseData extends Component {
     return star;
   };
 
+  HouseDetailStudentPage = (id) => {
+    const { navigator } = this.props;
+    console.log("id = " + id);
+    if(navigator){
+      navigator.push({
+        name: 'HouseDetail',
+        component: HouseDetail,
+        params: {
+          id: id,
+        }
+      })
+    }
+  }
+
 
   render() {
     // const { region } = this.props;
@@ -159,7 +177,7 @@ export default class HouseData extends Component {
           <View style={{flex: 1,justifyContent: 'center',alignItems: 'center'}}>
           <Text style={{marginLeft:10, marginTop:10}} >共{this.state.data.length}間房屋</Text>
             {
-              this.state.data.map((val, index) => {
+              /*this.state.data.map((val, index) => {
                 return (
                   <View style={styles.dataView} key={index}>
                     <View>
@@ -181,6 +199,11 @@ export default class HouseData extends Component {
                     </View>
                   </View>
                 )
+              })*/
+            }
+            {
+              this.state.data.map((val, index) => {
+                return <HouseDataComponent val={val} index={index} nextPage={this.nextPage}/>
               })
             }
             <View style={styles.dataView}>
