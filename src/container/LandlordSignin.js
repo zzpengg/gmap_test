@@ -37,7 +37,7 @@ import FBLoginView from'../component/FBLoginView'
 
 const ACCESS_TOKEN = 'access_token';
 import {FBLogin, FBLoginManager} from 'react-native-facebook-login';
-
+import {Loading} from '../component/Loading'
 import IconVec from 'react-native-vector-icons/FontAwesome';
 import PersonInfoLandlord from './PersonInfoLandlord.js';
 
@@ -52,7 +52,7 @@ export default class LandlordSignin extends Component {
       accessToken: "",
       error: "",
       avatar: '',
-      visiable:true,
+      visible:true,
     }
   }
 
@@ -309,19 +309,7 @@ export default class LandlordSignin extends Component {
 
    return (
      <View style={styles.container}>
-       <Modal
-       visible={this.state.visible}
-       animationType={"fade"}
-       transparent={true}
-       onRequestClose={() => {}}
-       >
-         <View style={styles.modalcontainer}>
-           <View style={styles.innerContainer}>
-             <Text>載入中...</Text>
-             <Spinner color='blue'/>
-           </View>
-         </View>
-       </Modal>
+      <Loading label="載入中..." visible={this.state.visible}/>
        <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
          <Button transparent onPress={this.prePage.bind(this)}>
            <Icon name='ios-arrow-back' />

@@ -41,7 +41,7 @@ import IconVec from 'react-native-vector-icons/FontAwesome';
 import Dimensions from 'Dimensions';
 const windowSize = Dimensions.get('window');
 import Comment from '../component/Comment.js';
-
+import {Loading} from '../component/Loading'
 import CreateHouseData from './CreateHouseData.js';
 
 export default class HouseDetail extends Component {
@@ -195,7 +195,8 @@ export default class HouseDetail extends Component {
     .catch( async(err) => {
       console.log(err);
       await this.setState({
-        upload: false
+        upload: false,
+        houseSource:null
       })
       Alert.alert("上傳訊息","上傳失敗",[{text:"我知道了",onPress:()=>{}}]);
       check = 0;
@@ -204,6 +205,7 @@ export default class HouseDetail extends Component {
     if(response.text === "success upload" && check == 1){
       await this.setState({
         upload: false,
+        houseSource:null
       })
        Alert.alert("上傳訊息","上傳成功",[{text:"我知道了",onPress:()=>{}}]);
     }
@@ -584,19 +586,7 @@ export default class HouseDetail extends Component {
     if(tab==2){
       return(
         <ScrollView>
-          <Modal
-            visible={this.state.upload}
-            animationType={"slide"}
-            transparent={true}
-            onRequestClose={() => {}}
-          >
-        <View style={styles.modalcontainer}>
-           <View style={styles.innerContainer}>
-             <Text>上傳中...</Text>
-             <Spinner color='blue'/>
-           </View>
-         </View>
-       </Modal>
+        <Loading label="上傳中" visible={this.state.upload}/>
           <View style={styles.viewFlexRow} >
              <View style={{padding:10}}>
                <View style={{marginLeft: 100}} >

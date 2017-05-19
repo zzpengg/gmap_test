@@ -47,7 +47,7 @@ export default class Index extends Component {
     );
   }
 
-  onBackAndroid = () => {
+  onBackAndroid = async() => {
     const nav = this.props.navigator;
     const routers = nav.getCurrentRoutes();
     const now = Date.now();
@@ -55,6 +55,8 @@ export default class Index extends Component {
     if(!nav)
       return false
     if(routers.length > 1){
+     // await this.props.callBack();
+      console.log(this.props);
       nav.pop();
       return true;
     }

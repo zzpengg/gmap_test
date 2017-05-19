@@ -23,7 +23,7 @@ import {
   Title,
   Spinner
 } from 'native-base';
-
+import {Loading} from '../component/Loading'
 import HouseDetail from './HouseDetail.js';
 import CreateHouseData from './CreateHouseData.js';
 
@@ -137,19 +137,7 @@ export default class HouseData extends Component {
     const { navigator } = this.props;
     return (
       <View>
-        <Modal
-        visible={this.state.visible}
-        animationType={"fade"}
-        transparent={true}
-        onRequestClose={() => {}}
-        >
-         <View style={styles.modalcontainer}>
-           <View style={styles.innerContainer}>
-              <Text>載入中...</Text>
-              <Spinner color='blue'/>
-            </View>
-          </View>
-        </Modal>
+      <Loading label="載入中..." visible={this.state.visible}/>
         <ScrollView>
           <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
             <Button transparent onPress={this.prePage.bind(this)}>
