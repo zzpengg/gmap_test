@@ -717,7 +717,7 @@ export default class HouseDetail extends Component {
             ) : <Text style={{alignSelf: 'center'}} >暫無留言</Text>
           }
             <TextInput
-            style={{textAlignVertical: 'top',borderColor:'black',borderRadius:5,borderWidth:0.5}}
+            style={{alignSelf:'center',width:windowSize.width/5*4,textAlignVertical: 'top',borderColor:'black',borderRadius:5,borderWidth:0.5}}
             onChangeText = { (content) => this.setState({content: content})}
             editable = {true}
             numberOfLines = {4}
