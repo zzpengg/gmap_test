@@ -23,7 +23,7 @@ import {
   Title,
   Spinner
 } from 'native-base';
-
+import {Loading} from '../component/Loading'
 import HouseDetail from './HouseDetail.js';
 import CreateHouseData from './CreateHouseData.js';
 
@@ -155,18 +155,7 @@ export default class HouseData extends Component {
     const { navigator } = this.props;
     return (
       <View>
-        <Modal
-        visible={this.state.visible}
-        animationType={"slide"}
-        onRequestClose={() => {}}
-        >
-          <View style={{flex: 1,  flexDirection: 'column',justifyContent: 'center',alignItems: 'center'}}>
-            <View >
-              <Text>載入中...</Text>
-              <Spinner color='blue'/>
-            </View>
-          </View>
-        </Modal>
+      <Loading label="載入中..." visible={this.state.visible}/>
         <ScrollView>
           <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
             <Button transparent onPress={this.prePage.bind(this)}>
@@ -241,6 +230,17 @@ const styles = StyleSheet.create({
    justifyContent: 'flex-end',
    alignItems: 'center',
  },
+  modalcontainer: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+  },
+  innerContainer: {
+    borderRadius: 10,
+    alignItems: 'center',
+    backgroundColor: '#fff', padding: 20
+  },
  map: {
    ...StyleSheet.absoluteFillObject,
  },

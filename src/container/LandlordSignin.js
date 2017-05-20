@@ -37,7 +37,7 @@ import FBLoginView from'../component/FBLoginView'
 
 const ACCESS_TOKEN = 'access_token';
 import {FBLogin, FBLoginManager} from 'react-native-facebook-login';
-
+import {Loading} from '../component/Loading'
 import IconVec from 'react-native-vector-icons/FontAwesome';
 import PersonInfoLandlord from './PersonInfoLandlord.js';
 
@@ -52,7 +52,7 @@ export default class LandlordSignin extends Component {
       accessToken: "",
       error: "",
       avatar: '',
-      visiable:true,
+      visible:true,
     }
   }
 
@@ -309,18 +309,7 @@ export default class LandlordSignin extends Component {
 
    return (
      <View style={styles.container}>
-       <Modal
-       visible={this.state.visible}
-       animationType={"slide"}
-       onRequestClose={() => {}}
-       >
-         <View style={{flex: 1,  flexDirection: 'column',justifyContent: 'center',alignItems: 'center'}}>
-           <View >
-             <Text>載入中...</Text>
-             <Spinner color='blue'/>
-           </View>
-         </View>
-       </Modal>
+      <Loading label="載入中..." visible={this.state.visible}/>
        <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
          <Button transparent onPress={this.prePage.bind(this)}>
            <Icon name='ios-arrow-back' />
@@ -411,6 +400,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#fffbe2',
     flex: 1,
     justifyContent: 'center',
+  },
+  modalcontainer: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+  },
+  innerContainer: {
+    borderRadius: 10,
+    alignItems: 'center',
+    backgroundColor: '#fff', padding: 20
   },
   footerItem: {
     flex: 1,

@@ -242,7 +242,7 @@ export default class HouseDetailStudent extends Component {
         <Image
           resizeMode="cover"
           source={{
-            uri: `https://maps.googleapis.com/maps/api/staticmap?center=${this.state.address}&zoom=16.85&size=${imgWidth}x${imgHeight}&scale=8&language=zh-tw&markers=size:mid%7Ccolor:blue%7C${this.state.address}&key=AIzaSyBiwSQUTr6brsJoPHcliZ3TVFYgYf7ulbw` }}
+            uri: `https://maps.googleapis.com/maps/api/staticmap?center=${this.state.house.address}&zoom=16.85&size=${imgWidth}x${imgHeight}&scale=8&language=zh-tw&markers=size:mid%7Ccolor:blue%7C${this.state.house.address}&key=AIzaSyBiwSQUTr6brsJoPHcliZ3TVFYgYf7ulbw` }}
           style={{
             width: imgWidth,
             height: imgHeight,
@@ -448,7 +448,7 @@ export default class HouseDetailStudent extends Component {
   render() {
     // const { region } = this.props;
     //console.log(region);
-   const { title, area, address, vacancy, rent, type, checkwater, checkele, checknet, score, phone,landlordId} = this.state.house;
+   const { title, area, address, vacancy, rent, type, checkwater, checkele, checknet, score, phone,landlordId,remark} = this.state.house;
    let url=`http://test-zzpengg.c9users.io:8080/images/house/${landlordId}/${this.state.houseId}/`;
    return (
      <ScrollView>
@@ -500,6 +500,16 @@ export default class HouseDetailStudent extends Component {
          {this.gmap()}
          <Text style={styles.detailText}>評價: {this.rankStar(score)}{score ? <Text>({score})</Text> : null}</Text>
          <Text style={styles.detailText}>連絡房東: {phone}</Text>
+         <Text style={styles.detailText}>備註:</Text>
+        <TextInput
+              style={{alignSelf:'center',width:windowSize.width/5*4,textAlignVertical: 'top',borderColor:'black',borderRadius:5,borderWidth:0.5}}
+              editable = {false}
+              multiline = {true}
+              numberOfLines = {4}
+              maxLength = {100}
+              value={remark}
+              blurOnSubmit={true}
+            />
          <TouchableOpacity onPress={ this.commentPage }>
            <Text style={{marginLeft: 33, fontSize: 18, marginTop: 10}}>最佳留言 <IconVec name='chevron-right' /></Text>
          </TouchableOpacity>

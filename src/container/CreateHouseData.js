@@ -13,7 +13,9 @@ import {
   Text,
   Navigator,
   TouchableOpacity,
-  PixelRatio
+  PixelRatio,
+  Alert,
+  TextInput
 } from 'react-native';
 import {
   Container,
@@ -191,9 +193,8 @@ export default class CreateHouseData extends Component {
       checknet: false,
       type: "套房",
       accessToken: this.props.accessToken,
-      houseSource:null,
-      uploadState:"",
-      account:this.props.account
+      account:this.props.account,
+      remark:"",
     }
 
   }
@@ -251,14 +252,25 @@ export default class CreateHouseData extends Component {
   }
   onHousePressed = async() => {
     try {
-      console.log("testtest");
-      let url = 'http://test-zzpengg.c9users.io:8080/house/createMyHouse'
-      let res = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'x-access-token': this.state.accessToken,
-        },
+      
+        if(this.state.title.length==0||this.state.address.length==0||this.state.address.length==0){
+          Alert.alert(
+            "錯誤訊息",
+            "欄位值不能為空",
+            [
+              {text:'我知道了',onPress:()=>{}}
+            ]
+          )
+        }
+      else {
+         console.log("testtest");
+        let url = 'http://test-zzpengg.c9users.io:8080/house/createMyHouse'
+        let res = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'x-access-token': this.state.accessToken,
+          },
         body: JSON.stringify({
           title: this.state.title,
           area: this.state.area,
@@ -269,6 +281,7 @@ export default class CreateHouseData extends Component {
           checkele:this.state.checkele,
           checkwater:this.state.checkwater,
           type: this.state.type,
+          remark:this.state.remark
         })
       }).then( (data) => data.json())
         .catch( (e) => console.log(e) );
@@ -282,6 +295,7 @@ export default class CreateHouseData extends Component {
       else{
         console.log("out");
         console.log("something wrong");
+      }
       }
       console.log(res);
     } catch (errors) {
@@ -329,12 +343,31 @@ export default class CreateHouseData extends Component {
 
             <View style={styles.viewFlexRow}>
               <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>剩餘空房</Text>
-              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (vacancy) => this.setState({ vacancy: vacancy }) }></Input>
+              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}}
+                onChangeText={ (vacancy) => {
+                  if(isNaN(vacancy)){
+                    Alert.alert("型態錯誤","請輸入數字",[{text:"我知道了",onPress:()=>{}}]);
+                    this.setState({vacancy:""});
+                  }
+                  else{
+                     this.setState({ vacancy: vacancy });
+                  }}}
+                  value={this.state.vacancy} />
             </View>
 
             <View style={styles.viewFlexRow}>
               <Text style={{paddingTop:16, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>租金</Text>
-              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15, textAlign: 'right',marginRight: 5}} onChangeText={ (rent) => this.setState({ rent: rent }) }></Input>
+              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15, textAlign: 'right',marginRight: 5}}
+                onChangeText={ (rent) => {
+                  if(isNaN(rent)){
+                    Alert.alert("型態錯誤","請輸入數字",[{text:"我知道了",onPress:()=>{}}]);
+                    this.setState({rent:""});
+                  }
+                  else{
+                    this.setState({ rent: rent })
+                  }
+                  }}
+                    value={this.state.rent} />
               <Text style={{paddingTop:10, fontSize: 15, color: '#7b7d85'}} >/月</Text>
             </View>
 
@@ -351,21 +384,42 @@ export default class CreateHouseData extends Component {
                </Picker>
              </View>
              <View>
+           
              <CheckBox
+             style={{flex:1,flexDirection:'row'}}
                label='包水'
                checked={this.state.checkwater}
                onChange={this.checkWater}
              />
+            
+             
              <CheckBox
+             style={{flex:1,flexDirection:'row'}}
                label='包電'
                checked={this.state.checkele}
                onChange={this.checkEle}
              />
+            
+            
              <CheckBox
+             style={{flex:1,flexDirection:'row'}}
                label='網路'
                checked={this.state.checknet}
                onChange={this.checkNet}
              />
+            
+             <Text>備註:</Text>
+              <TextInput
+              style={{textAlignVertical: 'top',borderColor:'black',borderRadius:5,borderWidth:0.5}}
+              onChangeText = { (remark) => this.setState({remark: remark})}
+              editable = {true}
+              multiline = {true}
+              numberOfLines = {4}
+              maxLength = {100}
+              blurOnSubmit={true}
+              value={this.state.remark}
+            />
+            <Text>{this.state.remark.length}/100</Text>
              </View>
              <Button style={styles.submitBtn} block warning onPress={this.onHousePressed.bind(this)}> 新增 </Button>
            </List>

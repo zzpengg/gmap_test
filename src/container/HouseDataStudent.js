@@ -336,6 +336,14 @@ export default class HouseData extends Component {
                 )
               })
             }
+                {
+                   this.state.loading?null:
+                   this.state.updateData.length?               
+                  <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                    <Image source={require('../assets/searchhouse.jpg')} style={{width:width*0.35, height:width*0.35}}/ >
+                    <Text>已無符合需求的房屋</Text>
+                  </View>:null
+                }
               </View>
             </DropdownMenu>
             </View>

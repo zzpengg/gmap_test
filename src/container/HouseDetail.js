@@ -41,7 +41,7 @@ import IconVec from 'react-native-vector-icons/FontAwesome';
 import Dimensions from 'Dimensions';
 const windowSize = Dimensions.get('window');
 import Comment from '../component/Comment.js';
-
+import {Loading} from '../component/Loading'
 import CreateHouseData from './CreateHouseData.js';
 
 export default class HouseDetail extends Component {
@@ -71,6 +71,7 @@ export default class HouseDetail extends Component {
       checkwater: '',
       checkele: '',
       checknet: '',
+      remark:"",
       path:[],
       name: "develop",
       content: "",
@@ -195,7 +196,8 @@ export default class HouseDetail extends Component {
     .catch( async(err) => {
       console.log(err);
       await this.setState({
-        upload: false
+        upload: false,
+        houseSource:null
       })
       Alert.alert("上傳訊息","上傳失敗",[{text:"我知道了",onPress:()=>{}}]);
       check = 0;
@@ -204,6 +206,7 @@ export default class HouseDetail extends Component {
     if(response.text === "success upload" && check == 1){
       await this.setState({
         upload: false,
+        houseSource:null
       })
        Alert.alert("上傳訊息","上傳成功",[{text:"我知道了",onPress:()=>{}}]);
     }
@@ -247,6 +250,7 @@ export default class HouseDetail extends Component {
         updatedAt,
         vacancy,
         path,
+        remark
       } = res.data;
 
       await this.setState({
@@ -264,7 +268,8 @@ export default class HouseDetail extends Component {
         type,
         updatedAt,
         vacancy,
-        path
+        path,
+        remark
       });
     } catch (errors) {
       console.log(errors);
@@ -357,6 +362,7 @@ export default class HouseDetail extends Component {
           checknet:this.state.checknet,
           checkele:this.state.checkele,
           type: this.state.type,
+          remark:this.state.remark
         })
       }).then( (data) => data.json())
         .catch( (e) => console.log(e) );
@@ -578,24 +584,23 @@ export default class HouseDetail extends Component {
         {this.gmap()}
         <Text style={styles.detailText}>評價: {this.rankStar(score)}{score ? <Text>({score})</Text> : null}</Text>
         <Text style={styles.detailText}>連絡房東: {phone}</Text>
+        <Text style={styles.detailText}>備註:</Text>
+        <TextInput
+              style={{alignSelf:'center',width:windowSize.width/5*4,textAlignVertical: 'top',borderColor:'black',borderRadius:5,borderWidth:0.5}}
+              editable = {false}
+              multiline = {true}
+              numberOfLines = {4}
+              maxLength = {100}
+              value={this.state.remark}
+              blurOnSubmit={true}
+            />
         </View>
       );
     }
     if(tab==2){
       return(
         <ScrollView>
-          <Modal
-            visible={this.state.upload}
-            animationType={"slide"}
-            onRequestClose={() => {}}
-          >
-         <View style={{flex: 1, flexDirection: 'column',justifyContent: 'center',alignItems: 'center'}}>
-           <View >
-             <Text>上傳中...</Text>
-             <Spinner color='blue'/>
-           </View>
-         </View>
-       </Modal>
+        <Loading label="上傳中" visible={this.state.upload}/>
           <View style={styles.viewFlexRow} >
              <View style={{padding:10}}>
                <View style={{marginLeft: 100}} >
@@ -676,7 +681,16 @@ export default class HouseDetail extends Component {
              checked={checknet}
              onChange={this.checkNet}
            />
-
+           <Text>備註:</Text>
+          <TextInput
+            style={{textAlignVertical: 'top',borderColor:'black',borderRadius:5,borderWidth:0.5}}
+            onChangeText = { (remark) => this.setState({remark:remark})}
+            editable = {true}
+            numberOfLines = {4}
+            multiline = {true}
+            blurOnSubmit={true}
+            value={this.state.remark}
+          />
            </View>
 
            <Button style={styles.submitBtn} block warning onPress={this.updateHousePressed.bind(this)}> 送出修改 </Button>
@@ -702,12 +716,13 @@ export default class HouseDetail extends Component {
               <Comment key={index+2} {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)} />
             ) : <Text style={{alignSelf: 'center'}} >暫無留言</Text>
           }
-
-          <TextInput
+            <TextInput
+            style={{textAlignVertical: 'top',borderColor:'black',borderRadius:5,borderWidth:0.5}}
             onChangeText = { (content) => this.setState({content: content})}
             editable = {true}
             numberOfLines = {4}
             multiline = {true}
+            blurOnSubmit={true}
           />
           <Button style={styles.submitBtn} onPress={this.onCommentPressed.bind(this)} block warning> 確認送出 </Button>
         </View>
@@ -810,6 +825,17 @@ const styles = StyleSheet.create({
    justifyContent: 'flex-end',
    alignItems: 'center',
  },
+   modalcontainer: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+  },
+  innerContainer: {
+    borderRadius: 10,
+    alignItems: 'center',
+    backgroundColor: '#fff', padding: 20
+  },
  map: {
    ...StyleSheet.absoluteFillObject,
  },
