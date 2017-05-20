@@ -71,6 +71,7 @@ export default class HouseDetail extends Component {
       checkwater: '',
       checkele: '',
       checknet: '',
+      remark:"",
       path:[],
       name: "develop",
       content: "",
@@ -249,6 +250,7 @@ export default class HouseDetail extends Component {
         updatedAt,
         vacancy,
         path,
+        remark
       } = res.data;
 
       await this.setState({
@@ -266,7 +268,8 @@ export default class HouseDetail extends Component {
         type,
         updatedAt,
         vacancy,
-        path
+        path,
+        remark
       });
     } catch (errors) {
       console.log(errors);
@@ -359,6 +362,7 @@ export default class HouseDetail extends Component {
           checknet:this.state.checknet,
           checkele:this.state.checkele,
           type: this.state.type,
+          remark:this.state.remark
         })
       }).then( (data) => data.json())
         .catch( (e) => console.log(e) );
@@ -580,6 +584,16 @@ export default class HouseDetail extends Component {
         {this.gmap()}
         <Text style={styles.detailText}>評價: {this.rankStar(score)}{score ? <Text>({score})</Text> : null}</Text>
         <Text style={styles.detailText}>連絡房東: {phone}</Text>
+        <Text style={styles.detailText}>備註:</Text>
+        <TextInput
+              style={{alignSelf:'center',width:windowSize.width/5*4,textAlignVertical: 'top',borderColor:'black',borderRadius:5,borderWidth:0.5}}
+              editable = {false}
+              multiline = {true}
+              numberOfLines = {4}
+              maxLength = {100}
+              value={this.state.remark}
+              blurOnSubmit={true}
+            />
         </View>
       );
     }
@@ -667,7 +681,16 @@ export default class HouseDetail extends Component {
              checked={checknet}
              onChange={this.checkNet}
            />
-
+           <Text>備註:</Text>
+          <TextInput
+            style={{textAlignVertical: 'top',borderColor:'black',borderRadius:5,borderWidth:0.5}}
+            onChangeText = { (remark) => this.setState({remark:remark})}
+            editable = {true}
+            numberOfLines = {4}
+            multiline = {true}
+            blurOnSubmit={true}
+            value={this.state.remark}
+          />
            </View>
 
            <Button style={styles.submitBtn} block warning onPress={this.updateHousePressed.bind(this)}> 送出修改 </Button>
@@ -693,12 +716,13 @@ export default class HouseDetail extends Component {
               <Comment key={index+2} {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)} />
             ) : <Text style={{alignSelf: 'center'}} >暫無留言</Text>
           }
-
-          <TextInput
+            <TextInput
+            style={{textAlignVertical: 'top',borderColor:'black',borderRadius:5,borderWidth:0.5}}
             onChangeText = { (content) => this.setState({content: content})}
             editable = {true}
             numberOfLines = {4}
             multiline = {true}
+            blurOnSubmit={true}
           />
           <Button style={styles.submitBtn} onPress={this.onCommentPressed.bind(this)} block warning> 確認送出 </Button>
         </View>

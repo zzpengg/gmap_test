@@ -14,7 +14,8 @@ import {
   Navigator,
   TouchableOpacity,
   PixelRatio,
-  Alert
+  Alert,
+  TextInput
 } from 'react-native';
 import {
   Container,
@@ -192,7 +193,8 @@ export default class CreateHouseData extends Component {
       checknet: false,
       type: "套房",
       accessToken: this.props.accessToken,
-      account:this.props.account
+      account:this.props.account,
+      remark:"",
     }
 
   }
@@ -251,7 +253,7 @@ export default class CreateHouseData extends Component {
   onHousePressed = async() => {
     try {
       
-        if(this.state.title.length==0||this.state.address.length==0||this.state.address){
+        if(this.state.title.length==0||this.state.address.length==0||this.state.address.length==0){
           Alert.alert(
             "錯誤訊息",
             "欄位值不能為空",
@@ -279,12 +281,12 @@ export default class CreateHouseData extends Component {
           checkele:this.state.checkele,
           checkwater:this.state.checkwater,
           type: this.state.type,
+          remark:this.state.remark
         })
       }).then( (data) => data.json())
         .catch( (e) => console.log(e) );
       console.log("res = " + res);
       console.log( (res != null) );
-      }
       if(res != null){
         console.log("in");
         this.props.callBack();
@@ -293,6 +295,7 @@ export default class CreateHouseData extends Component {
       else{
         console.log("out");
         console.log("something wrong");
+      }
       }
       console.log(res);
     } catch (errors) {
@@ -381,21 +384,42 @@ export default class CreateHouseData extends Component {
                </Picker>
              </View>
              <View>
+           
              <CheckBox
+             style={{flex:1,flexDirection:'row'}}
                label='包水'
                checked={this.state.checkwater}
                onChange={this.checkWater}
              />
+            
+             
              <CheckBox
+             style={{flex:1,flexDirection:'row'}}
                label='包電'
                checked={this.state.checkele}
                onChange={this.checkEle}
              />
+            
+            
              <CheckBox
+             style={{flex:1,flexDirection:'row'}}
                label='網路'
                checked={this.state.checknet}
                onChange={this.checkNet}
              />
+            
+             <Text>備註:</Text>
+              <TextInput
+              style={{textAlignVertical: 'top',borderColor:'black',borderRadius:5,borderWidth:0.5}}
+              onChangeText = { (remark) => this.setState({remark: remark})}
+              editable = {true}
+              multiline = {true}
+              numberOfLines = {4}
+              maxLength = {100}
+              blurOnSubmit={true}
+              value={this.state.remark}
+            />
+            <Text>{this.state.remark.length}/100</Text>
              </View>
              <Button style={styles.submitBtn} block warning onPress={this.onHousePressed.bind(this)}> 新增 </Button>
            </List>
