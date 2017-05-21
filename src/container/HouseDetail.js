@@ -649,7 +649,7 @@ export default class HouseDetail extends Component {
 
           <View style={styles.viewFlexRow}>
             <Text style={{paddingTop:16, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>租金</Text>
-            <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15, textAlign: 'right',marginRight: 5}} onChangeText={ (rent) => this.setState({ rent: rent }) } value={rent}></Input>
+            <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15 ,marginRight: 5}} onChangeText={ (rent) => this.setState({ rent: rent }) } value={rent}></Input>
             <Text style={{paddingTop:10, fontSize: 15, color: '#7b7d85'}} >/月</Text>
           </View>
 
