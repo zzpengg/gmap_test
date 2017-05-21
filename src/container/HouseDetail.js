@@ -606,7 +606,6 @@ export default class HouseDetail extends Component {
       return(
         <ScrollView>
         <Loading label="上傳中" visible={this.state.upload}/>
-         <Loading label="刪除中" visible={this.state.deletephoto}/>
           <View style={styles.viewFlexRow} >
              <View style={{padding:10}}>
                <View style={{marginLeft: 100}} >
