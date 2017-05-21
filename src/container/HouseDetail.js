@@ -41,7 +41,7 @@ import IconVec from 'react-native-vector-icons/FontAwesome';
 import Dimensions from 'Dimensions';
 const windowSize = Dimensions.get('window');
 import Comment from '../component/Comment.js';
-import {Loading} from '../component/Loading'
+import {Loading} from '../component/Loading';
 import CreateHouseData from './CreateHouseData.js';
 
 export default class HouseDetail extends Component {
@@ -1014,12 +1014,12 @@ const styles = StyleSheet.create({
     marginRight: 0,
     marginTop: 20,
   },
-    avatar: {
+  avatar: {
     borderRadius: 75,
     width: 150,
     height: 150
   },
-     avatarContainer: {
+  avatarContainer: {
     borderColor: '#9B9B9B',
     borderWidth: 1 / PixelRatio.get(),
     justifyContent: 'center',

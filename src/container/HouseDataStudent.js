@@ -40,6 +40,8 @@ const windowSize = Dimensions.get('window');
 import IconVec from 'react-native-vector-icons/FontAwesome';
 import PersonInfoStudent from './PersonInfoStudent.js';
 
+import HouseDataComponent from '../component/HouseDataComponent.js';
+
 const STUDENT_ACCESS_TOKEN = 'student_access_token';
 
 export default class HouseData extends Component {
@@ -76,16 +78,17 @@ export default class HouseData extends Component {
     }
   }
 
-  nextPage() {
+  nextPage = (id) => {
     const { navigator } = this.props;
-    //为什么这里可以取得 props.navigator?请看上文:
-    //<Component {...route.params} navigator={navigator} />
-    //这里传递了navigator作为props
+
     console.log("next page pressed");
     if(navigator) {
         navigator.push({
             name: 'HouseDetailStudent',
             component: HouseDetailStudent,
+            params: {
+              id: id,
+            }
         })
     }
   }
@@ -305,40 +308,12 @@ export default class HouseData extends Component {
 
             {
                 this.state.updateData.map((val, index) => {
-                return (
-                  <TouchableOpacity
-                  key={index}
-                  onPress={() => {
-                    const { navigator } = this.props;
-                    if(navigator){
-                      navigator.push({
-                        name: 'HouseDetailStudent',
-                        component: HouseDetailStudent,
-                        params: {
-                          id: val.id,
-                        }
-                      })
-                    }
-                  }}>
-                  <View style={styles.dataView} key={index}>
-                    <View>
-                      <Image source={require('../assets/fuck_cat.jpg')} style={{width:100, height:100, marginTop:10, marginLeft:5, marginBottom: 5 }} />
-                    </View>
-
-                    <View style={{marginTop:10, marginLeft: 10}} >
-                      <Text style={styles.detailText}>房屋名稱: {val.title}</Text>
-                      <Text style={styles.detailText}>所在區域: {val.area}</Text>
-                      <Text style={styles.detailText}>租金: {val.rent} /月</Text>
-                      <Text style={styles.detailText}>評分: {this.rankStar(val.score)}{val.score ? <Text>({val.score})</Text> : null}</Text>
-                    </View>
-                  </View>
-                  </TouchableOpacity>
-                )
+                return <HouseDataComponent val={val} index={index} nextPage={this.nextPage}/>
               })
             }
                 {
                    this.state.loading?null:
-                   this.state.updateData.length?               
+                   this.state.updateData.length?
                   <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                     <Image source={require('../assets/searchhouse.jpg')} style={{width:width*0.35, height:width*0.35}}/ >
                     <Text>已無符合需求的房屋</Text>
