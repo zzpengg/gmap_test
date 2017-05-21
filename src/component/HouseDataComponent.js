@@ -113,7 +113,7 @@ const HouseDataComponent = (props) => (
   }} >
   <View style={styles.dataView} key={props.index}>
     <View>
-      <Image source={require('../assets/fuck_cat.jpg')} style={{width:100, height:100, marginTop:10, marginLeft:5, marginBottom: 5 }} />
+      <Image source={require('../assets/house-icon.png')} style={{width:100, height:100, marginTop:10, marginLeft:5, marginBottom: 5 }} />
     </View>
 
     <View style={{marginTop:10, marginLeft: 10}} >

@@ -290,26 +290,44 @@ export default class HouseDetailStudent extends Component {
   }
 
   onCommentPressed = async() => {
-    try {
-      let url = 'http://test-zzpengg.c9users.io:8080/comment/createMyComment'
-      let response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'x-access-token': this.state.accessToken,
-        },
-        body: JSON.stringify({
-          houseId: this.state.houseId,
-          content: this.state.content,
-          star: this.state.starCount,
-        })
-      }).then( (res) => res.json() )
-      .catch( (err) => console.log(err))
-      console.log(response);
-      this.loadComment();
-    } catch (errors) {
-      console.log(errors);
+    if(this.state.content.length == 0){
+      Alert.alert(
+        '錯誤訊息',
+        '評論內容不得為空',
+        [
+          {text:'我知道了',onPress:()=>{}}
+        ]
+      );
+    }else if(this.state.starCount == 0){
+      Alert.alert(
+        '錯誤訊息',
+        '尚未選取星星數',
+        [
+          {text:'我知道了',onPress:()=>{this._swiper.scrollBy(1)}}
+        ]
+      );
+    }else{
+      try {
+        let url = 'http://test-zzpengg.c9users.io:8080/comment/createMyComment'
+        let response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'x-access-token': this.state.accessToken,
+          },
+          body: JSON.stringify({
+            houseId: this.state.houseId,
+            content: this.state.content,
+            star: this.state.starCount,
+          })
+        }).then( (res) => res.json() )
+        .catch( (err) => console.log(err))
+        console.log(response);
+        this.loadComment();
+      }catch (errors) {
+        console.log(errors);
+      }
     }
   }
 

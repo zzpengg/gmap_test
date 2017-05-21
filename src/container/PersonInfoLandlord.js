@@ -16,6 +16,8 @@ import {
   Image,
   Modal,
   Alert,
+  TouchableOpacity,
+  PixelRatio,
 } from 'react-native';
 import {
   Container,
@@ -36,8 +38,10 @@ import {
 import HouseDetailStudent from './HouseDetailStudent.js';
 import StudentRegister from './StudentRegister.js';
 import HouseComment from './HouseComment.js';
+import ImagePicker from 'react-native-image-picker';
 
 import { FBLoginManager } from 'react-native-facebook-login';
+import { Loading } from '../component/Loading';
 
 const ACCESS_TOKEN = 'access_token';
 
@@ -53,6 +57,8 @@ export default class PersonInfoLandlord extends Component {
       accessToken: this.props.accessToken,
       error: "",
       visiable:true,
+      upload:false,
+      avatarSource:null,
     }
     this.getMyInfo = this.getMyInfo.bind(this);
     this.getMyInfo();
@@ -161,6 +167,90 @@ export default class PersonInfoLandlord extends Component {
     }
   }
 
+  selectPhotoTapped() {
+   const options = {
+     title: '取得照片',
+     cancelButtonTitle: '取消',
+     takePhotoButtonTitle: '開啟相機',
+     chooseFromLibraryButtonTitle: '從圖片庫尋找',
+     quality: 1.0,
+     maxWidth: 500,
+     maxHeight: 500,
+     storageOptions: {
+       skipBackup: true
+     }
+   };
+
+   ImagePicker.showImagePicker(options, async (response) => {
+     console.log('Response = ', response);
+
+     if (response.didCancel) {
+       console.log('User cancelled photo picker');
+     }
+     else if (response.error) {
+       console.log('ImagePicker Error: ', response.error);
+     }
+     else if (response.customButton) {
+       console.log('User tapped custom button: ', response.customButton);
+     }
+     else {
+       let source = { uri: response.uri };
+       console.log(response.type);
+       await this.setState({fileType:response.type});
+       // You can also display the image using data:
+       // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+       console.log(source);
+      this.setState({
+         avatarSource: source,
+      })
+    }});
+  }
+
+  upload = async() => {
+    if(this.state.fileType!="image/jpeg"){
+      Alert.alert("檔案型態錯誤","照片格式僅限jpg檔",[
+        {text:"我知道了",onPress:()=>{this.setState({avatarSource:null})}}
+      ]);
+    }
+    else{
+      this.setState({upload:true})
+      let data = new FormData()
+      let id = this.props.id;
+      data.append('id', id);
+      data.append('avatar', {...this.state.avatarSource, type: 'image/jpeg', name: 'image.jpg',});
+      let url = 'https://test-zzpengg.c9users.io:8080/user/upload';
+      let check = 1;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',
+          'x-access-token': this.state.accessToken
+        },
+        body: data
+      }).then( (res) => res.json() )
+      .catch( async(err) => {
+        console.log(err);
+        await this.setState({
+          upload: false,
+          avatarSource:null
+        })
+        Alert.alert("上傳訊息","上傳失敗",[{text:"我知道了",onPress:()=>{}}]);
+        check = 0;
+      })
+      console.log(response);
+      if(response.text === "success upload" && check == 1){
+        await this.setState({
+          upload: false,
+          avatarSource:null
+        })
+        Alert.alert("上傳訊息","上傳成功",[{text:"我知道了",onPress:()=>{}}]);
+      }
+      await this.loadTheHouse();
+      console.log(response);
+    }
+ }
+
   render() {
    return (
      <View style={styles.container}>
@@ -184,16 +274,34 @@ export default class PersonInfoLandlord extends Component {
        </Header>
          <Content>
          <View style={styles.loginform}>
+           <Loading label="上傳中" visible={this.state.upload}/>
            <View>
              {
-               this.state.avatar == null ?
+               /*this.state.avatar == null ?
                <Image source={require('../assets/fuck_cat.jpg')} style={styles.personImage} />
                :
                this.state.avatar.length < 50 ?
                <Image source={{uri: `https://test-zzpengg.c9users.io:8080/images/${this.state.avatar}`}} style={styles.personImage} />
                :
-               <Image source={{uri: this.state.avatar}} style={styles.personImage} />
+               <Image source={{uri: this.state.avatar}} style={styles.personImage} />*/
              }
+             <View style={styles.viewFlexRow} >
+                <View style={{padding:10}}>
+                  <View style={{marginLeft: 60}} >
+                   <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
+                     <View style={[styles.avatar, styles.avatarContainer, {marginBottom: 20}]}>
+                     { this.state.avatarSource === null ? <Text>選擇照片</Text> :
+                       <Image style={styles.avatar} source={this.state.avatarSource} />
+                     }
+                     </View>
+                     <Text style={{marginLeft: 100}}>{this.state.uploadState}</Text>
+                   </TouchableOpacity>
+                   </View>
+                   <TouchableOpacity style={{marginLeft:80}} onPress={this.upload}>
+                     <Text >按此上傳圖片</Text>
+                   </TouchableOpacity>
+                 </View>
+             </View>
              <View style={{alignSelf: 'center'}}>
                <Text style={{fontSize: 32}}>{this.state.account}</Text>
              </View>
@@ -371,5 +479,19 @@ const styles = StyleSheet.create({
     marginTop: 10,
     alignSelf: 'center',
     width: 300,
-  }
+  },
+  avatar: {
+    borderRadius: 75,
+    width: 150,
+    height: 150
+  },
+  avatarContainer: {
+    borderColor: '#9B9B9B',
+    borderWidth: 1 / PixelRatio.get(),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  viewFlexRow: {
+    flexDirection: 'row'
+  },
 });

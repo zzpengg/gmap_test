@@ -154,10 +154,6 @@ export default class LandlordRegistion extends Component {
                }).then( (data) => data.json() )
 
                console.log(response);
-               await this.setState({
-                 accessToken: response.token
-               })
-               this.storeToken(response.token);
                const { navigator } = this.props;
               //  if(navigator){
               //    navigator.push({
@@ -183,7 +179,7 @@ export default class LandlordRegistion extends Component {
      this.setState({modalVisible: visible});
    }
 
-  
+
 
 render() {
     var data= [
@@ -294,7 +290,7 @@ render() {
                <Text style={{fontSize: 18, marginTop: 40}}>帳號密碼</Text>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="帳號"
+                   <Input placeholder="帳號(長度4~16)"
                       value={this.state.account}
                       onBlur={async()=>{
 
@@ -328,7 +324,7 @@ render() {
                </ListItem>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="密碼"
+                   <Input placeholder="密碼(長度6~20)"
                    value={this.state.password}
                    secureTextEntry={true}
                    onBlur={()=>{
