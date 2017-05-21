@@ -344,6 +344,7 @@ export default class CreateHouseData extends Component {
             <View style={styles.viewFlexRow}>
               <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>剩餘空房</Text>
               <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}}
+                keyboardType={'phone-pad'}
                 onChangeText={ (vacancy) => {
                   if(isNaN(vacancy)){
                     Alert.alert("型態錯誤","請輸入數字",[{text:"我知道了",onPress:()=>{}}]);
@@ -358,6 +359,7 @@ export default class CreateHouseData extends Component {
             <View style={styles.viewFlexRow}>
               <Text style={{paddingTop:16, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>租金</Text>
               <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15, textAlign: 'right',marginRight: 5}}
+                keyboardType={'phone-pad'}
                 onChangeText={ (rent) => {
                   if(isNaN(rent)){
                     Alert.alert("型態錯誤","請輸入數字",[{text:"我知道了",onPress:()=>{}}]);
@@ -417,6 +419,7 @@ export default class CreateHouseData extends Component {
               numberOfLines = {4}
               maxLength = {100}
               blurOnSubmit={true}
+              placeholder="長度限定100字"
               value={this.state.remark}
             />
             <Text>{this.state.remark.length}/100</Text>

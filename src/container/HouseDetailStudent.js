@@ -502,7 +502,7 @@ export default class HouseDetailStudent extends Component {
          <Text style={styles.detailText}>連絡房東: {phone}</Text>
          <Text style={styles.detailText}>備註:</Text>
         <TextInput
-              style={{alignSelf:'center',width:windowSize.width/5*4,textAlignVertical: 'top',borderColor:'black',borderRadius:5,borderWidth:0.5}}
+              style={{alignSelf:'center',width:windowSize.width/5*4,textAlignVertical: 'top'}}
               editable = {false}
               multiline = {true}
               numberOfLines = {4}

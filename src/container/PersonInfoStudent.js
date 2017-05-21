@@ -30,7 +30,7 @@ import {
   Input,
   Spinner,
 } from 'native-base';
-
+import { Loading } from '../component/Loading.js';
 import HouseDetailStudent from './HouseDetailStudent.js';
 import StudentRegister from './StudentRegister.js';
 import HouseComment from './HouseComment.js';
@@ -49,7 +49,7 @@ export default class PersonInfoStudent extends Component {
       password: "",
       accessToken: "",
       error: "",
-      visiable:true,
+      visible:true,
     }
   }
 
@@ -259,18 +259,7 @@ export default class PersonInfoStudent extends Component {
   render() {
    return (
      <View style={styles.container}>
-       <Modal
-       visible={this.state.visible}
-       animationType={"slide"}
-       onRequestClose={() => {}}
-       >
-         <View style={{flex: 1,  flexDirection: 'column',justifyContent: 'center',alignItems: 'center'}}>
-           <View >
-             <Text>載入中...</Text>
-             <Spinner color='blue'/>
-           </View>
-         </View>
-       </Modal>
+     <Loading label="載入中..." visible={this.state.visible}/>
        <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
          <Button transparent onPress={this.prePage.bind(this)}>
            <Icon name='ios-arrow-back' />

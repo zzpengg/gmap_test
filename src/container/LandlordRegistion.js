@@ -222,9 +222,10 @@ render() {
                  <ListItem style={{ marginTop: 10 }}>
                   <InputGroup borderType="regular" style={{ borderRadius: 5}} >
                     <Input placeholder="信箱" onChangeText={(val)=>{this.setState({email:val})}}
+                      keyboardType={'email-address'}
                       onBlur={ async() =>{
                       const emailRule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
-                      if(this.state.email.search(emailRule)==-1)
+                      if(this.state.email.search(emailRule)==-1 && this.state.email.length!=0)
                       {
                         Alert.alert(
                           "型態錯誤",
@@ -241,7 +242,8 @@ render() {
                 </ListItem>
                 <ListItem style={{ marginTop: 10 }}>
                   <InputGroup borderType="regular" style={{ borderRadius: 5}} >
-                    <Input placeholder="電話" onChangeText={ (val) =>{
+                    <Input placeholder="電話"  keyboardType={'phone-pad'}
+                    onChangeText={ (val) =>{
                       if(isNaN(val)==true)
                       {
                         Alert.alert(
@@ -291,9 +293,9 @@ render() {
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
                    <Input placeholder="帳號(長度4~16)"
+                      keyboardType='ascii-capable'
                       value={this.state.account}
                       onBlur={async()=>{
-
                         if(this.state.account.length<4&&this.state.account.length!=0){
                           Alert.alert(
                             "長度不符",

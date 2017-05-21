@@ -79,7 +79,7 @@ export default class HouseDetail extends Component {
       loading: true,
       houseSource:null,
       fileType:"",
-      upload:false
+      upload:false,
     }
 
     this.loadTheHouse = this.loadTheHouse.bind(this);
@@ -303,7 +303,11 @@ export default class HouseDetail extends Component {
 
   onCommentPressed = async() => {
     try {
-      let url = 'http://test-zzpengg.c9users.io:8080/comment/createLandlordComment'
+      if(this.state.content.length==0){
+        Alert.alert("長度錯誤","內容不可為空",{text:"我知道了",onPress:()=>{}})
+      }
+      else{
+         let url = 'http://test-zzpengg.c9users.io:8080/comment/createLandlordComment'
       let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -319,6 +323,7 @@ export default class HouseDetail extends Component {
       .catch( (err) => console.log(err))
       console.log(response);
       this.loadComment();
+      }   
     } catch (errors) {
       console.log(errors);
     }
@@ -586,7 +591,7 @@ export default class HouseDetail extends Component {
         <Text style={styles.detailText}>連絡房東: {phone}</Text>
         <Text style={styles.detailText}>備註:</Text>
         <TextInput
-              style={{alignSelf:'center',width:windowSize.width/5*4,textAlignVertical: 'top',borderColor:'black',borderRadius:5,borderWidth:0.5}}
+              style={{alignSelf:'center',width:windowSize.width/5*4,textAlignVertical: 'top',borderRadius:5,borderWidth:0.5}}
               editable = {false}
               multiline = {true}
               numberOfLines = {4}
@@ -601,6 +606,7 @@ export default class HouseDetail extends Component {
       return(
         <ScrollView>
         <Loading label="上傳中" visible={this.state.upload}/>
+         <Loading label="刪除中" visible={this.state.deletephoto}/>
           <View style={styles.viewFlexRow} >
              <View style={{padding:10}}>
                <View style={{marginLeft: 100}} >
@@ -689,8 +695,10 @@ export default class HouseDetail extends Component {
             numberOfLines = {4}
             multiline = {true}
             blurOnSubmit={true}
+            placeholder="長度限定100字"
             value={this.state.remark}
           />
+          <Text>{this.state.remark.length}/100</Text>
            </View>
 
            <Button style={styles.submitBtn} block warning onPress={this.updateHousePressed.bind(this)}> 送出修改 </Button>
@@ -723,7 +731,10 @@ export default class HouseDetail extends Component {
             numberOfLines = {4}
             multiline = {true}
             blurOnSubmit={true}
+            placeholder="長度限定100字"
+            maxLength={100}
           />
+          <Text>{this.state.content.length}/100</Text>
           <Button style={styles.submitBtn} onPress={this.onCommentPressed.bind(this)} block warning> 確認送出 </Button>
         </View>
       )
