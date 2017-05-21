@@ -31,10 +31,10 @@ import {
   Picker,
   Item,
 } from 'native-base';
+
 import IconVec from 'react-native-vector-icons/FontAwesome';
 import CheckBox from 'react-native-checkbox';
 import StarRating from 'react-native-star-rating';
-
 
 import Dimensions from 'Dimensions';
 const windowSize = Dimensions.get('window');
@@ -324,6 +324,19 @@ export default class HouseDetailStudent extends Component {
         }).then( (res) => res.json() )
         .catch( (err) => console.log(err))
         console.log(response);
+        if(response.text == 'comment create success'){
+          Alert.alert(
+            '上傳訊息',
+            '評論成功',
+            [
+              {text:'我知道了',onPress:()=>{this._swiper.scrollBy(1)}}
+            ]
+          );
+          this.setState({
+            content: '',
+            starCount: 0,
+          })
+        }
         this.loadComment();
       }catch (errors) {
         console.log(errors);

@@ -252,7 +252,7 @@ export default class CreateHouseData extends Component {
   }
   onHousePressed = async() => {
     try {
-      
+
         if(this.state.title.length==0||this.state.address.length==0||this.state.address.length==0){
           Alert.alert(
             "錯誤訊息",
@@ -302,7 +302,7 @@ export default class CreateHouseData extends Component {
       console.log(errors);
     }
   }
- 
+
   render() {
     // const { region } = this.props;
     //console.log(region);
@@ -358,8 +358,12 @@ export default class CreateHouseData extends Component {
 
             <View style={styles.viewFlexRow}>
               <Text style={{paddingTop:16, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>租金</Text>
+<<<<<<< HEAD
               <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15, textAlign: 'right',marginRight: 5}}
                 keyboardType={'phone-pad'}
+=======
+              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15,marginRight: 5}}
+>>>>>>> upstream/master
                 onChangeText={ (rent) => {
                   if(isNaN(rent)){
                     Alert.alert("型態錯誤","請輸入數字",[{text:"我知道了",onPress:()=>{}}]);
@@ -386,30 +390,30 @@ export default class CreateHouseData extends Component {
                </Picker>
              </View>
              <View>
-           
+
              <CheckBox
              style={{flex:1,flexDirection:'row'}}
                label='包水'
                checked={this.state.checkwater}
                onChange={this.checkWater}
              />
-            
-             
+
+
              <CheckBox
              style={{flex:1,flexDirection:'row'}}
                label='包電'
                checked={this.state.checkele}
                onChange={this.checkEle}
              />
-            
-            
+
+
              <CheckBox
              style={{flex:1,flexDirection:'row'}}
                label='網路'
                checked={this.state.checknet}
                onChange={this.checkNet}
              />
-            
+
              <Text>備註:</Text>
               <TextInput
               style={{textAlignVertical: 'top',borderColor:'black',borderRadius:5,borderWidth:0.5}}
