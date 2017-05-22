@@ -53,13 +53,9 @@ export default class PersonInfoStudent extends Component {
       password: "",
       accessToken: "",
       error: "",
-<<<<<<< HEAD
       visible:true,
-=======
-      visiable: true,
       upload: false,
       avatarSource: null,
->>>>>>> upstream/master
     }
   }
 

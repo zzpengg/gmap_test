@@ -358,12 +358,9 @@ export default class CreateHouseData extends Component {
 
             <View style={styles.viewFlexRow}>
               <Text style={{paddingTop:16, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>租金</Text>
-<<<<<<< HEAD
-              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15, textAlign: 'right',marginRight: 5}}
-                keyboardType={'phone-pad'}
-=======
               <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15,marginRight: 5}}
->>>>>>> upstream/master
+                keyboardType={'phone-pad'}
+
                 onChangeText={ (rent) => {
                   if(isNaN(rent)){
                     Alert.alert("型態錯誤","請輸入數字",[{text:"我知道了",onPress:()=>{}}]);
