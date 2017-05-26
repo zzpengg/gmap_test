@@ -193,20 +193,14 @@ export default class HouseData extends Component {
               })*/
             }
             <ListView 
-              initialListSize={10} 
+              initialListSize={1} 
               dataSource={dataSource}
               renderRow={(rowData,rowID)=>{
                 return(
                   <HouseDataComponent val={rowData} index={rowID} nextPage={this.nextPage}/> 
                 )
-                  
               }}
             />
-            {/*{
-              this.state.data.map((val, index) => {
-                return <HouseDataComponent val={val} index={index} nextPage={this.nextPage}/>
-              })
-            }*/}
             <View style={styles.dataView}>
               <TouchableOpacity
                 onPress={() => {
