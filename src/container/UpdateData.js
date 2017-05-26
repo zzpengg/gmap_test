@@ -14,6 +14,7 @@ import {
   Image,
   TouchableOpacity,
   Modal,
+  Alert,
 } from 'react-native';
 import {
   Header,
@@ -24,102 +25,127 @@ import {
   Spinner,
   InputGroup,
   Input,
+  Item,
 } from 'native-base';
 import { Loading } from '../component/Loading'
-import HouseDetail from './HouseDetail.js';
-import CreateHouseData from './CreateHouseData.js';
 
-import HouseDataComponent from '../component/HouseDataComponent.js';
 
 export default class UpdateData extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
-      loading: true,
       accessToken: this.props.accessToken,
-      visible:true,
+      name: this.props.name,
+      message: `剩下${20-this.props.name.length}個字`,
     }
-    this.loadHouse = this.loadHouse.bind(this);
-    this.loadHouse();
   }
 
   prePage() {
-    this.props.callBack();
     const { navigator } = this.props;
     if(navigator) {
         navigator.pop();
     }
   }
+  check = (name) => {
+    if(name.length > 20){
+      Alert.alert('錯誤訊息',
+        "名字過長",
+        [
+          {
+            text:'我知道了',onPress:()=>{
+            this.setState({
+              name: '',
+              message: `剩下20個字`
+            })}
+          }
+        ]
+      );
 
-  loadHouse = async () => {
-    try {
-      const url = 'http://test-zzpengg.c9users.io:8080/house/findMyHouse'
-      let res = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'x-access-token': this.state.accessToken,
-        },
-      }).then((data) => data.json())
-        .catch((e) => console.log(e));
 
-      console.log(res);
+    }else{
       this.setState({
-        data: res.data,
-        loading: false,
-        visible:false,
-      })
-
-    } catch (errors) {
-      console.log(errors);
+        name,
+        message: `剩下${20-name.length}個字`
+      });
     }
   }
 
-  callBack = () => {
-    this.loadHouse();
-  }
-
-  HouseDetailStudentPage = (id) => {
-    const { navigator } = this.props;
-    console.log("id = " + id);
-    if(navigator){
-      navigator.push({
-        name: 'HouseDetail',
-        component: HouseDetail,
-        params: {
-          id: id,
-        }
-      })
+  updateMyInfo = async() => {
+    try {
+      let url = 'http://test-zzpengg.c9users.io:8080/student/updateMyInfo';
+      let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'x-access-token': this.state.accessToken,
+        },
+        body: JSON.stringify({
+          name: this.state.name,
+          password: this.state.password,
+        })
+      }).then( (data) => data.json() )
+      console.log("pressed");
+      console.log(response);
+      if(response.text === 'updateMyInfo success'){
+        //Handle success
+        //On success we will store the access_token in the AsyncStorage
+        this.setState({error: 'success'});
+        Alert.alert('訊息',
+          '修改成功',
+          [
+            {text:'我知道了',onPress:()=>{}}
+          ]
+        );
+      } else {
+            //Handle error
+            let error = res;
+            throw error;
+      }
+    } catch(error){
+      let str=""+error;
+      Alert.alert('錯誤訊息',
+      str,
+      [
+        {text:'我知道了',onPress:()=>{}}
+      ]
+    );
+      console.log("error " + error);
     }
   }
 
 
   render() {
-
-    const { navigator } = this.props;
     return (
-      <View>
-      <Loading label="載入中..." visible={this.state.visible}/>
+      <View style={styles.container}>
         <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
           <Button transparent onPress={this.prePage.bind(this)}>
             <Icon name='ios-arrow-back' />
           </Button>
           <Title>名字</Title>
         </Header>
-        <View style={{flex: 1,justifyContent: 'center',alignItems: 'center'}}>
-          <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-            <Icon name="ios-person" />
-            <Input onChangeText={(account) => {this.setState({account})}} />
-          </InputGroup>
-        </View>
+        <Content>
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            <Input style={{borderRadius: 0.75, borderColor: 'black', borderWidth: 1, marginTop: 15, marginLeft: 5, marginRight: 5}}
+              value={this.state.name}
+              onChangeText={(name) => this.check(name)}
+            />
+            <Button style={{marginTop: 15}} onPress={this.updateMyInfo} block warning> 儲存 </Button>
+          </View>
+          <Text>{this.state.message}</Text>
+        </Content>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#fffbe2',
+    flex: 1,
+    justifyContent: 'center',
+  },
   modalcontainer: {
     flex: 1,
     justifyContent: 'center',

@@ -36,9 +36,10 @@ import { Loading } from '../component/Loading.js';
 import HouseDetailStudent from './HouseDetailStudent.js';
 import StudentRegister from './StudentRegister.js';
 import HouseComment from './HouseComment.js';
+import UpdateData from './UpdateData.js';
 import ImagePicker from 'react-native-image-picker';
 import { FBLoginManager } from 'react-native-facebook-login';
-
+import LoveList from './LoveList.js';
 
 const STUDENT_ACCESS_TOKEN = 'student_access_token';
 
@@ -346,6 +347,29 @@ export default class PersonInfoStudent extends Component {
     }
   }
 
+  updateDataPage = () => {
+    const { navigator } = this.props;
+    navigator.push({
+      name: 'UpdateData',
+      component: UpdateData,
+      params: {
+        accessToken: this.state.accessToken,
+        name: this.state.name
+      }
+    });
+  }
+
+  lovePage = () => {
+    const { navigator } = this.props;
+    navigator.push({
+      name: 'LoveList',
+      component: LoveList,
+      params: {
+        accessToken: this.state.accessToken,
+      }
+    });
+  }
+
   render() {
    return (
      <View style={styles.container}>
@@ -401,16 +425,28 @@ export default class PersonInfoStudent extends Component {
                  <Text style={{color: 'black', marginTop: 3}}>帳號</Text>
                  <View style={{flexDirection: 'row'}}>
                    <Text style={{color: 'black', marginRight: 5, marginTop: 3}}>{this.state.account}</Text>
+                 </View>
+               </View>
+             </Button>
+           </View>
+           <View >
+             <Button style={{backgroundColor: '#FFFFFF', }} block onPress={this.updateDataPage}>
+               <View style={{flex: 1, justifyContent: 'space-between', flexDirection: 'row'}}>
+                 <Text style={{color: 'black', marginTop: 3}}>暱稱</Text>
+                 <View style={{flexDirection: 'row'}}>
+                   <Text style={{color: 'black', marginRight: 5, marginTop: 3}}>{this.state.name}</Text>
                    <Icon name="ios-arrow-forward" />
                  </View>
                </View>
              </Button>
            </View>
            <View >
-             <Button style={{backgroundColor: '#FFFFFF', }} block >
+             <Button style={{backgroundColor: '#FFFFFF', }} block onPress={this.lovePage}>
                <View style={{flex: 1, justifyContent: 'space-between', flexDirection: 'row'}}>
-                 <Text style={{color: 'black'}}>暱稱</Text>
-                 <Text style={{color: 'black'}}>{this.state.name}</Text>
+                 <Text style={{color: 'black', marginTop: 3}}>我的最愛</Text>
+                 <View style={{flexDirection: 'row'}}>
+                   <Icon name="ios-arrow-forward" />
+                 </View>
                </View>
              </Button>
            </View>
