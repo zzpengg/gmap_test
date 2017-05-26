@@ -235,7 +235,7 @@ export default class LandlordSignin extends Component {
       }
     } catch(error){
       Alert.alert('錯誤訊息',
-      "發生錯誤",
+      "帳號或密碼輸入錯誤",
       [
         {text:'我知道了',onPress:()=>{}}
       ]
