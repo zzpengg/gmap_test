@@ -316,11 +316,6 @@ export default class HouseData extends Component {
                   
               }}
             />
-            {/*{
-                this.state.updateData.map((val, index) => {
-                return <HouseDataComponent val={val} index={index} nextPage={this.nextPage}/>
-              })
-            }*/}
                 {
                    this.state.loading?null:
                    this.state.updateData.length?

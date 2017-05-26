@@ -56,6 +56,9 @@ export default class Index extends Component {
       return false
     if(routers.length > 1){
       nav.pop();
+      const l = this.props.navigator.state.routeStack.length-1;
+      this.props.navigator.state.routeStack[l].params.callBack();
+      console.log(this.props.navigator.state.routeStack);
       return true;
     }
 
