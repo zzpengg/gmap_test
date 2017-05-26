@@ -414,7 +414,9 @@ export default class PersonInfoStudent extends Component {
              </View>
              <View style={{alignSelf: 'center', flexDirection: 'row'}}>
                <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>名字</Text>
-               <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (name) => this.setState({ name: name }) } value={this.state.name}></Input>
+               <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>{this.state.name}</Text>
+               <Icon name="ios-arrow-forward" />
+               {/*<Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (name) => this.setState({ name: name }) } value={this.state.name}></Input>*/}
              </View>
              <View style={{alignSelf: 'center', flexDirection: 'row'}}>
                <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>密碼</Text>
