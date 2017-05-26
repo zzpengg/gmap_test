@@ -217,7 +217,20 @@ export default class HouseDetailStudent extends Component {
       });
     }
   }
-
+  callLandLord = (phone) =>{
+    Alert.alert('打給房東',`${phone}`, [
+        {
+          text: '是',onPress:()=>{
+            const url = `tel:${phone}`;
+            Linking.canOpenURL(url).then(supported => {
+              if (supported) {
+                Linking.openURL(url);
+              }
+            });
+          }},
+      { text: '否', onPress: () => {} },
+    ]);
+  }
   navigate = () => {
     Alert.alert('導航',`${this.state.house.address}`, [
         {
@@ -499,7 +512,7 @@ export default class HouseDetailStudent extends Component {
          <Text style={styles.detailText}>類型:  {type}</Text>
          {this.gmap()}
          <Text style={styles.detailText}>評價: {this.rankStar(score)}{score ? <Text>({score})</Text> : null}</Text>
-         <Text style={styles.detailText}>連絡房東: {phone}</Text>
+         <Button style={styles.detailText} info={true} onPress={()=>{this.callLandLord(phone)}}>連絡房東: {phone}</Button>
          <Text style={styles.detailText}>備註:</Text>
         <TextInput
               style={{alignSelf:'center',width:windowSize.width/5*4,textAlignVertical: 'top'}}

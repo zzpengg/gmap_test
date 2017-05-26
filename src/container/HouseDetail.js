@@ -176,6 +176,11 @@ export default class HouseDetail extends Component {
         {text:"我知道了",onPress:()=>{this.setState({houseSource:null})}}
       ]);
     }
+    else if(this.state.path.length>=5){
+      Alert.alert("錯誤訊息","照片限制最多5張",[
+        {text:"我知道了",onPress:()=>{this.setState({houseSource:null})}}
+      ]);
+    }
     else{
     this.setState({upload:true})
     let data = new FormData()

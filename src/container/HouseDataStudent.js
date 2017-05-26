@@ -19,7 +19,8 @@ import {
   ActivityIndicator,
   BackAndroid,
   Navigator,
-  AsyncStorage
+  AsyncStorage,
+  ListView
 } from 'react-native';
 import {
   Header,
@@ -127,9 +128,8 @@ export default class HouseData extends Component {
         data: res.data,
         updateData: res.data,
         loading: false,
+        visible:false
       })
-      this.setState({visible:false})
-
     } catch (errors) {
       console.log(errors);
     }
@@ -237,7 +237,8 @@ export default class HouseData extends Component {
   render() {
 
     const data = [["地區", "寶山", "進德"], ["類型", "套房", "雅房"], ["租金", "3000以下", "3000~4000", "4000~5000", "5000以上"]];
-
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    const dataSource = ds.cloneWithRows(this.state.updateData);
     const { navigator } = this.props;
     return (
         <ScrollView pagingEnabled={true}
@@ -305,12 +306,21 @@ export default class HouseData extends Component {
                   color="rgb(213, 179, 36)"
                 /> : null
             }
-
-            {
+            <ListView 
+              initialListSize={10} 
+              dataSource={dataSource}
+              renderRow={(rowData,rowID)=>{
+                return(
+                  <HouseDataComponent val={rowData} index={rowID} nextPage={this.nextPage}/> 
+                )
+                  
+              }}
+            />
+            {/*{
                 this.state.updateData.map((val, index) => {
                 return <HouseDataComponent val={val} index={index} nextPage={this.nextPage}/>
               })
-            }
+            }*/}
                 {
                    this.state.loading?null:
                    this.state.updateData.length?

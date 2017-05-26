@@ -14,6 +14,7 @@ import {
   Image,
   TouchableOpacity,
   Modal,
+  ListView
 } from 'react-native';
 import {
   Header,
@@ -151,7 +152,8 @@ export default class HouseData extends Component {
   render() {
     // const { region } = this.props;
     //console.log(region);
-
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    const dataSource = ds.cloneWithRows(this.state.data);
     const { navigator } = this.props;
     return (
       <View>
@@ -190,11 +192,21 @@ export default class HouseData extends Component {
                 )
               })*/
             }
-            {
+            <ListView 
+              initialListSize={10} 
+              dataSource={dataSource}
+              renderRow={(rowData,rowID)=>{
+                return(
+                  <HouseDataComponent val={rowData} index={rowID} nextPage={this.nextPage}/> 
+                )
+                  
+              }}
+            />
+            {/*{
               this.state.data.map((val, index) => {
                 return <HouseDataComponent val={val} index={index} nextPage={this.nextPage}/>
               })
-            }
+            }*/}
             <View style={styles.dataView}>
               <TouchableOpacity
                 onPress={() => {

@@ -37,9 +37,8 @@ import HouseDetailStudent from './HouseDetailStudent.js';
 import StudentRegister from './StudentRegister.js';
 import HouseComment from './HouseComment.js';
 import ImagePicker from 'react-native-image-picker';
-
 import { FBLoginManager } from 'react-native-facebook-login';
-import { Loading } from '../component/Loading';
+
 
 const STUDENT_ACCESS_TOKEN = 'student_access_token';
 
