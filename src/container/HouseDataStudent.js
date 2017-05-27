@@ -118,12 +118,14 @@ export default class HouseData extends Component {
 
   loadHouse = async () => {
     try {
+      console.log("***loadHouse***");
       const url = 'http://test-zzpengg.c9users.io:8080/house/findHouseData'
       let res = await fetch(url)
         .then((data) => data.json())
         .catch((e) => console.log(e));
 
       console.log(res);
+      console.log(res.data[0].id + ' ' + res.data[0].landlordId + ' ' + res.data[0].picture);
       this.setState({
         data: res.data,
         updateData: res.data,
@@ -306,14 +308,14 @@ export default class HouseData extends Component {
                   color="rgb(213, 179, 36)"
                 /> : null
             }
-            <ListView 
-              initialListSize={10} 
+            <ListView
+              initialListSize={10}
               dataSource={dataSource}
               renderRow={(rowData,rowID)=>{
                 return(
-                  <HouseDataComponent val={rowData} index={rowID} nextPage={this.nextPage}/> 
+                  <HouseDataComponent val={rowData} index={rowID} nextPage={this.nextPage}/>
                 )
-                  
+
               }}
             />
                 {
