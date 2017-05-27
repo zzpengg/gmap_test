@@ -42,6 +42,7 @@ import { FBLoginManager } from 'react-native-facebook-login';
 import LoveList from './LoveList.js';
 import IssueList from './IssueList.js';
 import UpdateAvatar from './UpdateAvatar.js';
+import UserData from '../component/UserData.js';
 
 const STUDENT_ACCESS_TOKEN = 'student_access_token';
 
@@ -319,8 +320,7 @@ export default class PersonInfoStudent extends Component {
              <Text style={{marginTop: 40, fontSize: 20, marginLeft: 20}}>個人圖片</Text>
            </View>
            </TouchableOpacity>
-
-           <View >
+           <View>
              <Button style={{backgroundColor: '#FFFFFF', }} block >
                <View style={{flex: 1, justifyContent: 'space-between', flexDirection: 'row'}}>
                  <Text style={{color: 'black', marginTop: 3}}>帳號</Text>
@@ -330,37 +330,9 @@ export default class PersonInfoStudent extends Component {
                </View>
              </Button>
            </View>
-           <View >
-             <Button style={{backgroundColor: '#FFFFFF', }} block onPress={this.updateDataPage}>
-               <View style={{flex: 1, justifyContent: 'space-between', flexDirection: 'row'}}>
-                 <Text style={{color: 'black', marginTop: 3}}>暱稱</Text>
-                 <View style={{flexDirection: 'row'}}>
-                   <Text style={{color: 'black', marginRight: 5, marginTop: 3}}>{this.state.name}</Text>
-                   <Icon name="ios-arrow-forward" />
-                 </View>
-               </View>
-             </Button>
-           </View>
-           <View >
-             <Button style={{backgroundColor: '#FFFFFF', }} block onPress={this.lovePage}>
-               <View style={{flex: 1, justifyContent: 'space-between', flexDirection: 'row'}}>
-                 <Text style={{color: 'black', marginTop: 3}}>我的最愛</Text>
-                 <View style={{flexDirection: 'row'}}>
-                   <Icon name="ios-arrow-forward" />
-                 </View>
-               </View>
-             </Button>
-           </View>
-           <View >
-             <Button style={{backgroundColor: '#FFFFFF', }} block onPress={this.issuePage}>
-               <View style={{flex: 1, justifyContent: 'space-between', flexDirection: 'row'}}>
-                 <Text style={{color: 'black', marginTop: 3}}>問題回報</Text>
-                 <View style={{flexDirection: 'row'}}>
-                   <Icon name="ios-arrow-forward" />
-                 </View>
-               </View>
-             </Button>
-           </View>
+           <UserData title="暱稱" value={this.state.name} updateDataPage={this.updateDataPage} />
+           <UserData title="我的最愛" value="" updateDataPage={this.lovePage} />
+           <UserData title="問題回報" value="" updateDataPage={this.issuePage} />
            <Button style={styles.submitBtn} onPress={this.onLogout.bind(this)} block info> 登出 </Button>
          </Content>
       }

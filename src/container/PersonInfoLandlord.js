@@ -42,6 +42,8 @@ import ImagePicker from 'react-native-image-picker';
 
 import { FBLoginManager } from 'react-native-facebook-login';
 import { Loading } from '../component/Loading';
+import UserData from '../component/UserData.js';
+import PhonePage from './PhonePage.js';
 
 const ACCESS_TOKEN = 'access_token';
 
@@ -249,7 +251,18 @@ export default class PersonInfoLandlord extends Component {
       // await this.loadTheHouse();
       console.log(response);
     }
- }
+   }
+
+  phonePage = () => {
+    const { navigator } = this.props;
+    navigator.push({
+      name: 'PhonePage',
+      component: PhonePage,
+      params: {
+        accessToken: this.state.accessToken,
+      }
+    });
+  }
 
   render() {
    return (
@@ -272,58 +285,35 @@ export default class PersonInfoLandlord extends Component {
          </Button>
          <Title>個人資料</Title>
        </Header>
-         <Content>
-         <View style={styles.loginform}>
-           <Loading label="上傳中" visible={this.state.upload}/>
-           <View>
+       <Content style={{backgroundColor: '#DDDDDD'}}>
+         <TouchableOpacity onPress={this.updateAvatarPage}>
+           <View style={{flex: 1, flexDirection: 'row', backgroundColor: 'white'}}>
+             <View style={[styles.avatar, styles.avatarContainer, {marginBottom: 20}]}>
              {
-               /*this.state.avatar == null ?
-               <Image source={require('../assets/fuck_cat.jpg')} style={styles.personImage} />
-               :
-               this.state.avatar.length < 50 ?
-               <Image source={{uri: `https://test-zzpengg.c9users.io:8080/images/${this.state.avatar}`}} style={styles.personImage} />
-               :
-               <Image source={{uri: this.state.avatar}} style={styles.personImage} />*/
+               this.state.avatarSource == null ?
+               <Image style={styles.avatar} source={require('../assets/landlord-icon.png')} /> :
+               <Image style={styles.avatar} source={{uri: `http://test-zzpengg.c9users.io:8080/images/avatar/landlord/${this.state.id}`+'/'+`${this.state.avatarSource}`}} />
              }
-             <View style={styles.viewFlexRow} >
-                <View style={{padding:10}}>
-                  <View style={{marginLeft: 60}} >
-                   <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
-                     <View style={[styles.avatar, styles.avatarContainer, {marginBottom: 20}]}>
-                     { this.state.avatarSource === null ? <Text>選擇照片</Text> :
-                       <Image style={styles.avatar} source={this.state.avatarSource} />
-                     }
-                     </View>
-                     <Text style={{marginLeft: 100}}>{this.state.uploadState}</Text>
-                   </TouchableOpacity>
-                   </View>
-                   <TouchableOpacity style={{marginLeft:80}} onPress={this.upload}>
-                     <Text >按此上傳圖片</Text>
-                   </TouchableOpacity>
-                 </View>
              </View>
-             <View style={{alignSelf: 'center'}}>
-               <Text style={{fontSize: 32}}>{this.state.account}</Text>
+             <Text style={{marginTop: 40, fontSize: 20, marginLeft: 20}}>個人圖片</Text>
+           </View>
+         </TouchableOpacity>
+         <View>
+           <Button style={{backgroundColor: '#FFFFFF', }} block >
+             <View style={{flex: 1, justifyContent: 'space-between', flexDirection: 'row'}}>
+               <Text style={{color: 'black', marginTop: 3}}>帳號</Text>
+               <View style={{flexDirection: 'row'}}>
+                 <Text style={{color: 'black', marginRight: 5, marginTop: 3}}>{this.state.account}</Text>
+               </View>
              </View>
-             <View style={{alignSelf: 'center', flexDirection: 'row'}}>
-               <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>名字</Text>
-               <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (name) => this.setState({ name: name }) } value={this.state.name}></Input>
-             </View>
-             <View style={{alignSelf: 'center', flexDirection: 'row'}}>
-               <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>密碼</Text>
-               <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (password) => this.setState({ password: password }) } value={this.state.password}></Input>
-             </View>
-             <View style={{alignSelf: 'center', flexDirection: 'row'}}>
-               <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>電話</Text>
-               <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (phone) => this.setState({ phone: phone }) } value={this.state.phone}></Input>
-             </View>
-            </View>
-            <Button style={styles.submitBtn}  onPress={this.updateMyInfo} block warning> 確認送出 </Button>
-            <Button style={styles.submitBtn} onPress={this.onLogout.bind(this)} block info> 登出 </Button>
-          </View>
-
-         </Content>
-      </View>
+           </Button>
+         </View>
+         <UserData title="暱稱" value={this.state.name} updateDataPage={this.updateDataPage} />
+         <UserData title="電話" value={this.state.phone} updateDataPage={this.phonePage} />
+         <UserData title="問題回報" value="" updateDataPage={this.issuePage} />
+         <Button style={styles.submitBtn} onPress={this.onLogout.bind(this)} block info> 登出 </Button>
+       </Content>
+     </View>
    );
   }
 }

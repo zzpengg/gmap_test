@@ -15,7 +15,6 @@ import {
   TouchableOpacity,
   Modal,
   Alert,
-  TextInput,
 } from 'react-native';
 import {
   Header,
@@ -30,16 +29,14 @@ import {
 } from 'native-base';
 import { Loading } from '../component/Loading'
 
-import Dimensions from 'Dimensions';
-const windowSize = Dimensions.get('window');
 
-export default class IssueList extends Component {
+export default class PhonePage extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       accessToken: this.props.accessToken,
-      issue: '',
+      phone: this.props.phone,
     }
   }
 
@@ -50,42 +47,36 @@ export default class IssueList extends Component {
     }
   }
 
-  createIssue = async() => {
+  updateMyInfo = async() => {
     try {
-      if(this.state.issue.length == 0){
-        Alert.alert(
-          '錯誤訊息',
-          '內容不得為空',
+      let url = 'http://test-zzpengg.c9users.io:8080/landlord/updateMyInfo';
+      let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'x-access-token': this.state.accessToken,
+        },
+        body: JSON.stringify({
+          phone: this.state.phone,
+        })
+      }).then( (data) => data.json() )
+      console.log("pressed");
+      console.log(response);
+      if(response.text === 'updateMyInfo success'){
+        //Handle success
+        //On success we will store the access_token in the AsyncStorage
+        this.setState({error: 'success'});
+        Alert.alert('訊息',
+          '修改成功',
           [
             {text:'我知道了',onPress:()=>{}}
           ]
         );
-      }else{
-        let url = 'http://test-zzpengg.c9users.io:8080/issue/addIssue';
-        let response = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'x-access-token': this.state.accessToken,
-          },
-          body: JSON.stringify({
-            issue: this.state.issue,
-          })
-        }).then( (data) => data.json() )
-        console.log("pressed");
-        console.log(response);
-        if(response.text === 'issue create success'){
-          //Handle success
-          //On success we will store the access_token in the AsyncStorage
-          this.setState({error: 'success'});
-          Alert.alert('訊息',
-            '回報成功',
-            [
-              {text:'我知道了',onPress:()=>{this.setState({issue: ''})}}
-            ]
-          );
-        }
+      } else {
+            //Handle error
+            let error = res;
+            throw error;
       }
     } catch(error){
       let str=""+error;
@@ -99,6 +90,20 @@ export default class IssueList extends Component {
     }
   }
 
+  check = (phone) => {
+    if(phone.length > 10){
+      Alert.alert('錯誤訊息', '超過十碼',
+        [
+          {text:'我知道了',onPress:()=>{this.setState({ phone: ''})}}
+        ]
+      );
+    }else{
+      this.setState({
+        phone
+      })
+    }
+  }
+
 
   render() {
     return (
@@ -107,28 +112,17 @@ export default class IssueList extends Component {
           <Button transparent onPress={this.prePage.bind(this)}>
             <Icon name='ios-arrow-back' />
           </Button>
-          <Title>問題回報</Title>
+          <Title>電話</Title>
         </Header>
         <Content>
-          <View style={styles.slide2}>
-            <View>
-              <TextInput
-                style={{alignSelf:'center',width:windowSize.width/5*4,textAlignVertical: 'top',borderColor:'black',borderRadius:5,borderWidth:0.5,marginTop:5}}
-                onChangeText={(issue) => this.setState({issue})}
-                value={this.state.issue}
-                editable = {true}
-                numberOfLines = {4}
-                multiline = {true}
-                blurOnSubmit={true}
-                placeholder="長度限定100字"
-                maxLength={100}
-              />
-              <Text style={styles.houseTitle}> {this.state.issue.length}/100</Text>
-            </View>
-            <View style={{flexDirection: 'row', alignItems: 'flex-end',alignSelf:'center'}}>
-              <Button style={styles.commentSubmitBtn} onPress={this.createIssue} > 確認送出 </Button>
-            </View>
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            <Input style={{borderRadius: 0.75, borderColor: 'black', borderWidth: 1, marginTop: 15, marginLeft: 5, marginRight: 5}}
+              value={this.state.phone}
+              onChangeText={(phone) => this.check(phone)}
+            />
+            <Button style={{marginTop: 15}} onPress={this.updateMyInfo} block warning> 儲存 </Button>
           </View>
+          <Text>{this.state.message}</Text>
         </Content>
       </View>
     );
@@ -136,9 +130,6 @@ export default class IssueList extends Component {
 }
 
 const styles = StyleSheet.create({
-  commentSubmitBtn: {
-    backgroundColor: 'blue',
-  },
   container: {
     backgroundColor: '#fffbe2',
     flex: 1,
@@ -213,10 +204,5 @@ const styles = StyleSheet.create({
     width: 220,
     flex:1,
     justifyContent: 'flex-end'
-  },
-  houseTitle: {
-    marginTop: 10,
-    marginLeft: 10,
-    alignSelf:'center'
-  },
+  }
 });
