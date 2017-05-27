@@ -169,7 +169,8 @@ const styles = StyleSheet.create({
     paddingTop:10,
     paddingLeft: 30,
     fontSize: 15,
-    color: '#7b7d85'
+    color: '#7b7d85',
+    alignSelf:'center'
   },
   houseTitleInput: {
     borderColor: 'red',
@@ -209,7 +210,7 @@ const styles = StyleSheet.create({
   houseTitle: {
     marginTop: 10,
     marginLeft: 10,
-
+    alignSelf:'center'
   },
   houseImage: {
     width: 300,
@@ -223,13 +224,13 @@ const styles = StyleSheet.create({
     height: 300,
   },
   slide1: {
-    height: 300,
+    height: 200,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#9DD6EB',
   },
   slide2: {
-    height: 300,
+    height: 200,
     backgroundColor: '#97CAE5',
   },
   commentSubmitBtn: {
@@ -464,7 +465,7 @@ export default class HouseDetailStudent extends Component {
   commentArea = () => {
     if(this.state.isLogin == 1){
       return (
-        <Swiper style={styles.wrapper} showsButtons={true} ref={(swiper) => {this._swiper = swiper;}} height={300}>
+        <Swiper style={styles.wrapper} showsButtons={true} ref={(swiper) => {this._swiper = swiper;}} height={200}>
         <View style={styles.slide1}>
           <StarRating
             disabled={false}
@@ -482,14 +483,19 @@ export default class HouseDetailStudent extends Component {
         <View style={styles.slide2}>
           <View>
             <TextInput
-              style={{borderColor: 'gray', borderWidth: 1, marginLeft: 10, marginRight: 10, width: 350}}
+              style={{alignSelf:'center',width:windowSize.width/5*4,textAlignVertical: 'top',borderColor:'black',borderRadius:5,borderWidth:0.5,marginTop:5}}
               onChangeText={(content) => this.setState({content})}
               value={this.state.content}
-              multiline={true}
+              editable = {true}
+              numberOfLines = {4}
+              multiline = {true}
+              blurOnSubmit={true}
+              placeholder="長度限定100字"
+              maxLength={100}
             />
             <Text style={styles.houseTitle}> {this.state.content.length}/100</Text>
           </View>
-          <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+          <View style={{flexDirection: 'row', alignItems: 'flex-end',alignSelf:'center'}}>
             <Button style={styles.commentSubmitBtn} onPress={this.onCommentPressed.bind(this)} > 確認送出 </Button>
           </View>
         </View>
