@@ -77,6 +77,7 @@ export default class HouseData extends Component {
 
   loadHouse = async () => {
     try {
+      console.log("***loadHouse***");
       const url = 'http://test-zzpengg.c9users.io:8080/house/findMyHouse'
       let res = await fetch(url, {
         method: 'GET',
@@ -88,6 +89,8 @@ export default class HouseData extends Component {
         .catch((e) => console.log(e));
 
       console.log(res);
+      console.log("test");
+      console.log("why");
       this.setState({
         data: res.data,
         loading: false,
@@ -192,12 +195,12 @@ export default class HouseData extends Component {
                 )
               })*/
             }
-            <ListView 
-              initialListSize={1} 
+            <ListView
+              initialListSize={1}
               dataSource={dataSource}
               renderRow={(rowData,rowID)=>{
                 return(
-                  <HouseDataComponent val={rowData} index={rowID} nextPage={this.nextPage}/> 
+                  <HouseDataComponent val={rowData} index={rowID} nextPage={this.nextPage}/>
                 )
               }}
             />
