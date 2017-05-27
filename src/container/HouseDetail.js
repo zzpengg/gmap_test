@@ -80,6 +80,7 @@ export default class HouseDetail extends Component {
       houseSource:null,
       fileType:"",
       upload:false,
+      updatevisible:false,
     }
 
     this.loadTheHouse = this.loadTheHouse.bind(this);
@@ -354,6 +355,7 @@ export default class HouseDetail extends Component {
 
   updateHousePressed = async() => {
     try {
+      this.setState({updatevisible:true})
       let url = 'http://test-zzpengg.c9users.io:8080/house/updateMyHouse'
       let res = await fetch(url, {
         method: 'POST',
@@ -378,15 +380,18 @@ export default class HouseDetail extends Component {
         .catch( (e) => console.log(e) );
       console.log(res);
       console.log( (res != null) );
-      if(res != null){
+      if(res.text == "house update success"){
+        Alert.alert("訊息","更新成功",[{text:"確認",onPress:()=>{}}]);
         console.log("in");
         await this.setState({
-          tab: 1
+          tab: 1,
+          updatevisible:false,
         })
       }
       else{
         console.log("out");
         console.log("something wrong");
+        Alert.alert("訊息","更新失敗",[{text:"確認",onPress:()=>{}}]);
       }
     } catch (errors) {
       console.log(errors);
@@ -611,6 +616,7 @@ export default class HouseDetail extends Component {
       return(
         <ScrollView>
         <Loading label="上傳中" visible={this.state.upload}/>
+        <Loading label="更新中" visible={this.state.updatevisible}/>
           <View style={styles.viewFlexRow} >
              <View style={{padding:10}}>
                <View style={{marginLeft: 100}} >

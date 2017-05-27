@@ -37,6 +37,7 @@ import {
 import CheckBox from 'react-native-checkbox';
 import HouseData from './HouseData.js';
 import ImagePicker from 'react-native-image-picker';
+import {Loading} from'../component/Loading'
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FBFAFA',
@@ -195,6 +196,7 @@ export default class CreateHouseData extends Component {
       accessToken: this.props.accessToken,
       account:this.props.account,
       remark:"",
+      visible:false,
     }
 
   }
@@ -263,6 +265,7 @@ export default class CreateHouseData extends Component {
           )
         }
       else {
+        await this.setState({visible:true});
          console.log("testtest");
         let url = 'http://test-zzpengg.c9users.io:8080/house/createMyHouse'
         let res = await fetch(url, {
@@ -287,14 +290,18 @@ export default class CreateHouseData extends Component {
         .catch( (e) => console.log(e) );
       console.log("res = " + res);
       console.log( (res != null) );
-      if(res != null){
+      if(res.text == "house create success"){
+        await this.setState({visible:false});
+        Alert.alert("訊息","新增成功",[{text:"確認",onPress:()=>{}}]);
         console.log("in");
         this.props.callBack();
         this.prePage();
       }
       else{
+        await this.setState({visible:false});
         console.log("out");
         console.log("something wrong");
+        Alert.alert("錯誤訊息","新增失敗",[{text:"確認",onPress:()=>{}}])
       }
       }
       console.log(res);
@@ -316,6 +323,7 @@ export default class CreateHouseData extends Component {
           <Title>新增房屋資訊</Title>
         </Header>
         <Content>
+        <Loading label="新增中" visible={this.state.visible}/>
           <ScrollView>
             <List style={styles.form}>
              <View style={styles.viewFlexRow}>
