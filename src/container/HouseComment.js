@@ -250,6 +250,8 @@ export default class HouseDetailStudent extends Component {
       starCount: 0,
       sortedData: [],
       slice: 0,
+      chooseTime: 0,
+      chooseGood: 0,
     }
     this.loadComment = this.loadComment.bind(this);
     this.loadComment();
@@ -555,6 +557,8 @@ export default class HouseDetailStudent extends Component {
     this.setState({
       sortedData: sortedData,
       slice: 1,
+      chooseTime: 1,
+      chooseGood: 0,
     })
   }
   sortByGood = () => {
@@ -562,22 +566,13 @@ export default class HouseDetailStudent extends Component {
       return b.like - a.like;
     })
     this.setState({
-      sortedData: sortedData
+      sortedData: sortedData,
+      chooseTime: 0,
+      chooseGood: 1,
     })
   }
 
   dataContent = () => {
-    let chooseStyle = () => {
-      if(this.state.choose == 1){
-        return {
-          color: 'green'
-        }
-      }else{
-        return {
-          color: 'black'
-        }
-      }
-    }
       return (
         <View>
           {
@@ -599,16 +594,32 @@ export default class HouseDetailStudent extends Component {
               <View>
                 <View style={{flex: 1, flexDirection: 'row'}}>
                   <TouchableOpacity onPress={this.sortByTime}>
-                    <View style={{flex: 1, flexDirection: 'row', marginLeft: 10}}>
-                      <Icon name="ios-checkmark" style={{fontSize: 20}}/>
-                      <Text style={{marginTop: 5, fontSize: 20}}>按照時間順序</Text>
-                    </View>
+                    {
+                      this.state.chooseTime == 0 ?
+                      <View style={{flex: 1, flexDirection: 'row', marginLeft: 10}}>
+                        <Icon name="ios-checkmark" style={{fontSize: 40}}/>
+                        <Text style={{marginTop: 5, fontSize: 20}}>按照時間順序</Text>
+                      </View>
+                      :
+                      <View style={{flex: 1, flexDirection: 'row', marginLeft: 10}}>
+                        <Icon name="ios-checkmark" style={{fontSize: 40, color: 'green'}}/>
+                        <Text style={{marginTop: 5, fontSize: 20, color: 'green'}}>按照時間順序</Text>
+                      </View>
+                    }
                   </TouchableOpacity>
                   <TouchableOpacity onPress={this.sortByGood}>
-                    <View style={{flex: 1, flexDirection: 'row', marginLeft: 20}}>
-                      <Icon name="ios-checkmark" />
-                      <Text>按照人氣順序</Text>
-                    </View>
+                    {
+                      this.state.chooseGood == 0 ?
+                      <View style={{flex: 1, flexDirection: 'row', marginLeft: 20}}>
+                        <Icon name="ios-checkmark" style={{fontSize: 40}}/>
+                        <Text style={{marginTop: 5, fontSize: 20}}>按照人氣順序</Text>
+                      </View>
+                      :
+                      <View style={{flex: 1, flexDirection: 'row', marginLeft: 20}}>
+                        <Icon name="ios-checkmark" style={{fontSize: 40, color: 'green'}}/>
+                        <Text style={{marginTop: 5, fontSize: 20, color: 'green'}}>按照人氣順序</Text>
+                      </View>
+                    }
                   </TouchableOpacity>
                 </View>
               {
