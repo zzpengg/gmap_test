@@ -30,6 +30,8 @@ import {
 } from 'native-base';
 import { Loading } from '../component/Loading'
 
+import Dimensions from 'Dimensions';
+const windowSize = Dimensions.get('window');
 
 export default class IssueList extends Component {
 
@@ -95,7 +97,7 @@ export default class IssueList extends Component {
         Alert.alert('訊息',
           '回報成功',
           [
-            {text:'我知道了',onPress:()=>{}}
+            {text:'我知道了',onPress:()=>{this.setState({issue: ''})}}
           ]
         );
       }
@@ -122,19 +124,25 @@ export default class IssueList extends Component {
           <Title>問題回報</Title>
         </Header>
         <Content>
-          <View style={{flex: 1, flexDirection: 'row'}}>
+          <View style={styles.slide2}>
             <View>
               <TextInput
-                style={{borderColor: 'gray', borderWidth: 1, marginLeft: 10, marginRight: 10, width: 350, marginTop: 15}}
+                style={{alignSelf:'center',width:windowSize.width/5*4,textAlignVertical: 'top',borderColor:'black',borderRadius:5,borderWidth:0.5,marginTop:5}}
                 onChangeText={(issue) => this.setState({issue})}
                 value={this.state.issue}
-                multiline={true}
+                editable = {true}
+                numberOfLines = {4}
+                multiline = {true}
+                blurOnSubmit={true}
+                placeholder="長度限定100字"
+                maxLength={100}
               />
               <Text style={styles.houseTitle}> {this.state.issue.length}/100</Text>
             </View>
-            <Button style={{marginTop: 15}} onPress={this.createIssue} block warning> 提交 </Button>
+            <View style={{flexDirection: 'row', alignItems: 'flex-end',alignSelf:'center'}}>
+              <Button style={styles.commentSubmitBtn} onPress={this.createIssue} > 確認送出 </Button>
+            </View>
           </View>
-          <Text>{this.state.message}</Text>
         </Content>
       </View>
     );
@@ -142,6 +150,9 @@ export default class IssueList extends Component {
 }
 
 const styles = StyleSheet.create({
+  commentSubmitBtn: {
+    backgroundColor: 'blue',
+  },
   container: {
     backgroundColor: '#fffbe2',
     flex: 1,
@@ -216,5 +227,10 @@ const styles = StyleSheet.create({
     width: 220,
     flex:1,
     justifyContent: 'flex-end'
-  }
+  },
+  houseTitle: {
+    marginTop: 10,
+    marginLeft: 10,
+    alignSelf:'center'
+  },
 });
