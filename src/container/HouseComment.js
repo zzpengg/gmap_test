@@ -191,16 +191,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#7b7d85'
   },
-  container: {
-   ...StyleSheet.absoluteFillObject,
-   height: 400,
-   width: 400,
-   justifyContent: 'flex-end',
-   alignItems: 'center',
- },
- map: {
-   ...StyleSheet.absoluteFillObject,
- },
  center: {
     flex: 1,
     justifyContent: 'center',
@@ -209,7 +199,6 @@ const styles = StyleSheet.create({
   houseTitle: {
     marginTop: 10,
     marginLeft: 10,
-
   },
   houseImage: {
     width: 300,
@@ -257,6 +246,8 @@ export default class HouseDetailStudent extends Component {
       isLogin: 0,
       loadingisLogin: true,
       starCount: 0,
+      sortedData: [],
+      slice: 0,
     }
     this.loadComment = this.loadComment.bind(this);
     this.loadComment();
@@ -281,6 +272,7 @@ export default class HouseDetailStudent extends Component {
       console.log(res);
       this.setState({
         data: res.data,
+        sortedData: res.data,
         loading: false,
       });
 
@@ -535,7 +527,50 @@ export default class HouseDetailStudent extends Component {
     return star;
   };
 
+  sortByTime = () => {
+    if(this.state.slice == 0){
+      let timeForData = this.state.data;
+      console.log(timeForData[0].createdAt);
+      for(let i=0;i<timeForData.length;i++){
+        timeForData[i].createdAt = timeForData[i].createdAt.slice(0, 4) +
+                                   timeForData[i].createdAt.slice(5, 7) +
+                                   timeForData[i].createdAt.slice(8, 10) +
+                                   timeForData[i].createdAt.slice(11, 13) +
+                                   timeForData[i].createdAt.slice(14, 16) +
+                                   timeForData[i].createdAt.slice(17, 19);
+      }
+      console.log(timeForData[0].createdAt);
+    }
+    console.log();
+    let sortedData = this.state.sortedData.sort( function (a, b){
+      return a.createdAt - b.createdAt;
+    })
+    this.setState({
+      sortedData: sortedData,
+      slice: 1,
+    })
+  }
+  sortByGood = () => {
+    let sortedData = this.state.sortedData.sort( function (a, b){
+      return b.like - a.like;
+    })
+    this.setState({
+      sortedData: sortedData
+    })
+  }
+
   dataContent = () => {
+    let chooseStyle = () => {
+      if(this.state.choose == 1){
+        return {
+          color: 'green'
+        }
+      }else{
+        return {
+          color: 'black'
+        }
+      }
+    }
       return (
         <View>
           {
@@ -543,22 +578,37 @@ export default class HouseDetailStudent extends Component {
               <ActivityIndicator
                 animating={this.state.loadingisLogin}
                 color="rgb(213, 179, 36)"
-              /> : null
+              /> : this.commentArea()
           }
-          {this.commentArea()}
           {
             this.state.loading ?
               <ActivityIndicator
                 animating={this.state.loading}
                 style={styles.spinner}
                 color="rgb(213, 179, 36)"
-              /> : null
-          }
-          {
-            this.state.data.length > 0 ?
-            this.state.data.map((val, index) =>
-              <Comment key={index+2} {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)} />
-            ) : <Text style={{alignSelf: 'center'}} >暫無留言</Text>
+              />
+              :
+              this.state.data.length > 0 ?
+              <View>
+                <View style={{flex: 1, flexDirection: 'row'}}>
+                  <TouchableOpacity onPress={this.sortByTime}>
+                    <View style={{flex: 1, flexDirection: 'row', marginLeft: 10}}>
+                      <Icon name="ios-checkmark" style={{fontSize: 20}}/>
+                      <Text style={{marginTop: 5, fontSize: 20}}>按照時間順序</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={this.sortByGood}>
+                    <View style={{flex: 1, flexDirection: 'row', marginLeft: 20}}>
+                      <Icon name="ios-checkmark" />
+                      <Text>按照人氣順序</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              {
+                this.state.sortedData.map((val, index) =>
+                  <Comment key={index} {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)} />
+                )
+              }</View> : <Text style={{alignSelf: 'center'}} >暫無留言</Text>
           }
         </View>
       )
