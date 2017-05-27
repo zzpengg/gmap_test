@@ -41,57 +41,22 @@ import ImagePicker from 'react-native-image-picker';
 import { FBLoginManager } from 'react-native-facebook-login';
 import LoveList from './LoveList.js';
 import IssueList from './IssueList.js';
-import UpdateAvatar from './UpdateAvatar.js';
 
 const STUDENT_ACCESS_TOKEN = 'student_access_token';
 
-export default class PersonInfoStudent extends Component {
+export default class UpdateAvatar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: '',
       name: "",
       account: "",
       status: "",
       password: "",
-      accessToken: "",
+      accessToken: this.props.accessToken,
       error: "",
       visible:true,
       upload: false,
       avatarSource: null,
-    }
-  }
-
-  componentWillMount() {
-    this.getToken();
-  }
-
-  getToken = async() => {
-    try {
-      let accessToken = await AsyncStorage.getItem(STUDENT_ACCESS_TOKEN);
-      if(!accessToken) {
-          console.log("not have token");
-          this.setState({visible:false});
-      } else {
-          this.setState({accessToken: accessToken});
-          console.log("accessToken = " + accessToken);
-          let text = await this.getMyInfo(accessToken);
-          console.log("text = " + text);
-          if(text == 'getMyInfo success'){
-            this.setState({error: 'success'});
-            this.setState({visible: false});
-            console.log('success');
-          }
-          else{
-            console.log(text);
-            this.setState({visible: false});
-            this.setState({error: text});
-          }
-
-      }
-    } catch(error) {
-        console.log("catch error = " + error);
-        this.setState({visible: false});
     }
   }
 
@@ -100,36 +65,6 @@ export default class PersonInfoStudent extends Component {
       if(navigator) {
           navigator.pop();
       }
-  }
-
-  storeToken(responseData){
-    AsyncStorage.setItem(STUDENT_ACCESS_TOKEN, responseData, (err)=> {
-      if(err){
-        console.log("an error");
-        throw err;
-      }
-      console.log("success");
-    }).catch((err)=> {
-        console.log("error is: " + err);
-    });
-  }
-
-  async deleteToken() {
-    try {
-        await AsyncStorage.removeItem(STUDENT_ACCESS_TOKEN)
-    } catch(error) {
-        console.log("Something went wrong");
-    }
-  }
-
-  onLogout(){
-    FBLoginManager.logout( (data) => {console.log(data) });
-    this.deleteToken();
-    this.setState({
-      error: 'logout'
-    })
-    console.log('callback called');
-    this.prePage();
   }
 
   async getMyInfo(token) {
@@ -147,13 +82,11 @@ export default class PersonInfoStudent extends Component {
       console.log("response");
       console.log(response);
       await this.setState({
-        id: response.data.id,
         name: response.data.name,
         account: response.data.account,
         password: response.data.password,
-        avatarSource: response.data.avatar
+        avatar: response.data.avatar
       })
-      console.log(this.state.id + ' ' + this.state.avatarSource);
       return response.text;
     }catch(error){
       console.log("catch error = " + error);
@@ -224,6 +157,134 @@ export default class PersonInfoStudent extends Component {
     });
   }
 
+  updateMyInfo = async() => {
+    try {
+      let url = 'http://test-zzpengg.c9users.io:8080/student/updateMyInfo';
+      let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'x-access-token': this.state.accessToken,
+        },
+        body: JSON.stringify({
+          name: this.state.name,
+          password: this.state.password,
+        })
+      }).then( (data) => data.json() )
+      console.log("pressed");
+      console.log(response);
+      if(response.text === 'updateMyInfo success'){
+        //Handle success
+        //On success we will store the access_token in the AsyncStorage
+        this.setState({error: 'success'});
+        Alert.alert('訊息',
+          '修改成功',
+          [
+            {text:'我知道了',onPress:()=>{}}
+          ]
+        );
+      } else {
+            //Handle error
+            let error = res;
+            throw error;
+      }
+    } catch(error){
+      let str=""+error;
+      Alert.alert('錯誤訊息',
+      str,
+      [
+        {text:'我知道了',onPress:()=>{}}
+      ]
+    );
+      console.log("error " + error);
+    }
+  }
+
+  selectPhotoTapped() {
+   const options = {
+     title: '取得照片',
+     cancelButtonTitle: '取消',
+     takePhotoButtonTitle: '開啟相機',
+     chooseFromLibraryButtonTitle: '從圖片庫尋找',
+     quality: 1.0,
+     maxWidth: 500,
+     maxHeight: 500,
+     storageOptions: {
+       skipBackup: true
+     }
+   };
+
+   ImagePicker.showImagePicker(options, async (response) => {
+     console.log('Response = ', response);
+
+     if (response.didCancel) {
+       console.log('User cancelled photo picker');
+     }
+     else if (response.error) {
+       console.log('ImagePicker Error: ', response.error);
+     }
+     else if (response.customButton) {
+       console.log('User tapped custom button: ', response.customButton);
+     }
+     else {
+       let source = { uri: response.uri };
+       console.log(response.type);
+       await this.setState({fileType:response.type});
+       // You can also display the image using data:
+       // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+       console.log(source);
+      this.setState({
+         avatarSource: source,
+      })
+    }});
+  }
+
+  upload = async() => {
+    if(this.state.fileType!="image/jpeg"){
+      Alert.alert("檔案型態錯誤","照片格式僅限jpg檔",[
+        {text:"我知道了",onPress:()=>{this.setState({avatarSource:null})}}
+      ]);
+    }
+    else{
+      this.setState({upload:true})
+      let data = new FormData()
+      let id = this.props.id;
+      data.append('id', id);
+      data.append('avatar', {...this.state.avatarSource, type: 'image/jpeg', name: 'image.jpg',});
+      let url = 'https://test-zzpengg.c9users.io:8080/student/upload';
+      let check = 1;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',
+          'x-access-token': this.state.accessToken
+        },
+        body: data
+      }).then( (res) => res.json() )
+      .catch( async(err) => {
+        console.log(err);
+        await this.setState({
+          upload: false,
+          avatarSource:null
+        })
+        Alert.alert("上傳訊息","上傳失敗",[{text:"我知道了",onPress:()=>{}}]);
+        check = 0;
+      })
+      console.log(response);
+      if(response.text === "success upload" && check == 1){
+        await this.setState({
+          upload: false,
+          avatarSource:null
+        })
+        Alert.alert("上傳訊息","上傳成功",[{text:"我知道了",onPress:()=>{}}]);
+      }
+      // await this.loadTheHouse();
+      console.log(response);
+    }
+  }
+
   updateDataPage = () => {
     const { navigator } = this.props;
     navigator.push({
@@ -258,112 +319,34 @@ export default class PersonInfoStudent extends Component {
     });
   }
 
-  updateAvatarPage = () => {
-    const { navigator } = this.props;
-    navigator.push({
-      name: 'UpdateAvatar',
-      component: UpdateAvatar,
-      params: {
-        accessToken: this.state.accessToken,
-      }
-    });
-  }
-
   render() {
    return (
      <View style={styles.container}>
-     <Loading label="載入中..." visible={this.state.visible}/>
        <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
          <Button transparent onPress={this.prePage.bind(this)}>
            <Icon name='ios-arrow-back' />
          </Button>
-         <Title>個人資料</Title>
+         <Title>上傳照片</Title>
        </Header>
-       {
-          (this.state.error != 'success') ?
-          <Content>
-          <List style={styles.form}>
-           <ListItem style={{ marginTop: 15 }}>
-             <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-               <Icon name="ios-person" />
-               <Input onChangeText={(account) => {this.setState({account})}} placeholder="帳號" />
-             </InputGroup>
-           </ListItem>
-           <ListItem style={{ marginTop: 10 }}>
-             <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-               <Icon name="ios-unlock" />
-               <Input onChangeText={(password) => {this.setState({password})}} placeholder="密碼" secureTextEntry={true}/>
-             </InputGroup>
-           </ListItem>
-           <Button onPress={this.nextPageRegister} style={styles.submitBtn} block warning> 註冊 </Button>
-           <View style={{ alignItems: 'center' }}>
-             <View style={styles.orWrapper}>
-               <Text style={styles.orText}>or</Text>
-             </View>
-             <View style={styles.hr} />
-           </View>
-           <Button style={styles.submitBtn} onPress={this.onLoginPressed} block info> 登入 </Button>
-         </List>
-         </Content>
-         :
          <Content style={{backgroundColor: '#DDDDDD'}}>
-          <TouchableOpacity onPress={this.updateAvatarPage}>
-           <View style={{flex: 1, flexDirection: 'row', backgroundColor: 'white'}}>
-             <View style={[styles.avatar, styles.avatarContainer, {marginBottom: 20}]}>
-             {
-               this.state.avatarSource == null ?
-               <Image style={styles.avatar} source={require('../assets/student-icon.png')} /> :
-               <Image style={styles.avatar} source={{uri: `http://test-zzpengg.c9users.io:8080/images/avatar/student/${this.state.id}`+'/'+`${this.state.avatarSource}`}} />
-             }
+         <View style={styles.viewFlexRow} >
+            <View style={{padding:10}}>
+              <View style={{marginLeft: 60}} >
+               <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
+                 <View style={[styles.avatar, styles.avatarContainer, {marginBottom: 20}]}>
+                 { this.state.avatarSource === null ? <Text>選擇照片</Text> :
+                   <Image style={styles.avatar} source={this.state.avatarSource} />
+                 }
+                 </View>
+                 <Text style={{marginLeft: 100}}>{this.state.uploadState}</Text>
+               </TouchableOpacity>
+               </View>
+               <TouchableOpacity style={{marginLeft:80}} onPress={this.upload}>
+                 <Text >按此上傳圖片</Text>
+               </TouchableOpacity>
              </View>
-             <Text style={{marginTop: 40, fontSize: 20, marginLeft: 20}}>個人圖片</Text>
-           </View>
-           </TouchableOpacity>
-
-           <View >
-             <Button style={{backgroundColor: '#FFFFFF', }} block >
-               <View style={{flex: 1, justifyContent: 'space-between', flexDirection: 'row'}}>
-                 <Text style={{color: 'black', marginTop: 3}}>帳號</Text>
-                 <View style={{flexDirection: 'row'}}>
-                   <Text style={{color: 'black', marginRight: 5, marginTop: 3}}>{this.state.account}</Text>
-                 </View>
-               </View>
-             </Button>
-           </View>
-           <View >
-             <Button style={{backgroundColor: '#FFFFFF', }} block onPress={this.updateDataPage}>
-               <View style={{flex: 1, justifyContent: 'space-between', flexDirection: 'row'}}>
-                 <Text style={{color: 'black', marginTop: 3}}>暱稱</Text>
-                 <View style={{flexDirection: 'row'}}>
-                   <Text style={{color: 'black', marginRight: 5, marginTop: 3}}>{this.state.name}</Text>
-                   <Icon name="ios-arrow-forward" />
-                 </View>
-               </View>
-             </Button>
-           </View>
-           <View >
-             <Button style={{backgroundColor: '#FFFFFF', }} block onPress={this.lovePage}>
-               <View style={{flex: 1, justifyContent: 'space-between', flexDirection: 'row'}}>
-                 <Text style={{color: 'black', marginTop: 3}}>我的最愛</Text>
-                 <View style={{flexDirection: 'row'}}>
-                   <Icon name="ios-arrow-forward" />
-                 </View>
-               </View>
-             </Button>
-           </View>
-           <View >
-             <Button style={{backgroundColor: '#FFFFFF', }} block onPress={this.issuePage}>
-               <View style={{flex: 1, justifyContent: 'space-between', flexDirection: 'row'}}>
-                 <Text style={{color: 'black', marginTop: 3}}>問題回報</Text>
-                 <View style={{flexDirection: 'row'}}>
-                   <Icon name="ios-arrow-forward" />
-                 </View>
-               </View>
-             </Button>
-           </View>
-           <Button style={styles.submitBtn} onPress={this.onLogout.bind(this)} block info> 登出 </Button>
+         </View>
          </Content>
-      }
       </View>
    );
   }
