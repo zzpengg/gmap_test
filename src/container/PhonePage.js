@@ -42,6 +42,7 @@ export default class PhonePage extends Component {
 
   prePage() {
     const { navigator } = this.props;
+    this.props.callBack();
     if(navigator) {
         navigator.pop();
     }
@@ -49,7 +50,15 @@ export default class PhonePage extends Component {
 
   updateMyInfo = async() => {
     try {
-      let url = 'http://test-zzpengg.c9users.io:8080/landlord/updateMyInfo';
+      if(this.state.phone.length != 10 || isNaN(this.state.phone)==true ){
+        Alert.alert('錯誤訊息',
+          '格式錯誤',
+          [
+            {text:'我知道了',onPress:()=>{}}
+          ]
+        );
+      }else{
+      let url = 'http://test-zzpengg.c9users.io:8080/user/updateMyPhone';
       let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -70,7 +79,7 @@ export default class PhonePage extends Component {
         Alert.alert('訊息',
           '修改成功',
           [
-            {text:'我知道了',onPress:()=>{}}
+            {text:'我知道了',onPress:()=>{this.prePage()}}
           ]
         );
       } else {
@@ -78,7 +87,7 @@ export default class PhonePage extends Component {
             let error = res;
             throw error;
       }
-    } catch(error){
+    }} catch(error){
       let str=""+error;
       Alert.alert('錯誤訊息',
       str,
@@ -94,7 +103,10 @@ export default class PhonePage extends Component {
     if(phone.length > 10){
       Alert.alert('錯誤訊息', '超過十碼',
         [
-          {text:'我知道了',onPress:()=>{this.setState({ phone: ''})}}
+          {text:'我知道了',onPress:()=>{
+            let newPhone = phone.slice(0, 10);
+            this.setState({ phone: newPhone})}
+          }
         ]
       );
     }else{

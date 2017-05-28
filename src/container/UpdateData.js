@@ -43,6 +43,7 @@ export default class UpdateData extends Component {
 
   prePage() {
     const { navigator } = this.props;
+    this.props.callBack();
     if(navigator) {
         navigator.pop();
     }
@@ -73,7 +74,11 @@ export default class UpdateData extends Component {
 
   updateMyInfo = async() => {
     try {
-      let url = 'http://test-zzpengg.c9users.io:8080/student/updateMyInfo';
+      let url = '';
+      if(this.props.identity == 'student')
+        url = 'http://test-zzpengg.c9users.io:8080/student/updateMyInfo'
+      else
+        url = 'http://test-zzpengg.c9users.io:8080/user/updateMyName'
       let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -83,7 +88,6 @@ export default class UpdateData extends Component {
         },
         body: JSON.stringify({
           name: this.state.name,
-          password: this.state.password,
         })
       }).then( (data) => data.json() )
       console.log("pressed");
