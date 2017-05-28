@@ -68,6 +68,7 @@ export default class PersonInfoLandlord extends Component {
 
   prePage() {
       const { navigator } = this.props;
+      this.props.callBack();
       if(navigator) {
           navigator.pop();
       }

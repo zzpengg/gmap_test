@@ -68,6 +68,7 @@ export default class LandlordSignin extends Component {
           this.setState({
             visible: false,
             error: 'error',
+            accessToken: '',
           });
       } else {
           console.log("accessToken = " + accessToken);
@@ -227,7 +228,7 @@ export default class LandlordSignin extends Component {
             {text:'我知道了',onPress:()=>{}}
           ]
         );
-      } 
+      }
       else {
             //Handle error
             let error = res;
