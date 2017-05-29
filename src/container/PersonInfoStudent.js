@@ -227,12 +227,15 @@ export default class PersonInfoStudent extends Component {
 
   updateDataPage = () => {
     const { navigator } = this.props;
+    console.log("***updateDataPage***");
     navigator.push({
       name: 'UpdateData',
       component: UpdateData,
       params: {
         accessToken: this.state.accessToken,
-        name: this.state.name
+        callBack: this.getToken,
+        name: this.state.name,
+        identity: 'student',
       }
     });
   }

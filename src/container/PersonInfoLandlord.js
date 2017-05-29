@@ -44,6 +44,8 @@ import { FBLoginManager } from 'react-native-facebook-login';
 import { Loading } from '../component/Loading';
 import UserData from '../component/UserData.js';
 import PhonePage from './PhonePage.js';
+import UpdateAvatar from './UpdateAvatar.js';
+import UpdateData from './UpdateData.js';
 
 const ACCESS_TOKEN = 'access_token';
 
@@ -68,6 +70,7 @@ export default class PersonInfoLandlord extends Component {
 
   prePage() {
       const { navigator } = this.props;
+      this.props.callBack();
       if(navigator) {
           navigator.pop();
       }
@@ -251,7 +254,7 @@ export default class PersonInfoLandlord extends Component {
       // await this.loadTheHouse();
       console.log(response);
     }
-   }
+  }
 
   phonePage = () => {
     const { navigator } = this.props;
@@ -260,6 +263,34 @@ export default class PersonInfoLandlord extends Component {
       component: PhonePage,
       params: {
         accessToken: this.state.accessToken,
+        phone: this.state.phone,
+        callBack: this.getMyInfo,
+      }
+    });
+  }
+
+  updateAvatarPage = () => {
+    const { navigator } = this.props;
+    navigator.push({
+      name: 'UpdateAvatar',
+      component: UpdateAvatar,
+      params: {
+        accessToken: this.state.accessToken,
+      }
+    });
+  }
+
+  updateDataPage = () => {
+    const { navigator } = this.props;
+    console.log("***updateDataPage***");
+    navigator.push({
+      name: 'UpdateData',
+      component: UpdateData,
+      params: {
+        accessToken: this.state.accessToken,
+        callBack: this.getMyInfo,
+        name: this.state.name,
+        identity: 'landlord',
       }
     });
   }

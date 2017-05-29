@@ -68,6 +68,7 @@ export default class LandlordSignin extends Component {
           this.setState({
             visible: false,
             error: 'error',
+            accessToken: '',
           });
       } else {
           console.log("accessToken = " + accessToken);
@@ -227,7 +228,7 @@ export default class LandlordSignin extends Component {
             {text:'我知道了',onPress:()=>{}}
           ]
         );
-      } 
+      }
       else {
             //Handle error
             let error = res;
@@ -367,7 +368,7 @@ export default class LandlordSignin extends Component {
            <View>
              {
                this.state.avatar == null ?
-               <Image source={require('../assets/fuck_cat.jpg')} style={styles.personImage} />
+               <Image source={require('../assets/landlord-icon.png')} style={styles.personImage} />
                :
                this.state.avatar.length < 50 ?
                <Image source={{uri: `https://test-zzpengg.c9users.io:8080/images/avatar/${this.state.id}/${this.state.avatar}`}} style={styles.personImage} />
