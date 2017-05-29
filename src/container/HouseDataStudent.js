@@ -309,7 +309,7 @@ export default class HouseData extends Component {
                 /> : null
             }
             <ListView
-              initialListSize={10}
+              initialListSize={5}
               dataSource={dataSource}
               renderRow={(rowData,rowID)=>{
                 return(
