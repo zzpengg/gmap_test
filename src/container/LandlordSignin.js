@@ -285,6 +285,7 @@ export default class LandlordSignin extends Component {
           address: response.address || '尚未取得',
           email: response.email,
           account: response.name,
+          userId: userId,
           password: token,
           avatar: response.picture.data.url
         })
@@ -349,7 +350,6 @@ export default class LandlordSignin extends Component {
            </View>
            <Button style={styles.submitBtn} onPress={this.onLoginPressed.bind(this)} block info> 登入 </Button>
            <FBLogin
-              buttonView={<FBLoginView />}
               ref={(fbLogin) => { this.fbLogin = fbLogin }}
               loginBehavior={FBLoginManager.LoginBehaviors.Native}
               permissions={["public_profile","email","user_friends"]}
