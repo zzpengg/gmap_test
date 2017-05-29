@@ -32,7 +32,7 @@ class FBLoginView extends Component {
 
               }}
               color={"#000000"}
-              backgroundColor={"#ffffff"} name={"facebook"}  size={20} borderRadius={100} >
+              backgroundColor={"#ffffff"} name={"facebook"}  size={5} borderRadius={100} >
 
             </Icon.Button>
           </View>
