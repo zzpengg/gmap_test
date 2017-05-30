@@ -142,10 +142,10 @@ const Comment = (props) => (
     <View style={styles.hr}></View>
     <View style={{flexDirection: 'row'}}>
       {
-        (props.avatar == null && props.identity == "landlord") ?
+        (props.avatar == null && props.star == null ) ?
         <Image source={require('../assets/landlord-icon.png')} style={styles.personImage} />
         :
-        (props.avatar == null && props.identity == "student") ?
+        (props.avatar == null && props.star != null ) ?
         <Image source={require('../assets/student-icon.png')} style={styles.personImage} />
         :
         props.avatar.length < 50 ?
