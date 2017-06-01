@@ -367,7 +367,7 @@ export default class LandlordSignin extends Component {
               style={styles.submitBtn}
               ref={(fbLogin) => { this.fbLogin = fbLogin }}
               loginBehavior={FBLoginManager.LoginBehaviors.Native}
-              permissions={["public_profile","email","user_friends"]}
+              permissions={["public_profile","email","user_friends" ]}
               onLogin={this.onFBLogin}
               onLoginFound={function(data){console.log(data.credentials)}}
               onLoginNotFound={function(e){console.log(e)}}

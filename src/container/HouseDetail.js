@@ -600,15 +600,17 @@ export default class HouseDetail extends Component {
         <Text style={styles.detailText}>評價: {this.rankStar(score)}{score ? <Text>({score})</Text> : null}</Text>
         <Text style={styles.detailText}>連絡房東: {phone}</Text>
         <Text style={styles.detailText}>備註:</Text>
-        <TextInput
-              style={{alignSelf:'center',width:windowSize.width/5*4,textAlignVertical: 'top',borderRadius:5,borderWidth:0.5}}
+        <View style={{flex:1,width:windowSize.width/5*4,alignSelf:'center',backgroundColor:'#ccc'}}>
+            <ScrollView style={{height:windowSize.height/6}}>
+              <Text
+              style={{alignSelf:'center',width:windowSize.width/5*4,color:'#2d85ca'}}
               editable = {false}
               multiline = {true}
-              numberOfLines = {4}
-              maxLength = {100}
-              value={this.state.remark}
-              blurOnSubmit={true}
-            />
+              maxLength = {100}>
+              {this.state.remark}
+              </Text>
+            </ScrollView>
+         </View>
         </View>
       );
     }

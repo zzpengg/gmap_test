@@ -88,9 +88,7 @@ export default class HouseData extends Component {
       }).then((data) => data.json())
         .catch((e) => console.log(e));
 
-      console.log(res);
-      console.log("test");
-      console.log("why");
+
       this.setState({
         data: res.data,
         loading: false,
@@ -170,31 +168,6 @@ export default class HouseData extends Component {
           </Header>
           <View style={{flex: 1,justifyContent: 'center',alignItems: 'center'}}>
           <Text style={{marginLeft:10, marginTop:10}} >共{this.state.data.length}間房屋</Text>
-            {
-              /*this.state.data.map((val, index) => {
-                return (
-                  <View style={styles.dataView} key={index}>
-                    <View>
-                      <Image source={require('../assets/fuck_cat.jpg')} style={{width:100, height:100, marginTop:5, marginLeft:5, marginBottom: 5 }} />
-                      <Text style={styles.imageText}>更改圖片</Text>
-                    </View>
-
-                    <View style={{marginTop:10, marginLeft: 10}} >
-                      <Text style={styles.detailText}>房屋名稱: {val.title}</Text>
-                      <Text style={styles.detailText}>所在區域: {val.area}</Text>
-                      <Text style={styles.detailText}>租金: {val.rent} /月</Text>
-                      <Text style={styles.detailText}>評分: {rankStar(val.score)}</Text>
-                      <View style={styles.detailData}>
-                        <Button success bordered style={{height: 18}} key={index}
-                          onPress={() => this.nextPage(val.id)}>
-                            <Text>詳細資料</Text>
-                        </Button>
-                      </View>
-                    </View>
-                  </View>
-                )
-              })*/
-            }
             <ListView
               initialListSize={1}
               dataSource={dataSource}

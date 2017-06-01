@@ -108,8 +108,9 @@ export default class LandlordChooseRegister extends Component{
       this.prePage();
     }
      catch(err){
-     Alert.alert("訊息","註冊失敗",[{text:"我知道了",onPress:""}])
-      console.log(err);
+        this.setState({loginloading:false})
+        Alert.alert("訊息","註冊失敗",[{text:"我知道了",onPress:""}])
+        console.log(err);
     }
   }
     prePage() {

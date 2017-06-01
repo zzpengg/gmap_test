@@ -514,15 +514,17 @@ export default class HouseDetailStudent extends Component {
          <Text style={styles.detailText}>評價: {this.rankStar(score)}{score ? <Text>({score})</Text> : null}</Text>
          <Button style={styles.detailText} info={true} onPress={()=>{this.callLandLord(phone)}}>連絡房東: {phone}</Button>
          <Text style={styles.detailText}>備註:</Text>
-        <TextInput
-              style={{alignSelf:'center',width:windowSize.width/5*4,textAlignVertical: 'top'}}
+         <View style={{flex:1,alignSelf:'center',width:windowSize.width/5*4,backgroundColor:'#ccc'}}>
+            <ScrollView style={{height:windowSize.height/6}}>
+              <Text
+              style={{alignSelf:'center',width:windowSize.width/5*4,color:'#2d85ca'}}
               editable = {false}
               multiline = {true}
-              numberOfLines = {4}
-              maxLength = {100}
-              value={remark}
-              blurOnSubmit={true}
-            />
+              maxLength = {100}>
+              {remark}
+              </Text>
+            </ScrollView>
+         </View>
          <TouchableOpacity onPress={ this.commentPage }>
            <Text style={{marginLeft: 33, fontSize: 18, marginTop: 10}}>最佳留言 <IconVec name='chevron-right' /></Text>
          </TouchableOpacity>

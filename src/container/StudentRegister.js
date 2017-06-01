@@ -87,14 +87,26 @@ export default class StudentRegister extends Component {
 
   onRegisterPressed = async() => {
     try {
-
+        let str = "";
+        if(this.state.name.length == 0){
+          str += "姓名 ";
+        }
+        if(this.state.account.length == 0){
+          str += "帳號 ";
+        }
+        if(this.state.email.length == 0){
+          str += "email ";
+        }
+        if(this.state.password.length == 0){
+          str += "密碼 ";
+        }
         if((this.state.name.length == 0)||
            (this.state.account.length == 0)||
            (this.state.email.length == 0)||
            (this.state.password.length == 0)){
           Alert.alert(
             "錯誤訊息",
-            "欄位值不能為空",
+            "請輸入" + str ,
             [
               {text:'我知道了',onPress:()=>{}}
             ]
