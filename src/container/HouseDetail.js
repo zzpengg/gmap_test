@@ -329,7 +329,7 @@ export default class HouseDetail extends Component {
       .catch( (err) => console.log(err))
       console.log(response);
       this.loadComment();
-      }   
+      }
     } catch (errors) {
       console.log(errors);
     }
@@ -467,6 +467,42 @@ export default class HouseDetail extends Component {
       else{
         console.log("commentId = " + commentId);
         const url = 'http://test-zzpengg.c9users.io:8080/like/addLike'
+        let res = await fetch(url,{
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'x-access-token': this.state.accessToken,
+          },
+          body: JSON.stringify({
+            commentId: commentId,
+          })
+        }).then( (data) => data.json() )
+          .catch((e) => console.log(e));
+
+        console.log(res);
+        this.loadComment();
+      }
+
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
+
+  thumbs_down = async(commentId) => {
+    try {
+      if(!this.state.accessToken){
+        Alert.alert(
+          '錯誤訊息',
+          '尚未登入',
+          [
+            {text:'我知道了',onPress:()=>{}}
+          ]
+        );
+      }
+      else{
+        console.log("commentId = " + commentId);
+        const url = 'http://test-zzpengg.c9users.io:8080/like/addDislike'
         let res = await fetch(url,{
           method: 'POST',
           headers: {
@@ -721,7 +757,7 @@ export default class HouseDetail extends Component {
     if(tab==3){
       return (
         <View>
-          <Text style={styles.houseTitle}>房屋名稱: </Text>
+          <Text style={styles.houseTitle}>房屋名稱: {this.state.title}</Text>
           {
             this.state.loading ?
               <ActivityIndicator
@@ -733,7 +769,7 @@ export default class HouseDetail extends Component {
           {
             this.state.data.length > 0 ?
             this.state.data.map((val, index) =>
-              <Comment key={index+2} {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)} />
+              <Comment key={index+2} {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)} identity="landlord"/>
             ) : <Text style={{alignSelf: 'center'}} >暫無留言</Text>
           }
             <TextInput
@@ -746,7 +782,7 @@ export default class HouseDetail extends Component {
             placeholder="長度限定100字"
             maxLength={100}
           />
-          <Text>{this.state.content.length}/100</Text>
+          <Text style={{marginLeft: 18}}>{this.state.content.length}/100</Text>
           <Button style={styles.submitBtn} onPress={this.onCommentPressed.bind(this)} block warning> 確認送出 </Button>
         </View>
       )
@@ -950,7 +986,7 @@ const styles = StyleSheet.create({
   submitBtn: {
     elevation: 1,
     marginLeft: 18,
-    marginRight: 0,
+    marginRight: 18,
     marginTop: 20,
   },
   hr: {
@@ -1030,12 +1066,6 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginBottom: 5,
     alignSelf: 'center'
-  },
-  submitBtn: {
-    elevation: 1,
-    marginLeft: 18,
-    marginRight: 0,
-    marginTop: 20,
   },
   avatar: {
     borderRadius: 75,

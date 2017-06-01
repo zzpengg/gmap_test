@@ -353,7 +353,7 @@ export default class HouseDetailStudent extends Component {
       }
       else{
         console.log("commentId = " + commentId);
-        const url = 'http://test-zzpengg.c9users.io:8080/like/addDislike'
+        const url = 'http://test-zzpengg.c9users.io:8080/like/'
         let res = await fetch(url,{
           method: 'POST',
           headers: {
@@ -538,7 +538,7 @@ export default class HouseDetailStudent extends Component {
            this.state.comment.map((val, index) => {
              return (
                <View key={index}>
-                 <Comment {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)}/>
+                 <Comment {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)} />
                </View>
              )
            }) : <Text style={{alignSelf: 'center'}}>暫無留言</Text>
