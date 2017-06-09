@@ -246,7 +246,7 @@ export default class PersonInfoLandlord extends Component {
         })
         Alert.alert("上傳訊息","上傳成功",[{text:"我知道了",onPress:()=>{}}]);
       }
-      await this.loadTheHouse();
+      // await this.loadTheHouse();
       console.log(response);
     }
  }
