@@ -7,7 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-
+import IconVec from 'react-native-vector-icons/FontAwesome';
 import {
   Button,
 } from 'native-base';
@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
   },
   dataView: {
     flexDirection: 'row',
-    marginLeft: 10,
     marginTop: 10,
     marginRight: 10,
     borderRadius: 5,
@@ -105,6 +104,36 @@ const styles = StyleSheet.create({
     left: 0
   },
 });
+rankStar = (rank) => {
+    const star = [];
+    for (let i = rank; i > 0; i--) {
+      if (i >= 1) {
+        star.push(
+          <IconVec
+            key={i}
+            style={{ marginRight: 5 }}
+            name={'star'}
+            size={15}
+            color={'gold'}
+          />
+        );
+      } else if (i < 1 && i >= 0.5) {
+        star.push(
+          <IconVec
+            key={'tail'}
+            style={{ marginRight: 5 }}
+            name={'star-half'}
+            size={15}
+            color={'gold'}
+          />
+        );
+      }
+    }
+    if(rank == 0){
+      return <Text>暫無評分</Text>
+    }
+    return star;
+  };
 
 const HouseDataComponent = (props) => (
   <TouchableOpacity  key={props.index}
@@ -113,7 +142,12 @@ const HouseDataComponent = (props) => (
   }} >
   <View style={styles.dataView} key={props.index}>
     <View>
-      <Image source={require('../assets/house-icon.png')} style={{width:100, height:100, marginTop:10, marginLeft:5, marginBottom: 5 }} />
+      {
+        props.val.picture == null ?
+        <Image source={require('../assets/house-icon.png')} style={{width:100, height:100, marginTop:10, marginLeft:5, marginBottom: 5 }} />
+        :
+        <Image source={{uri: `http://test-zzpengg.c9users.io:8080/images/house/${props.val.landlordId}/${props.val.id}/${props.val.picture}`}} style={{width:100, height:100, marginTop:10, marginLeft:5, marginBottom: 5 }} />
+      }
     </View>
 
     <View style={{marginTop:10, marginLeft: 10}} >

@@ -169,7 +169,8 @@ const styles = StyleSheet.create({
     paddingTop:10,
     paddingLeft: 30,
     fontSize: 15,
-    color: '#7b7d85'
+    color: '#7b7d85',
+    alignSelf:'center'
   },
   houseTitleInput: {
     borderColor: 'red',
@@ -191,16 +192,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#7b7d85'
   },
-  container: {
-   ...StyleSheet.absoluteFillObject,
-   height: 400,
-   width: 400,
-   justifyContent: 'flex-end',
-   alignItems: 'center',
- },
- map: {
-   ...StyleSheet.absoluteFillObject,
- },
  center: {
     flex: 1,
     justifyContent: 'center',
@@ -209,7 +200,7 @@ const styles = StyleSheet.create({
   houseTitle: {
     marginTop: 10,
     marginLeft: 10,
-
+    alignSelf:'center'
   },
   houseImage: {
     width: 300,
@@ -223,13 +214,13 @@ const styles = StyleSheet.create({
     height: 300,
   },
   slide1: {
-    height: 300,
+    height: 200,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#9DD6EB',
   },
   slide2: {
-    height: 300,
+    height: 200,
     backgroundColor: '#97CAE5',
   },
   commentSubmitBtn: {
@@ -257,6 +248,10 @@ export default class HouseDetailStudent extends Component {
       isLogin: 0,
       loadingisLogin: true,
       starCount: 0,
+      sortedData: [],
+      slice: 0,
+      chooseTime: 0,
+      chooseGood: 0,
     }
     this.loadComment = this.loadComment.bind(this);
     this.loadComment();
@@ -281,6 +276,7 @@ export default class HouseDetailStudent extends Component {
       console.log(res);
       this.setState({
         data: res.data,
+        sortedData: res.data,
         loading: false,
       });
 
@@ -464,7 +460,7 @@ export default class HouseDetailStudent extends Component {
   commentArea = () => {
     if(this.state.isLogin == 1){
       return (
-        <Swiper style={styles.wrapper} showsButtons={true} ref={(swiper) => {this._swiper = swiper;}} height={300}>
+        <Swiper style={styles.wrapper} showsButtons={true} ref={(swiper) => {this._swiper = swiper;}} height={200}>
         <View style={styles.slide1}>
           <StarRating
             disabled={false}
@@ -482,14 +478,19 @@ export default class HouseDetailStudent extends Component {
         <View style={styles.slide2}>
           <View>
             <TextInput
-              style={{borderColor: 'gray', borderWidth: 1, marginLeft: 10, marginRight: 10, width: 350}}
+              style={{alignSelf:'center',width:windowSize.width/5*4,textAlignVertical: 'top',borderColor:'black',borderRadius:5,borderWidth:0.5,marginTop:5}}
               onChangeText={(content) => this.setState({content})}
               value={this.state.content}
-              multiline={true}
+              editable = {true}
+              numberOfLines = {4}
+              multiline = {true}
+              blurOnSubmit={true}
+              placeholder="長度限定100字"
+              maxLength={100}
             />
             <Text style={styles.houseTitle}> {this.state.content.length}/100</Text>
           </View>
-          <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+          <View style={{flexDirection: 'row', alignItems: 'flex-end',alignSelf:'center'}}>
             <Button style={styles.commentSubmitBtn} onPress={this.onCommentPressed.bind(this)} > 確認送出 </Button>
           </View>
         </View>
@@ -535,6 +536,42 @@ export default class HouseDetailStudent extends Component {
     return star;
   };
 
+  sortByTime = () => {
+    if(this.state.slice == 0){
+      let timeForData = this.state.data;
+      console.log(timeForData[0].createdAt);
+      for(let i=0;i<timeForData.length;i++){
+        timeForData[i].createdAt = timeForData[i].createdAt.slice(0, 4) +
+                                   timeForData[i].createdAt.slice(5, 7) +
+                                   timeForData[i].createdAt.slice(8, 10) +
+                                   timeForData[i].createdAt.slice(11, 13) +
+                                   timeForData[i].createdAt.slice(14, 16) +
+                                   timeForData[i].createdAt.slice(17, 19);
+      }
+      console.log(timeForData[0].createdAt);
+    }
+    console.log();
+    let sortedData = this.state.sortedData.sort( function (a, b){
+      return a.createdAt - b.createdAt;
+    })
+    this.setState({
+      sortedData: sortedData,
+      slice: 1,
+      chooseTime: 1,
+      chooseGood: 0,
+    })
+  }
+  sortByGood = () => {
+    let sortedData = this.state.sortedData.sort( function (a, b){
+      return b.like - a.like;
+    })
+    this.setState({
+      sortedData: sortedData,
+      chooseTime: 0,
+      chooseGood: 1,
+    })
+  }
+
   dataContent = () => {
       return (
         <View>
@@ -543,22 +580,53 @@ export default class HouseDetailStudent extends Component {
               <ActivityIndicator
                 animating={this.state.loadingisLogin}
                 color="rgb(213, 179, 36)"
-              /> : null
+              /> : this.commentArea()
           }
-          {this.commentArea()}
           {
             this.state.loading ?
               <ActivityIndicator
                 animating={this.state.loading}
                 style={styles.spinner}
                 color="rgb(213, 179, 36)"
-              /> : null
-          }
-          {
-            this.state.data.length > 0 ?
-            this.state.data.map((val, index) =>
-              <Comment key={index+2} {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)} />
-            ) : <Text style={{alignSelf: 'center'}} >暫無留言</Text>
+              />
+              :
+              this.state.data.length > 0 ?
+              <View>
+                <View style={{flex: 1, flexDirection: 'row'}}>
+                  <TouchableOpacity onPress={this.sortByTime}>
+                    {
+                      this.state.chooseTime == 0 ?
+                      <View style={{flex: 1, flexDirection: 'row', marginLeft: 10}}>
+                        <Icon name="ios-checkmark" style={{fontSize: 40}}/>
+                        <Text style={{marginTop: 5, fontSize: 20}}>按照時間順序</Text>
+                      </View>
+                      :
+                      <View style={{flex: 1, flexDirection: 'row', marginLeft: 10}}>
+                        <Icon name="ios-checkmark" style={{fontSize: 40, color: 'green'}}/>
+                        <Text style={{marginTop: 5, fontSize: 20, color: 'green'}}>按照時間順序</Text>
+                      </View>
+                    }
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={this.sortByGood}>
+                    {
+                      this.state.chooseGood == 0 ?
+                      <View style={{flex: 1, flexDirection: 'row', marginLeft: 20}}>
+                        <Icon name="ios-checkmark" style={{fontSize: 40}}/>
+                        <Text style={{marginTop: 5, fontSize: 20}}>按照人氣順序</Text>
+                      </View>
+                      :
+                      <View style={{flex: 1, flexDirection: 'row', marginLeft: 20}}>
+                        <Icon name="ios-checkmark" style={{fontSize: 40, color: 'green'}}/>
+                        <Text style={{marginTop: 5, fontSize: 20, color: 'green'}}>按照人氣順序</Text>
+                      </View>
+                    }
+                  </TouchableOpacity>
+                </View>
+              {
+                this.state.sortedData.map((val, index) =>
+                  <Comment key={index} {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)} />
+                )
+              }</View> : <Text style={{alignSelf: 'center'}} >暫無留言</Text>
           }
         </View>
       )

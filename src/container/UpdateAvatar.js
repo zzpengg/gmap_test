@@ -1,5 +1,3 @@
-
-
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -34,22 +32,19 @@ import {
   Input,
   Spinner,
 } from 'native-base';
-
+import { Loading } from '../component/Loading.js';
 import HouseDetailStudent from './HouseDetailStudent.js';
 import StudentRegister from './StudentRegister.js';
 import HouseComment from './HouseComment.js';
-import ImagePicker from 'react-native-image-picker';
-
-import { FBLoginManager } from 'react-native-facebook-login';
-import { Loading } from '../component/Loading';
-import UserData from '../component/UserData.js';
-import PhonePage from './PhonePage.js';
-import UpdateAvatar from './UpdateAvatar.js';
 import UpdateData from './UpdateData.js';
+import ImagePicker from 'react-native-image-picker';
+import { FBLoginManager } from 'react-native-facebook-login';
+import LoveList from './LoveList.js';
+import IssueList from './IssueList.js';
 
-const ACCESS_TOKEN = 'access_token';
+const STUDENT_ACCESS_TOKEN = 'student_access_token';
 
-export default class PersonInfoLandlord extends Component {
+export default class UpdateAvatar extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -57,48 +52,24 @@ export default class PersonInfoLandlord extends Component {
       account: "",
       status: "",
       password: "",
-      phone: '',
       accessToken: this.props.accessToken,
       error: "",
-      visiable:true,
-      upload:false,
-      avatarSource:null,
+      visible:true,
+      upload: false,
+      avatarSource: null,
     }
-    this.getMyInfo = this.getMyInfo.bind(this);
-    this.getMyInfo();
   }
 
   prePage() {
       const { navigator } = this.props;
-      this.props.callBack();
       if(navigator) {
           navigator.pop();
       }
   }
 
-  async deleteToken() {
-    try {
-        await AsyncStorage.removeItem(ACCESS_TOKEN)
-    } catch(error) {
-        console.log("Something went wrong");
-    }
-  }
-
-  onLogout(){
-    FBLoginManager.logout( (data) => {console.log(data) });
-    this.deleteToken();
-    this.setState({
-      error: 'logout'
-    })
-    console.log('callback called');
-    this.props.callBack();
-    this.prePage();
-  }
-
   async getMyInfo(token) {
     try{
-      let token = this.state.accessToken;
-      let url = 'http://test-zzpengg.c9users.io:8080/user/getMyInfo';
+      let url = 'http://test-zzpengg.c9users.io:8080/student/getMyInfo';
       let response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -110,15 +81,11 @@ export default class PersonInfoLandlord extends Component {
       console.log("getMyInfo");
       console.log("response");
       console.log(response);
-
-      console.log(response.data.avatar);
       await this.setState({
         name: response.data.name,
         account: response.data.account,
         password: response.data.password,
-        phone: response.data.phone,
-        avatar: response.data.avatar,
-        visible: false,
+        avatar: response.data.avatar
       })
       return response.text;
     }catch(error){
@@ -127,9 +94,72 @@ export default class PersonInfoLandlord extends Component {
     }
   }
 
+  onLoginPressed = async() => {
+    try {
+      let url = 'http://test-zzpengg.c9users.io:8080/student/login';
+      let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          account: this.state.account,
+          password: this.state.password,
+        })
+      }).then( (data) => data.json() )
+      console.log("pressed");
+      console.log(response);
+      this.setState({
+        status: 'pressed'
+      })
+      if(response.text === 'login success'){
+        //Handle success
+        let accessToken = response.token;
+        console.log(accessToken);
+        //On success we will store the access_token in the AsyncStorage
+        this.storeToken(accessToken);
+        this.setState({accessToken: accessToken})
+        this.setState({error: 'success'});
+        this.getToken(accessToken);
+      } else if(response.text=== "validate error"){
+        Alert.alert('錯誤訊息',
+          "信箱尚未驗證\n請至信箱驗證帳戶",
+          [
+            {text:'我知道了',onPress:()=>{}}
+          ]
+        );
+      }
+      else {
+            //Handle error
+            let error = response;
+            throw error;
+      }
+    } catch(error){
+      Alert.alert('錯誤訊息',
+      "發生錯誤",
+      [
+        {text:'我知道了',onPress:()=>{}}
+      ]
+    );
+      console.log("error " + error);
+    }
+  }
+
+  nextPageRegister = () => {
+    const { navigator } = this.props;
+    navigator.push({
+      name: 'StudentRegister',
+      component: StudentRegister,
+      params: {
+        accessToken: this.state.accessToken
+      }
+    });
+  }
+
   updateMyInfo = async() => {
     try {
-      let url = 'http://test-zzpengg.c9users.io:8080/user/updateMyInfo';
+      let url = 'http://test-zzpengg.c9users.io:8080/student/updateMyInfo';
       let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -140,7 +170,6 @@ export default class PersonInfoLandlord extends Component {
         body: JSON.stringify({
           name: this.state.name,
           password: this.state.password,
-          phone: this.state.phone,
         })
       }).then( (data) => data.json() )
       console.log("pressed");
@@ -152,7 +181,7 @@ export default class PersonInfoLandlord extends Component {
         Alert.alert('訊息',
           '修改成功',
           [
-            {text:'我知道了', onPress:() => { this.prePage() }}
+            {text:'我知道了',onPress:()=>{}}
           ]
         );
       } else {
@@ -223,7 +252,7 @@ export default class PersonInfoLandlord extends Component {
       let id = this.props.id;
       data.append('id', id);
       data.append('avatar', {...this.state.avatarSource, type: 'image/jpeg', name: 'image.jpg',});
-      let url = 'https://test-zzpengg.c9users.io:8080/user/upload';
+      let url = 'https://test-zzpengg.c9users.io:8080/student/upload';
       let check = 1;
       const response = await fetch(url, {
         method: 'POST',
@@ -256,41 +285,36 @@ export default class PersonInfoLandlord extends Component {
     }
   }
 
-  phonePage = () => {
-    const { navigator } = this.props;
-    navigator.push({
-      name: 'PhonePage',
-      component: PhonePage,
-      params: {
-        accessToken: this.state.accessToken,
-        phone: this.state.phone,
-        callBack: this.getMyInfo,
-      }
-    });
-  }
-
-  updateAvatarPage = () => {
-    const { navigator } = this.props;
-    navigator.push({
-      name: 'UpdateAvatar',
-      component: UpdateAvatar,
-      params: {
-        accessToken: this.state.accessToken,
-      }
-    });
-  }
-
   updateDataPage = () => {
     const { navigator } = this.props;
-    console.log("***updateDataPage***");
     navigator.push({
       name: 'UpdateData',
       component: UpdateData,
       params: {
         accessToken: this.state.accessToken,
-        callBack: this.getMyInfo,
-        name: this.state.name,
-        identity: 'landlord',
+        name: this.state.name
+      }
+    });
+  }
+
+  lovePage = () => {
+    const { navigator } = this.props;
+    navigator.push({
+      name: 'LoveList',
+      component: LoveList,
+      params: {
+        accessToken: this.state.accessToken,
+      }
+    });
+  }
+
+  issuePage = () => {
+    const { navigator } = this.props;
+    navigator.push({
+      name: 'IssueList',
+      component: IssueList,
+      params: {
+        accessToken: this.state.accessToken,
       }
     });
   }
@@ -298,53 +322,32 @@ export default class PersonInfoLandlord extends Component {
   render() {
    return (
      <View style={styles.container}>
-       <Modal
-       visible={this.state.visible}
-       animationType={"slide"}
-       onRequestClose={() => {}}
-       >
-         <View style={{flex: 1,  flexDirection: 'column',justifyContent: 'center',alignItems: 'center'}}>
-           <View >
-             <Text>載入中...</Text>
-             <Spinner color='blue'/>
-           </View>
-         </View>
-       </Modal>
        <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
          <Button transparent onPress={this.prePage.bind(this)}>
            <Icon name='ios-arrow-back' />
          </Button>
-         <Title>個人資料</Title>
+         <Title>上傳照片</Title>
        </Header>
-       <Content style={{backgroundColor: '#DDDDDD'}}>
-         <TouchableOpacity onPress={this.updateAvatarPage}>
-           <View style={{flex: 1, flexDirection: 'row', backgroundColor: 'white'}}>
-             <View style={[styles.avatar, styles.avatarContainer, {marginBottom: 20}]}>
-             {
-               this.state.avatarSource == null ?
-               <Image style={styles.avatar} source={require('../assets/landlord-icon.png')} /> :
-               <Image style={styles.avatar} source={{uri: `http://test-zzpengg.c9users.io:8080/images/avatar/landlord/${this.state.id}`+'/'+`${this.state.avatarSource}`}} />
-             }
-             </View>
-             <Text style={{marginTop: 40, fontSize: 20, marginLeft: 20}}>個人圖片</Text>
-           </View>
-         </TouchableOpacity>
-         <View>
-           <Button style={{backgroundColor: '#FFFFFF', }} block >
-             <View style={{flex: 1, justifyContent: 'space-between', flexDirection: 'row'}}>
-               <Text style={{color: 'black', marginTop: 3}}>帳號</Text>
-               <View style={{flexDirection: 'row'}}>
-                 <Text style={{color: 'black', marginRight: 5, marginTop: 3}}>{this.state.account}</Text>
+         <Content style={{backgroundColor: '#DDDDDD'}}>
+         <View style={styles.viewFlexRow} >
+            <View style={{padding:10}}>
+              <View style={{marginLeft: 60}} >
+               <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
+                 <View style={[styles.avatar, styles.avatarContainer, {marginBottom: 20}]}>
+                 { this.state.avatarSource === null ? <Text>選擇照片</Text> :
+                   <Image style={styles.avatar} source={this.state.avatarSource} />
+                 }
+                 </View>
+                 <Text style={{marginLeft: 100}}>{this.state.uploadState}</Text>
+               </TouchableOpacity>
                </View>
+               <TouchableOpacity style={{marginLeft:80}} onPress={this.upload}>
+                 <Text >按此上傳圖片</Text>
+               </TouchableOpacity>
              </View>
-           </Button>
          </View>
-         <UserData title="暱稱" value={this.state.name} updateDataPage={this.updateDataPage} />
-         <UserData title="電話" value={this.state.phone} updateDataPage={this.phonePage} />
-         <UserData title="問題回報" value="" updateDataPage={this.issuePage} />
-         <Button style={styles.submitBtn} onPress={this.onLogout.bind(this)} block info> 登出 </Button>
-       </Content>
-     </View>
+         </Content>
+      </View>
    );
   }
 }
@@ -503,8 +506,8 @@ const styles = StyleSheet.create({
   },
   avatar: {
     borderRadius: 75,
-    width: 150,
-    height: 150
+    width: 100,
+    height: 100
   },
   avatarContainer: {
     borderColor: '#9B9B9B',

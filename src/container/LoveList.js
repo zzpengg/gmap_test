@@ -24,8 +24,8 @@ import {
   Title,
   Spinner
 } from 'native-base';
-import {Loading} from '../component/Loading'
-import HouseDetail from './HouseDetail.js';
+import { Loading } from '../component/Loading';
+import HouseDetailStudent from './HouseDetailStudent.js';
 import CreateHouseData from './CreateHouseData.js';
 
 import HouseDataComponent from '../component/HouseDataComponent.js';
@@ -56,19 +56,17 @@ export default class HouseData extends Component {
     console.log("next page pressed");
     if(navigator) {
         navigator.push({
-            name: 'HouseDetail',
-            component: HouseDetail,
+            name: 'HouseDetailStudent',
+            component: HouseDetailStudent,
             params: {
               id: id,
               accessToken: this.props.accessToken,
-              callBack: this.callBack,
             }
         })
     }
   }
 
   prePage() {
-    this.props.callBack();
     const { navigator } = this.props;
     if(navigator) {
         navigator.pop();
@@ -77,8 +75,7 @@ export default class HouseData extends Component {
 
   loadHouse = async () => {
     try {
-      console.log("***loadHouse***");
-      const url = 'http://test-zzpengg.c9users.io:8080/house/findMyHouse'
+      const url = 'http://test-zzpengg.c9users.io:8080/love/findUserLove'
       let res = await fetch(url, {
         method: 'GET',
         headers: {
@@ -88,7 +85,7 @@ export default class HouseData extends Component {
       }).then((data) => data.json())
         .catch((e) => console.log(e));
 
-
+      console.log(res);
       this.setState({
         data: res.data,
         loading: false,
@@ -140,8 +137,8 @@ export default class HouseData extends Component {
     console.log("id = " + id);
     if(navigator){
       navigator.push({
-        name: 'HouseDetail',
-        component: HouseDetail,
+        name: 'HouseDetailStudent',
+        component: HouseDetailStudent,
         params: {
           id: id,
         }
@@ -168,6 +165,31 @@ export default class HouseData extends Component {
           </Header>
           <View style={{flex: 1,justifyContent: 'center',alignItems: 'center'}}>
           <Text style={{marginLeft:10, marginTop:10}} >共{this.state.data.length}間房屋</Text>
+            {
+              /*this.state.data.map((val, index) => {
+                return (
+                  <View style={styles.dataView} key={index}>
+                    <View>
+                      <Image source={require('../assets/fuck_cat.jpg')} style={{width:100, height:100, marginTop:5, marginLeft:5, marginBottom: 5 }} />
+                      <Text style={styles.imageText}>更改圖片</Text>
+                    </View>
+
+                    <View style={{marginTop:10, marginLeft: 10}} >
+                      <Text style={styles.detailText}>房屋名稱: {val.title}</Text>
+                      <Text style={styles.detailText}>所在區域: {val.area}</Text>
+                      <Text style={styles.detailText}>租金: {val.rent} /月</Text>
+                      <Text style={styles.detailText}>評分: {rankStar(val.score)}</Text>
+                      <View style={styles.detailData}>
+                        <Button success bordered style={{height: 18}} key={index}
+                          onPress={() => this.nextPage(val.id)}>
+                            <Text>詳細資料</Text>
+                        </Button>
+                      </View>
+                    </View>
+                  </View>
+                )
+              })*/
+            }
             <ListView
               initialListSize={1}
               dataSource={dataSource}
@@ -177,26 +199,6 @@ export default class HouseData extends Component {
                 )
               }}
             />
-            <View style={styles.dataView}>
-              <TouchableOpacity
-                onPress={() => {
-                  const { navigator } = this.props;
-                  if(navigator){
-                    navigator.push({
-                      name: 'CreateHouseData',
-                      component: CreateHouseData,
-                      params: {
-                        accessToken: this.props.accessToken,
-                        account:this.props.account,
-                        callBack: this.callBack,
-                      }
-                    })
-                  }
-                }}
-              >
-                <Image source={require('../assets/plus.png')} style={{width:80, height:80, marginTop:20, marginLeft:120, marginBottom: 20,}} />
-              </TouchableOpacity>
-            </View>
           </View>
         </ScrollView>
       </View>

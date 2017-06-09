@@ -142,8 +142,11 @@ const Comment = (props) => (
     <View style={styles.hr}></View>
     <View style={{flexDirection: 'row'}}>
       {
-        props.avatar == null ?
-        <Image source={require('../assets/fuck_cat.jpg')} style={styles.personImage} />
+        (props.avatar == null && props.star == null ) ?
+        <Image source={require('../assets/landlord-icon.png')} style={styles.personImage} />
+        :
+        (props.avatar == null && props.star != null ) ?
+        <Image source={require('../assets/student-icon.png')} style={styles.personImage} />
         :
         props.avatar.length < 50 ?
         <Image source={{uri: `https://test-zzpengg.c9users.io:8080/images/${props.avatar}`}} style={styles.personImage} />

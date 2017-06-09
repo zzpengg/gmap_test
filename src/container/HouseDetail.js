@@ -80,6 +80,7 @@ export default class HouseDetail extends Component {
       houseSource:null,
       fileType:"",
       upload:false,
+      updatevisible:false,
     }
 
     this.loadTheHouse = this.loadTheHouse.bind(this);
@@ -173,6 +174,11 @@ export default class HouseDetail extends Component {
    upload = async() => {
     if(this.state.fileType!="image/jpeg"){
       Alert.alert("檔案型態錯誤","照片格式僅限jpg檔",[
+        {text:"我知道了",onPress:()=>{this.setState({houseSource:null})}}
+      ]);
+    }
+    else if(this.state.path.length>=5){
+      Alert.alert("錯誤訊息","照片限制最多5張",[
         {text:"我知道了",onPress:()=>{this.setState({houseSource:null})}}
       ]);
     }
@@ -323,7 +329,7 @@ export default class HouseDetail extends Component {
       .catch( (err) => console.log(err))
       console.log(response);
       this.loadComment();
-      }   
+      }
     } catch (errors) {
       console.log(errors);
     }
@@ -349,6 +355,7 @@ export default class HouseDetail extends Component {
 
   updateHousePressed = async() => {
     try {
+      this.setState({updatevisible:true})
       let url = 'http://test-zzpengg.c9users.io:8080/house/updateMyHouse'
       let res = await fetch(url, {
         method: 'POST',
@@ -373,15 +380,18 @@ export default class HouseDetail extends Component {
         .catch( (e) => console.log(e) );
       console.log(res);
       console.log( (res != null) );
-      if(res != null){
+      if(res.text == "house update success"){
+        Alert.alert("訊息","更新成功",[{text:"確認",onPress:()=>{}}]);
         console.log("in");
         await this.setState({
-          tab: 1
+          tab: 1,
+          updatevisible:false,
         })
       }
       else{
         console.log("out");
         console.log("something wrong");
+        Alert.alert("訊息","更新失敗",[{text:"確認",onPress:()=>{}}]);
       }
     } catch (errors) {
       console.log(errors);
@@ -457,6 +467,42 @@ export default class HouseDetail extends Component {
       else{
         console.log("commentId = " + commentId);
         const url = 'http://test-zzpengg.c9users.io:8080/like/addLike'
+        let res = await fetch(url,{
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'x-access-token': this.state.accessToken,
+          },
+          body: JSON.stringify({
+            commentId: commentId,
+          })
+        }).then( (data) => data.json() )
+          .catch((e) => console.log(e));
+
+        console.log(res);
+        this.loadComment();
+      }
+
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
+
+  thumbs_down = async(commentId) => {
+    try {
+      if(!this.state.accessToken){
+        Alert.alert(
+          '錯誤訊息',
+          '尚未登入',
+          [
+            {text:'我知道了',onPress:()=>{}}
+          ]
+        );
+      }
+      else{
+        console.log("commentId = " + commentId);
+        const url = 'http://test-zzpengg.c9users.io:8080/like/addDislike'
         let res = await fetch(url,{
           method: 'POST',
           headers: {
@@ -590,15 +636,17 @@ export default class HouseDetail extends Component {
         <Text style={styles.detailText}>評價: {this.rankStar(score)}{score ? <Text>({score})</Text> : null}</Text>
         <Text style={styles.detailText}>連絡房東: {phone}</Text>
         <Text style={styles.detailText}>備註:</Text>
-        <TextInput
-              style={{alignSelf:'center',width:windowSize.width/5*4,textAlignVertical: 'top',borderRadius:5,borderWidth:0.5}}
+        <View style={{flex:1,width:windowSize.width/5*4,alignSelf:'center',backgroundColor:'#ccc'}}>
+            <ScrollView style={{height:windowSize.height/6}}>
+              <Text
+              style={{alignSelf:'center',width:windowSize.width/5*4,color:'#2d85ca'}}
               editable = {false}
               multiline = {true}
-              numberOfLines = {4}
-              maxLength = {100}
-              value={this.state.remark}
-              blurOnSubmit={true}
-            />
+              maxLength = {100}>
+              {this.state.remark}
+              </Text>
+            </ScrollView>
+         </View>
         </View>
       );
     }
@@ -606,6 +654,7 @@ export default class HouseDetail extends Component {
       return(
         <ScrollView>
         <Loading label="上傳中" visible={this.state.upload}/>
+        <Loading label="更新中" visible={this.state.updatevisible}/>
           <View style={styles.viewFlexRow} >
              <View style={{padding:10}}>
                <View style={{marginLeft: 100}} >
@@ -708,7 +757,7 @@ export default class HouseDetail extends Component {
     if(tab==3){
       return (
         <View>
-          <Text style={styles.houseTitle}>房屋名稱: </Text>
+          <Text style={styles.houseTitle}>房屋名稱: {this.state.title}</Text>
           {
             this.state.loading ?
               <ActivityIndicator
@@ -720,7 +769,7 @@ export default class HouseDetail extends Component {
           {
             this.state.data.length > 0 ?
             this.state.data.map((val, index) =>
-              <Comment key={index+2} {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)} />
+              <Comment key={index+2} {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)} identity="landlord"/>
             ) : <Text style={{alignSelf: 'center'}} >暫無留言</Text>
           }
             <TextInput
@@ -733,7 +782,7 @@ export default class HouseDetail extends Component {
             placeholder="長度限定100字"
             maxLength={100}
           />
-          <Text>{this.state.content.length}/100</Text>
+          <Text style={{marginLeft: 18}}>{this.state.content.length}/100</Text>
           <Button style={styles.submitBtn} onPress={this.onCommentPressed.bind(this)} block warning> 確認送出 </Button>
         </View>
       )
@@ -937,7 +986,7 @@ const styles = StyleSheet.create({
   submitBtn: {
     elevation: 1,
     marginLeft: 18,
-    marginRight: 0,
+    marginRight: 18,
     marginTop: 20,
   },
   hr: {
@@ -1017,12 +1066,6 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginBottom: 5,
     alignSelf: 'center'
-  },
-  submitBtn: {
-    elevation: 1,
-    marginLeft: 18,
-    marginRight: 0,
-    marginTop: 20,
   },
   avatar: {
     borderRadius: 75,

@@ -56,6 +56,9 @@ export default class Index extends Component {
       return false
     if(routers.length > 1){
       nav.pop();
+      const l = this.props.navigator.state.routeStack.length-1;
+      this.props.navigator.state.routeStack[l].params.callBack();
+      console.log(this.props.navigator.state.routeStack);
       return true;
     }
 
@@ -74,7 +77,7 @@ export default class Index extends Component {
         { text:"開啟網路", onPress: ()=>{ NativeModules.OpenSettings.openNetworkSettings(data => {
           console.log('call back data', data);
         });}},
-          { text:"取消", onPress: () => {}},  
+          { text:"取消", onPress: () => {}},
       ]
       )
     }
@@ -106,19 +109,16 @@ export default class Index extends Component {
     //console.log(region);
     return (
       <View style = {{ flex: 1 }}>
-
         <View style = {styles.center1}>
           <TouchableOpacity onPress = {this.studentButton.bind(this)}>
             <Text style = {styles.text}> 學生入口 </Text>
           </TouchableOpacity>
         </View>
-
         <View style = {styles.center2}>
           <TouchableOpacity onPress = {this.landlordButton.bind(this)}>
             <Text style = {styles.text}> 房東入口 </Text>
           </TouchableOpacity>
         </View>
-
       </View>
     );
   }

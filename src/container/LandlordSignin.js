@@ -14,6 +14,7 @@ import {
   Image,
   Modal,
   Alert,
+  TouchableOpacity
 } from 'react-native';
 import {
   Container,
@@ -34,7 +35,7 @@ import {
 import HouseData from './HouseData.js';
 import LandlordRegistion from './LandlordRegistion.js';
 import FBLoginView from'../component/FBLoginView'
-
+import LandlordChooseRegister from './LandlordChooseRegister.js'
 const ACCESS_TOKEN = 'access_token';
 import {FBLogin, FBLoginManager} from 'react-native-facebook-login';
 import {Loading} from '../component/Loading'
@@ -53,6 +54,7 @@ export default class LandlordSignin extends Component {
       error: "",
       avatar: '',
       visible:true,
+      loginloading:false
     }
   }
 
@@ -68,6 +70,7 @@ export default class LandlordSignin extends Component {
           this.setState({
             visible: false,
             error: 'error',
+            accessToken: '',
           });
       } else {
           console.log("accessToken = " + accessToken);
@@ -191,7 +194,7 @@ export default class LandlordSignin extends Component {
   }
 
   onLoginPressed = async() => {
-
+    await this.setState({loginloading:true});
     try {
       let url = 'http://test-zzpengg.c9users.io:8080/user/login';
       let response = await fetch(url, {
@@ -216,26 +219,28 @@ export default class LandlordSignin extends Component {
         console.log(accessToken);
         //On success we will store the access_token in the AsyncStorage
         this.storeToken(accessToken);
-        this.setState({accessToken: accessToken})
+        this.setState({accessToken: accessToken,loginloading:false})
         this.setState({error: 'success'});
         this.nextPage();
       }
       else if(response.text=== "validate error"){
+        this.setState({loginloading:false})
         Alert.alert('錯誤訊息',
           "信箱尚未驗證\n請至信箱驗證帳戶",
           [
             {text:'我知道了',onPress:()=>{}}
           ]
         );
-      } 
+      }
       else {
             //Handle error
             let error = res;
             throw error;
       }
     } catch(error){
+      this.setState({loginloading:false})
       Alert.alert('錯誤訊息',
-      "發生錯誤",
+      "帳號或密碼輸入錯誤",
       [
         {text:'我知道了',onPress:()=>{}}
       ]
@@ -247,8 +252,8 @@ export default class LandlordSignin extends Component {
   nextPageRegister = () => {
     const { navigator } = this.props;
     navigator.push({
-      name: 'LandlordRegistion',
-      component: LandlordRegistion,
+      name: 'LandlordChooseRegister',
+      component: LandlordChooseRegister,
       params: {
         accessToken: this.state.accessToken,
       }
@@ -256,6 +261,7 @@ export default class LandlordSignin extends Component {
   }
 
   onFBLogin = async(data) => {
+    await this.setState({loginloading:true});
     console.log("log in");
     console.log(data.credentials);
     const { token, userId } = data.credentials;
@@ -285,6 +291,7 @@ export default class LandlordSignin extends Component {
           address: response.address || '尚未取得',
           email: response.email,
           account: response.name,
+          userId: userId,
           password: token,
           avatar: response.picture.data.url
         })
@@ -294,7 +301,7 @@ export default class LandlordSignin extends Component {
       console.log(accessToken);
       //On success we will store the access_token in the AsyncStorage
       this.storeToken(accessToken);
-      this.setState({accessToken: accessToken})
+      this.setState({accessToken: accessToken,loginloading:false})
       this.setState({error: 'success'});
       this.nextPage();
 
@@ -310,6 +317,7 @@ export default class LandlordSignin extends Component {
    return (
      <View style={styles.container}>
       <Loading label="載入中..." visible={this.state.visible}/>
+      <Loading label="登入中" visible={this.state.loginloading}/>
        <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
          <Button transparent onPress={this.prePage.bind(this)}>
            <Icon name='ios-arrow-back' />
@@ -340,25 +348,35 @@ export default class LandlordSignin extends Component {
                <Input onChangeText={(password) => {this.setState({password})}} placeholder="密碼" secureTextEntry={true}/>
              </InputGroup>
            </ListItem>
-           <Button onPress={this.nextPageRegister.bind(this)} style={styles.submitBtn} block warning> 註冊 </Button>
+           {/*<Button onPress={this.nextPageRegister.bind(this)} style={styles.submitBtn} block warning> 註冊 </Button>
+           <View style={{ alignItems: 'center' }}>
+             <View style={styles.orWrapper}>
+               <Text style={styles.orText}>or</Text>
+             </View>
+             <View style={styles.hr} />
+           </View>*/}
+           <Button style={styles.submitBtn} onPress={this.onLoginPressed.bind(this)} block info> 登入 </Button>
            <View style={{ alignItems: 'center' }}>
              <View style={styles.orWrapper}>
                <Text style={styles.orText}>or</Text>
              </View>
              <View style={styles.hr} />
            </View>
-           <Button style={styles.submitBtn} onPress={this.onLoginPressed.bind(this)} block info> 登入 </Button>
            <FBLogin
-              buttonView={<FBLoginView />}
+              loginText="Facebook 登入"
+              style={styles.submitBtn}
               ref={(fbLogin) => { this.fbLogin = fbLogin }}
               loginBehavior={FBLoginManager.LoginBehaviors.Native}
-              permissions={["public_profile","email","user_friends"]}
+              permissions={["public_profile","email","user_friends" ]}
               onLogin={this.onFBLogin}
               onLoginFound={function(data){console.log(data.credentials)}}
               onLoginNotFound={function(e){console.log(e)}}
               onLogout={function(e){console.log(e)}}
               onCancel={function(e){console.log(e)}}
               onPermissionsMissing={function(e){console.log(e)}}/>
+              <TouchableOpacity onPress={this.nextPageRegister.bind(this)}>  
+                <Text style={{marginTop:15,textAlign:'center',color:'blue',fontSize:15}}>註冊新帳號</Text>
+              </TouchableOpacity>
          </List>
          </Content>
          :
@@ -367,7 +385,7 @@ export default class LandlordSignin extends Component {
            <View>
              {
                this.state.avatar == null ?
-               <Image source={require('../assets/fuck_cat.jpg')} style={styles.personImage} />
+               <Image source={require('../assets/landlord-icon.png')} style={styles.personImage} />
                :
                this.state.avatar.length < 50 ?
                <Image source={{uri: `https://test-zzpengg.c9users.io:8080/images/avatar/${this.state.id}/${this.state.avatar}`}} style={styles.personImage} />

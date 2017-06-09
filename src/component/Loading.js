@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff', padding: 20
   },
 });
-export  class Loading extends Component {
+export class Loading extends Component {
     constructor(props){
         super(props)
     }

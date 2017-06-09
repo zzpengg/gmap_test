@@ -34,11 +34,15 @@ import {
 } from 'native-base';
 import { Loading } from '../component/Loading.js';
 import HouseDetailStudent from './HouseDetailStudent.js';
-import StudentRegister from './StudentRegister.js';
+import StudentChooseRegister from './StudentChooseRegister.js';
 import HouseComment from './HouseComment.js';
+import {FBLogin, FBLoginManager} from 'react-native-facebook-login';
+import UpdateData from './UpdateData.js';
 import ImagePicker from 'react-native-image-picker';
-
-import { FBLoginManager } from 'react-native-facebook-login';
+import LoveList from './LoveList.js';
+import IssueList from './IssueList.js';
+import UpdateAvatar from './UpdateAvatar.js';
+import UserData from '../component/UserData.js';
 
 const STUDENT_ACCESS_TOKEN = 'student_access_token';
 
@@ -46,6 +50,7 @@ export default class PersonInfoStudent extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: '',
       name: "",
       account: "",
       status: "",
@@ -97,7 +102,54 @@ export default class PersonInfoStudent extends Component {
           navigator.pop();
       }
   }
+onFBLogin = async(data) => {
+    await this.setState({loginloading:true});
+    console.log("log in");
+    console.log(data.credentials);
+    const { token, userId } = data.credentials;
+    console.log(token);
+    console.log(userId);
+    try {
+      let url = `https://graph.facebook.com/v2.8/${userId}?access_token=${token}&fields=name,picture,gender,email`;
+      let response = await fetch(url).then( (data) => data.json() )
+      console.log('response = ');
+      console.log(response);
+      console.log(response.name);
+      console.log(response.gender);
+      console.log(response.picture.data.url);
 
+      // fb login
+      let url2 = 'http://test-zzpengg.c9users.io:8080/student/FBLogin';
+      let response2 = await fetch(url2, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: response.name,
+          gender: response.gender,
+          email: response.email,
+          account: response.name,
+          userId: userId,
+          password: token,
+          avatar: response.picture.data.url
+        })
+      }).then( (data) => data.json() );
+      console.log(response2);
+      let accessToken = response2.token;
+      console.log(accessToken);
+      //On success we will store the access_token in the AsyncStorage
+      this.storeToken(accessToken);
+      this.setState({accessToken: accessToken,loginloading:false})
+      this.setState({error: 'success'});
+      this.getToken(accessToken);
+
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
   storeToken(responseData){
     AsyncStorage.setItem(STUDENT_ACCESS_TOKEN, responseData, (err)=> {
       if(err){
@@ -143,10 +195,13 @@ export default class PersonInfoStudent extends Component {
       console.log("response");
       console.log(response);
       await this.setState({
+        id: response.data.id,
         name: response.data.name,
         account: response.data.account,
         password: response.data.password,
+        avatarSource: response.data.avatar
       })
+      console.log(this.state.id + ' ' + this.state.avatarSource);
       return response.text;
     }catch(error){
       console.log("catch error = " + error);
@@ -209,56 +264,60 @@ export default class PersonInfoStudent extends Component {
   nextPageRegister = () => {
     const { navigator } = this.props;
     navigator.push({
-      name: 'StudentRegister',
-      component: StudentRegister,
+      name: 'StudentChooseRegister',
+      component: StudentChooseRegister,
       params: {
         accessToken: this.state.accessToken
       }
     });
   }
 
-  updateMyInfo = async() => {
-    try {
-      let url = 'http://test-zzpengg.c9users.io:8080/student/updateMyInfo';
-      let response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'x-access-token': this.state.accessToken,
-        },
-        body: JSON.stringify({
-          name: this.state.name,
-          password: this.state.password,
-        })
-      }).then( (data) => data.json() )
-      console.log("pressed");
-      console.log(response);
-      if(response.text === 'updateMyInfo success'){
-        //Handle success
-        //On success we will store the access_token in the AsyncStorage
-        this.setState({error: 'success'});
-        Alert.alert('訊息',
-          '修改成功',
-          [
-            {text:'我知道了',onPress:()=>{}}
-          ]
-        );
-      } else {
-            //Handle error
-            let error = res;
-            throw error;
+  updateDataPage = () => {
+    const { navigator } = this.props;
+    console.log("***updateDataPage***");
+    navigator.push({
+      name: 'UpdateData',
+      component: UpdateData,
+      params: {
+        accessToken: this.state.accessToken,
+        callBack: this.getToken,
+        name: this.state.name,
+        identity: 'student',
       }
-    } catch(error){
-      let str=""+error;
-      Alert.alert('錯誤訊息',
-      str,
-      [
-        {text:'我知道了',onPress:()=>{}}
-      ]
-    );
-      console.log("error " + error);
-    }
+    });
+  }
+
+  lovePage = () => {
+    const { navigator } = this.props;
+    navigator.push({
+      name: 'LoveList',
+      component: LoveList,
+      params: {
+        accessToken: this.state.accessToken,
+      }
+    });
+  }
+
+  issuePage = () => {
+    const { navigator } = this.props;
+    navigator.push({
+      name: 'IssueList',
+      component: IssueList,
+      params: {
+        accessToken: this.state.accessToken,
+      }
+    });
+  }
+
+  updateAvatarPage = () => {
+    const { navigator } = this.props;
+    navigator.push({
+      name: 'UpdateAvatar',
+      component: UpdateAvatar,
+      params: {
+        accessToken: this.state.accessToken,
+      }
+    });
   }
 
   selectPhotoTapped() {
@@ -371,60 +430,60 @@ export default class PersonInfoStudent extends Component {
                <Input onChangeText={(password) => {this.setState({password})}} placeholder="密碼" secureTextEntry={true}/>
              </InputGroup>
            </ListItem>
-           <Button onPress={this.nextPageRegister} style={styles.submitBtn} block warning> 註冊 </Button>
-           <View style={{ alignItems: 'center' }}>
+
+           <Button style={styles.submitBtn} onPress={this.onLoginPressed} block info> 登入 </Button>
+            <View style={{ alignItems: 'center' }}>
              <View style={styles.orWrapper}>
                <Text style={styles.orText}>or</Text>
              </View>
              <View style={styles.hr} />
            </View>
-           <Button style={styles.submitBtn} onPress={this.onLoginPressed} block info> 登入 </Button>
+                     <FBLogin
+              loginText="Facebook 登入"
+              style={styles.submitBtn}
+              ref={(fbLogin) => { this.fbLogin = fbLogin }}
+              loginBehavior={FBLoginManager.LoginBehaviors.Native}
+              permissions={["public_profile","email","user_friends" ]}
+              onLogin={this.onFBLogin}
+              onLoginFound={function(data){console.log(data.credentials)}}
+              onLoginNotFound={function(e){console.log(e)}}
+              onLogout={function(e){console.log(e)}}
+              onCancel={function(e){console.log(e)}}
+              onPermissionsMissing={function(e){console.log(e)}}/>
+              <TouchableOpacity onPress={this.nextPageRegister.bind(this)}>  
+                <Text style={{marginTop:15,textAlign:'center',color:'blue',fontSize:15}}>註冊新帳號</Text>
+              </TouchableOpacity>
          </List>
          </Content>
          :
-         <Content>
-         <View style={styles.loginform}>
-           <Loading label="上傳中" visible={this.state.upload}/>
-           <View>
+         <Content style={{backgroundColor: '#DDDDDD'}}>
+          <TouchableOpacity onPress={this.updateAvatarPage}>
+           <View style={{flex: 1, flexDirection: 'row', backgroundColor: 'white'}}>
+             <View style={[styles.avatar, styles.avatarContainer, {marginBottom: 20}]}>
              {
-               /*this.state.avatar == null ?
-               <Image source={require('../assets/fuck_cat.jpg')} style={styles.personImage} />
-               :
-               <Image source={{uri: `https://test-zzpengg.c9users.io:8080/images/${this.state.avatar}`}} style={styles.personImage} />*/
+               this.state.avatarSource == null ?
+               <Image style={styles.avatar} source={require('../assets/student-icon.png')} /> :
+               <Image style={styles.avatar} source={{uri: `http://test-zzpengg.c9users.io:8080/images/avatar/student/${this.state.id}`+'/'+`${this.state.avatarSource}`}} />
              }
-             <View style={styles.viewFlexRow} >
-                <View style={{padding:10}}>
-                  <View style={{marginLeft: 60}} >
-                   <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
-                     <View style={[styles.avatar, styles.avatarContainer, {marginBottom: 20}]}>
-                     { this.state.avatarSource === null ? <Text>選擇照片</Text> :
-                       <Image style={styles.avatar} source={this.state.avatarSource} />
-                     }
-                     </View>
-                     <Text style={{marginLeft: 100}}>{this.state.uploadState}</Text>
-                   </TouchableOpacity>
-                   </View>
-                   <TouchableOpacity style={{marginLeft:80}} onPress={this.upload}>
-                     <Text >按此上傳圖片</Text>
-                   </TouchableOpacity>
-                 </View>
-             </View>
-             <View style={{alignSelf: 'center'}}>
-               <Text style={{fontSize: 32}}>{this.state.account}</Text>
-             </View>
-             <View style={{alignSelf: 'center', flexDirection: 'row'}}>
-               <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>名字</Text>
-               <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (name) => this.setState({ name: name }) } value={this.state.name}></Input>
-             </View>
-             <View style={{alignSelf: 'center', flexDirection: 'row'}}>
-               <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>密碼</Text>
-               <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (password) => this.setState({ password: password }) } value={this.state.password}></Input>
-             </View>
-            </View>
-            <Button style={styles.submitBtn}  onPress={this.updateMyInfo} block warning> 確認修改 </Button>
-            <Button style={styles.submitBtn} onPress={this.onLogout.bind(this)} block info> 登出 </Button>
-          </View>
 
+             </View>
+             <Text style={{marginTop: 40, fontSize: 20, marginLeft: 20}}>個人圖片</Text>
+           </View>
+           </TouchableOpacity>
+           <View>
+             <Button style={{backgroundColor: '#FFFFFF', }} block >
+               <View style={{flex: 1, justifyContent: 'space-between', flexDirection: 'row'}}>
+                 <Text style={{color: 'black', marginTop: 3}}>帳號</Text>
+                 <View style={{flexDirection: 'row'}}>
+                   <Text style={{color: 'black', marginRight: 5, marginTop: 3}}>{this.state.account}</Text>
+                 </View>
+               </View>
+             </Button>
+           </View>
+           <UserData title="暱稱" value={this.state.name} updateDataPage={this.updateDataPage} />
+           <UserData title="我的最愛" value="" updateDataPage={this.lovePage} />
+           <UserData title="問題回報" value="" updateDataPage={this.issuePage} />
+           <Button style={styles.submitBtn} onPress={this.onLogout.bind(this)} block info> 登出 </Button>
          </Content>
       }
       </View>
@@ -586,8 +645,8 @@ const styles = StyleSheet.create({
   },
   avatar: {
     borderRadius: 75,
-    width: 150,
-    height: 150
+    width: 100,
+    height: 100
   },
   avatarContainer: {
     borderColor: '#9B9B9B',
