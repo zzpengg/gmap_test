@@ -31,13 +31,13 @@ import {FBLogin, FBLoginManager} from 'react-native-facebook-login';
 import FBLoginView from'../component/FBLoginView'
 import {Loading} from '../component/Loading.js'
 import LandlordSignin from './LandlordSignin.js'
-import LandlordRegistion from './LandlordRegistion.js'
+import StudentRegister from './StudentRegister.js'
 import Dimensions from 'Dimensions';
 import HouseData from './HouseData.js'
 import IconVec from 'react-native-vector-icons/FontAwesome';
 const windowSize = Dimensions.get('window');
 const ACCESS_TOKEN = 'access_token';
-export default class LandlordChooseRegister extends Component{
+export default class StudentChooseRegister extends Component{
     constructor(props){
         super(props)
         this.state={
@@ -74,7 +74,7 @@ export default class LandlordChooseRegister extends Component{
       console.log(response.picture.data.url);
 
       // fb login
-      let url2 = 'http://test-zzpengg.c9users.io:8080/user/FBRegister';
+      let url2 = 'http://test-zzpengg.c9users.io:8080/student/FBRegister';
       let response2 = await fetch(url2, {
         method: 'POST',
         headers: {
@@ -83,9 +83,7 @@ export default class LandlordChooseRegister extends Component{
         },
         body: JSON.stringify({
           name: response.name,
-          phone: response.phone || '尚未取得',
           gender: response.gender,
-          address: response.address || '尚未取得',
           email: response.email,
           account: response.name,
           userId: userId,
@@ -122,8 +120,8 @@ export default class LandlordChooseRegister extends Component{
     nextPageRegister = () => {
     const { navigator } = this.props;
     navigator.push({
-      name: 'LandlordRegistion',
-      component: LandlordRegistion,
+      name: 'StudentRegister',
+      component: StudentRegister,
       params: {
         accessToken: this.props.accessToken,
       }
@@ -137,7 +135,7 @@ export default class LandlordChooseRegister extends Component{
           <Button transparent onPress={this.prePage.bind(this)} >
             <Icon name='ios-arrow-back' />
           </Button>
-          <Title>房東註冊</Title>
+          <Title>學生註冊</Title>
         </Header>
         <Loading label="註冊中" visible={this.state.loginloading}/>
         <Content>

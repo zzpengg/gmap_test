@@ -43,7 +43,6 @@ export default class LandlordRegistion extends Component {
         name: "",
         phone: "",
         gender: "",
-        address: "",
         account: "",
         password: "",
         email:"",
@@ -114,11 +113,26 @@ export default class LandlordRegistion extends Component {
 
   async onRegisterPressed () {
     try {
-
-        if(this.isempty(this.state.name)||this.isempty(this.state.phone)||this.isempty(this.state.account)||this.isempty(this.state.address)||this.isempty(this.state.password)||this.isempty(this.state.email)){
+        let str = "";
+        if(this.isempty(this.state.name)){
+          str +="姓名 "
+        }
+        if(this.isempty(this.state.email)){
+          str +="email "
+        }
+        if(this.isempty(this.state.account)){
+          str +="帳號 "
+        }
+        if(this.isempty(this.state.phone)){
+          str +="電話 "
+        }
+        if(this.isempty(this.state.password)){
+          str +="密碼 "
+        }
+        if(this.isempty(this.state.name)||this.isempty(this.state.phone)||this.isempty(this.state.account)||this.isempty(this.state.password)||this.isempty(this.state.email)){
           Alert.alert(
             "錯誤訊息",
-            "欄位值不能為空",
+            "請輸入" + str,
             [
               {text:'我知道了',onPress:()=>{}}
             ]
@@ -146,7 +160,6 @@ export default class LandlordRegistion extends Component {
                    name: this.state.name,
                    phone: this.state.phone,
                    gender: this.state.selected1,
-                   address: this.state.address,
                    account: this.state.account,
                    password: this.state.password,
                    email: this.state.email
@@ -228,7 +241,7 @@ render() {
                       if(this.state.email.search(emailRule)==-1 && this.state.email.length!=0)
                       {
                         Alert.alert(
-                          "型態錯誤",
+                          "格式錯誤",
                           "請輸入正確信箱",
                           [
                             {text:'我知道了',onPress:()=>{}}
@@ -247,7 +260,7 @@ render() {
                       if(isNaN(val)==true)
                       {
                         Alert.alert(
-                          "型態錯誤",
+                          "格式錯誤",
                           "請輸入數字",
                           [
                             {text:'我知道了',onPress:()=>{}}
@@ -284,11 +297,7 @@ render() {
 
                  </Picker>
                </View>
-               <ListItem style={{ marginTop: 15 }}>
-                 <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-                   <Input placeholder="住址" maxLength={50} onChangeText={ (val) => this.setState({address: val}) } />
-                 </InputGroup>
-               </ListItem>
+
                <Text style={{fontSize: 18, marginTop: 40}}>帳號密碼</Text>
                <ListItem style={{ marginTop: 15 }}>
                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >

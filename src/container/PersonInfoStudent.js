@@ -34,11 +34,11 @@ import {
 } from 'native-base';
 import { Loading } from '../component/Loading.js';
 import HouseDetailStudent from './HouseDetailStudent.js';
-import StudentRegister from './StudentRegister.js';
+import StudentChooseRegister from './StudentChooseRegister.js';
 import HouseComment from './HouseComment.js';
+import {FBLogin, FBLoginManager} from 'react-native-facebook-login';
 import UpdateData from './UpdateData.js';
 import ImagePicker from 'react-native-image-picker';
-import { FBLoginManager } from 'react-native-facebook-login';
 import LoveList from './LoveList.js';
 import IssueList from './IssueList.js';
 import UpdateAvatar from './UpdateAvatar.js';
@@ -102,7 +102,54 @@ export default class PersonInfoStudent extends Component {
           navigator.pop();
       }
   }
+onFBLogin = async(data) => {
+    await this.setState({loginloading:true});
+    console.log("log in");
+    console.log(data.credentials);
+    const { token, userId } = data.credentials;
+    console.log(token);
+    console.log(userId);
+    try {
+      let url = `https://graph.facebook.com/v2.8/${userId}?access_token=${token}&fields=name,picture,gender,email`;
+      let response = await fetch(url).then( (data) => data.json() )
+      console.log('response = ');
+      console.log(response);
+      console.log(response.name);
+      console.log(response.gender);
+      console.log(response.picture.data.url);
 
+      // fb login
+      let url2 = 'http://test-zzpengg.c9users.io:8080/student/FBLogin';
+      let response2 = await fetch(url2, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: response.name,
+          gender: response.gender,
+          email: response.email,
+          account: response.name,
+          userId: userId,
+          password: token,
+          avatar: response.picture.data.url
+        })
+      }).then( (data) => data.json() );
+      console.log(response2);
+      let accessToken = response2.token;
+      console.log(accessToken);
+      //On success we will store the access_token in the AsyncStorage
+      this.storeToken(accessToken);
+      this.setState({accessToken: accessToken,loginloading:false})
+      this.setState({error: 'success'});
+      this.getToken(accessToken);
+
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
   storeToken(responseData){
     AsyncStorage.setItem(STUDENT_ACCESS_TOKEN, responseData, (err)=> {
       if(err){
@@ -217,8 +264,8 @@ export default class PersonInfoStudent extends Component {
   nextPageRegister = () => {
     const { navigator } = this.props;
     navigator.push({
-      name: 'StudentRegister',
-      component: StudentRegister,
+      name: 'StudentChooseRegister',
+      component: StudentChooseRegister,
       params: {
         accessToken: this.state.accessToken
       }
@@ -273,6 +320,90 @@ export default class PersonInfoStudent extends Component {
     });
   }
 
+  selectPhotoTapped() {
+   const options = {
+     title: '取得照片',
+     cancelButtonTitle: '取消',
+     takePhotoButtonTitle: '開啟相機',
+     chooseFromLibraryButtonTitle: '從圖片庫尋找',
+     quality: 1.0,
+     maxWidth: 500,
+     maxHeight: 500,
+     storageOptions: {
+       skipBackup: true
+     }
+   };
+
+   ImagePicker.showImagePicker(options, async (response) => {
+     console.log('Response = ', response);
+
+     if (response.didCancel) {
+       console.log('User cancelled photo picker');
+     }
+     else if (response.error) {
+       console.log('ImagePicker Error: ', response.error);
+     }
+     else if (response.customButton) {
+       console.log('User tapped custom button: ', response.customButton);
+     }
+     else {
+       let source = { uri: response.uri };
+       console.log(response.type);
+       await this.setState({fileType:response.type});
+       // You can also display the image using data:
+       // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+       console.log(source);
+      this.setState({
+         avatarSource: source,
+      })
+    }});
+  }
+
+  upload = async() => {
+    if(this.state.fileType!="image/jpeg"){
+      Alert.alert("檔案型態錯誤","照片格式僅限jpg檔",[
+        {text:"我知道了",onPress:()=>{this.setState({avatarSource:null})}}
+      ]);
+    }
+    else{
+      this.setState({upload:true})
+      let data = new FormData()
+      let id = this.props.id;
+      data.append('id', id);
+      data.append('avatar', {...this.state.avatarSource, type: 'image/jpeg', name: 'image.jpg',});
+      let url = 'https://test-zzpengg.c9users.io:8080/student/upload';
+      let check = 1;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',
+          'x-access-token': this.state.accessToken
+        },
+        body: data
+      }).then( (res) => res.json() )
+      .catch( async(err) => {
+        console.log(err);
+        await this.setState({
+          upload: false,
+          avatarSource:null
+        })
+        Alert.alert("上傳訊息","上傳失敗",[{text:"我知道了",onPress:()=>{}}]);
+        check = 0;
+      })
+      console.log(response);
+      if(response.text === "success upload" && check == 1){
+        await this.setState({
+          upload: false,
+          avatarSource:null
+        })
+        Alert.alert("上傳訊息","上傳成功",[{text:"我知道了",onPress:()=>{}}]);
+      }
+      // await this.loadTheHouse();
+      console.log(response);
+    }
+  }
+
   render() {
    return (
      <View style={styles.container}>
@@ -299,14 +430,29 @@ export default class PersonInfoStudent extends Component {
                <Input onChangeText={(password) => {this.setState({password})}} placeholder="密碼" secureTextEntry={true}/>
              </InputGroup>
            </ListItem>
-           <Button onPress={this.nextPageRegister} style={styles.submitBtn} block warning> 註冊 </Button>
-           <View style={{ alignItems: 'center' }}>
+
+           <Button style={styles.submitBtn} onPress={this.onLoginPressed} block info> 登入 </Button>
+            <View style={{ alignItems: 'center' }}>
              <View style={styles.orWrapper}>
                <Text style={styles.orText}>or</Text>
              </View>
              <View style={styles.hr} />
            </View>
-           <Button style={styles.submitBtn} onPress={this.onLoginPressed} block info> 登入 </Button>
+                     <FBLogin
+              loginText="Facebook 登入"
+              style={styles.submitBtn}
+              ref={(fbLogin) => { this.fbLogin = fbLogin }}
+              loginBehavior={FBLoginManager.LoginBehaviors.Native}
+              permissions={["public_profile","email","user_friends" ]}
+              onLogin={this.onFBLogin}
+              onLoginFound={function(data){console.log(data.credentials)}}
+              onLoginNotFound={function(e){console.log(e)}}
+              onLogout={function(e){console.log(e)}}
+              onCancel={function(e){console.log(e)}}
+              onPermissionsMissing={function(e){console.log(e)}}/>
+              <TouchableOpacity onPress={this.nextPageRegister.bind(this)}>  
+                <Text style={{marginTop:15,textAlign:'center',color:'blue',fontSize:15}}>註冊新帳號</Text>
+              </TouchableOpacity>
          </List>
          </Content>
          :
@@ -319,6 +465,7 @@ export default class PersonInfoStudent extends Component {
                <Image style={styles.avatar} source={require('../assets/student-icon.png')} /> :
                <Image style={styles.avatar} source={{uri: `http://test-zzpengg.c9users.io:8080/images/avatar/student/${this.state.id}`+'/'+`${this.state.avatarSource}`}} />
              }
+
              </View>
              <Text style={{marginTop: 40, fontSize: 20, marginLeft: 20}}>個人圖片</Text>
            </View>

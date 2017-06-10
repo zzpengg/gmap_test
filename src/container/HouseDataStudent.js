@@ -124,8 +124,8 @@ export default class HouseData extends Component {
         .then((data) => data.json())
         .catch((e) => console.log(e));
 
-      console.log(res);
-      console.log(res.data[0].id + ' ' + res.data[0].landlordId + ' ' + res.data[0].picture);
+      // console.log(res);
+      // console.log(res.data[0].id + ' ' + res.data[0].landlordId + ' ' + res.data[0].picture);
       this.setState({
         data: res.data,
         updateData: res.data,
