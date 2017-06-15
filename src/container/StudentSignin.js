@@ -280,7 +280,7 @@ export default class StudentSignin extends Component {
 
   async checkAuth(token) {
     try{
-      let url = 'http://test-zzpengg.c9users.io:8080/student/islogin';
+      let url = 'http://ncuerent.ddns.net:1337/student/islogin';
       let response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -304,7 +304,7 @@ export default class StudentSignin extends Component {
   onLoginPressed = async() => {
 
     try {
-      let url = 'http://test-zzpengg.c9users.io:8080/student/login';
+      let url = 'http://ncuerent.ddns.net:1337/student/login';
       let response = await fetch(url, {
         method: 'POST',
         headers: {

@@ -51,7 +51,7 @@ export default class Comments extends Component {
 
   loadComment = async () => {
     try {
-      const url = 'http://test-zzpengg.c9users.io:8080/comment'
+      const url = 'http://ncuerent.ddns.net:1337/comment'
       let res = await fetch(url,{
       method: 'GET',
     }).then((data) => data.json())
@@ -69,7 +69,7 @@ export default class Comments extends Component {
 
   async onCommentPressed () {
     try {
-      let url = 'http://test-zzpengg.c9users.io:8080/comment'
+      let url = 'http://ncuerent.ddns.net:1337/comment'
       let response = await fetch(url, {
         method: 'POST',
         headers: {

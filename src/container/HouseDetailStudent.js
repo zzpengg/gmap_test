@@ -93,7 +93,7 @@ export default class HouseDetailStudent extends Component {
     if(this.state.accessToken.length != 0){
       try {
         console.log("loading Love");
-        const url = 'http://test-zzpengg.c9users.io:8080/love/findLove'
+        const url = 'http://ncuerent.ddns.net:1337/love/findLove'
         let res = await fetch(url,{
           method: 'POST',
           headers: {
@@ -124,7 +124,7 @@ export default class HouseDetailStudent extends Component {
   loadBestComment = async () => {
     try {
       console.log('****loadBestComment****');
-      const url = 'http://test-zzpengg.c9users.io:8080/comment/findBestComment'
+      const url = 'http://ncuerent.ddns.net:1337/comment/findBestComment'
       let res = await fetch(url,{
         method: 'POST',
         headers: {
@@ -168,7 +168,7 @@ export default class HouseDetailStudent extends Component {
   loadTheHouse = async () => {
     console.log("***load the house***");
     try {
-      const url = 'http://test-zzpengg.c9users.io:8080/house/findTheHouse'
+      const url = 'http://ncuerent.ddns.net:1337/house/findTheHouse'
       let res = await fetch(url,{
         method: 'POST',
         headers: {
@@ -317,7 +317,7 @@ export default class HouseDetailStudent extends Component {
       }
       else{
         console.log("commentId = " + commentId);
-        const url = 'http://test-zzpengg.c9users.io:8080/like/addLike'
+        const url = 'http://ncuerent.ddns.net:1337/like/addLike'
         let res = await fetch(url,{
           method: 'POST',
           headers: {
@@ -353,7 +353,7 @@ export default class HouseDetailStudent extends Component {
       }
       else{
         console.log("commentId = " + commentId);
-        const url = 'http://test-zzpengg.c9users.io:8080/like/'
+        const url = 'http://ncuerent.ddns.net:1337/like/'
         let res = await fetch(url,{
           method: 'POST',
           headers: {
@@ -427,7 +427,7 @@ export default class HouseDetailStudent extends Component {
         ]);
       }else {
         console.log("toggleLove");
-        const url = 'http://test-zzpengg.c9users.io:8080/love/addLove'
+        const url = 'http://ncuerent.ddns.net:1337/love/addLove'
         let res = await fetch(url,{
           method: 'POST',
           headers: {
@@ -462,7 +462,7 @@ export default class HouseDetailStudent extends Component {
     // const { region } = this.props;
     //console.log(region);
    const { title, area, address, vacancy, rent, type, checkwater, checkele, checknet, score, phone,landlordId,remark} = this.state.house;
-   let url=`https://test-zzpengg.c9users.io:8080/images/house/${landlordId}/${this.state.houseId}/`;
+   let url=`http://ncuerent.ddns.net:1337/images/house/${landlordId}/${this.state.houseId}/`;
    return (
      <ScrollView>
        <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>

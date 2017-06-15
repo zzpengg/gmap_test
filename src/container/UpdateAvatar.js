@@ -69,7 +69,7 @@ export default class UpdateAvatar extends Component {
 
   async getMyInfo(token) {
     try{
-      let url = 'http://test-zzpengg.c9users.io:8080/student/getMyInfo';
+      let url = 'http://ncuerent.ddns.net:1337/student/getMyInfo';
       let response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -96,7 +96,7 @@ export default class UpdateAvatar extends Component {
 
   onLoginPressed = async() => {
     try {
-      let url = 'http://test-zzpengg.c9users.io:8080/student/login';
+      let url = 'http://ncuerent.ddns.net:1337/student/login';
       let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -159,7 +159,7 @@ export default class UpdateAvatar extends Component {
 
   updateMyInfo = async() => {
     try {
-      let url = 'http://test-zzpengg.c9users.io:8080/student/updateMyInfo';
+      let url = 'http://ncuerent.ddns.net:1337/student/updateMyInfo';
       let response = await fetch(url, {
         method: 'POST',
         headers: {

@@ -60,7 +60,7 @@ export default class LandlordRegistion extends Component {
 
     async onFilter () {
       try {
-          var data = await fetch('http://test-zzpengg.c9users.io:8080/house');
+          var data = await fetch('http://ncuerent.ddns.net:1337/house');
           this.nextPage();
 
         }catch (errors) {

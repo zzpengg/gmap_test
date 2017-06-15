@@ -54,7 +54,7 @@ export default class LandlordRegistion extends Component {
   }
   checkIdRepeat = async() => {
     console.log("checkIdRepeat");
-    let url='http://test-zzpengg.c9users.io:8080/user/checkIdRepeat';
+    let url='http://ncuerent.ddns.net:1337/user/checkIdRepeat';
     let res=await fetch(url,{
       method:'POST',
       headers:{
@@ -149,7 +149,7 @@ export default class LandlordRegistion extends Component {
           )
         }
         else {
-          let url = 'http://test-zzpengg.c9users.io:8080/user/register';
+          let url = 'http://ncuerent.ddns.net:1337/user/register';
                let response = await fetch(url, {
                  method: 'POST',
                  headers: {

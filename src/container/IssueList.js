@@ -61,7 +61,7 @@ export default class IssueList extends Component {
           ]
         );
       }else{
-        let url = 'http://test-zzpengg.c9users.io:8080/issue/addIssue';
+        let url = 'http://ncuerent.ddns.net:1337/issue/addIssue';
         let response = await fetch(url, {
           method: 'POST',
           headers: {

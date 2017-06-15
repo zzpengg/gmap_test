@@ -123,7 +123,7 @@ export default class StudentRegister extends Component {
           )
         }
         else {
-          let response = await fetch('http://test-zzpengg.c9users.io:8080/student/register', {
+          let response = await fetch('http://ncuerent.ddns.net:1337/student/register', {
                   method: 'POST',
                   body: JSON.stringify({
                         name: this.state.name,

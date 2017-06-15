@@ -58,7 +58,7 @@ export default class PhonePage extends Component {
           ]
         );
       }else{
-      let url = 'http://test-zzpengg.c9users.io:8080/user/updateMyPhone';
+      let url = 'http://ncuerent.ddns.net:1337/user/updateMyPhone';
       let response = await fetch(url, {
         method: 'POST',
         headers: {
