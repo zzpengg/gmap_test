@@ -146,7 +146,7 @@ const HouseDataComponent = (props) => (
         props.val.picture == null ?
         <Image source={require('../assets/house-icon.png')} style={{width:100, height:100, marginTop:10, marginLeft:5, marginBottom: 5 }} />
         :
-        <Image source={{uri: `http://test-zzpengg.c9users.io:8080/images/house/${props.val.landlordId}/${props.val.id}/${props.val.picture}`}} style={{width:100, height:100, marginTop:10, marginLeft:5, marginBottom: 5 }} />
+        <Image source={{uri: `http://ncuerent.ddns.net:1337/images/house/${props.val.landlordId}/${props.val.id}/${props.val.picture}`}} style={{width:100, height:100, marginTop:10, marginLeft:5, marginBottom: 5 }} />
       }
     </View>
 

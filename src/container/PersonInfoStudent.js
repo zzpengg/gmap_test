@@ -119,7 +119,7 @@ onFBLogin = async(data) => {
       console.log(response.picture.data.url);
 
       // fb login
-      let url2 = 'http://test-zzpengg.c9users.io:8080/student/FBLogin';
+      let url2 = 'http://ncuerent.ddns.net:1337/student/FBLogin';
       let response2 = await fetch(url2, {
         method: 'POST',
         headers: {
@@ -182,7 +182,7 @@ onFBLogin = async(data) => {
 
   async getMyInfo(token) {
     try{
-      let url = 'http://test-zzpengg.c9users.io:8080/student/getMyInfo';
+      let url = 'http://ncuerent.ddns.net:1337/student/getMyInfo';
       let response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -211,7 +211,7 @@ onFBLogin = async(data) => {
 
   onLoginPressed = async() => {
     try {
-      let url = 'http://test-zzpengg.c9users.io:8080/student/login';
+      let url = 'http://ncuerent.ddns.net:1337/student/login';
       let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -463,7 +463,7 @@ onFBLogin = async(data) => {
              {
                this.state.avatarSource == null ?
                <Image style={styles.avatar} source={require('../assets/student-icon.png')} /> :
-               <Image style={styles.avatar} source={{uri: `http://test-zzpengg.c9users.io:8080/images/avatar/student/${this.state.id}`+'/'+`${this.state.avatarSource}`}} />
+               <Image style={styles.avatar} source={{uri: `http://ncuerent.ddns.net:1337/images/avatar/student/${this.state.id}`+'/'+`${this.state.avatarSource}`}} />
              }
 
              </View>

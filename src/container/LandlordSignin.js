@@ -167,7 +167,7 @@ export default class LandlordSignin extends Component {
 
   async checkAuth(token) {
     try{
-      let url = 'http://test-zzpengg.c9users.io:8080/user/islogin';
+      let url = 'http://ncuerent.ddns.net:1337/user/islogin';
       let response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -196,7 +196,7 @@ export default class LandlordSignin extends Component {
   onLoginPressed = async() => {
     await this.setState({loginloading:true});
     try {
-      let url = 'http://test-zzpengg.c9users.io:8080/user/login';
+      let url = 'http://ncuerent.ddns.net:1337/user/login';
       let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -277,7 +277,7 @@ export default class LandlordSignin extends Component {
       console.log(response.picture.data.url);
 
       // fb login
-      let url2 = 'http://test-zzpengg.c9users.io:8080/user/FBLogin';
+      let url2 = 'http://ncuerent.ddns.net:1337/user/FBLogin';
       let response2 = await fetch(url2, {
         method: 'POST',
         headers: {

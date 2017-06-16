@@ -98,7 +98,7 @@ export default class PersonInfoLandlord extends Component {
   async getMyInfo(token) {
     try{
       let token = this.state.accessToken;
-      let url = 'http://test-zzpengg.c9users.io:8080/user/getMyInfo';
+      let url = 'http://ncuerent.ddns.net:1337/user/getMyInfo';
       let response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -129,7 +129,7 @@ export default class PersonInfoLandlord extends Component {
 
   updateMyInfo = async() => {
     try {
-      let url = 'http://test-zzpengg.c9users.io:8080/user/updateMyInfo';
+      let url = 'http://ncuerent.ddns.net:1337/user/updateMyInfo';
       let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -323,7 +323,7 @@ export default class PersonInfoLandlord extends Component {
              {
                this.state.avatarSource == null ?
                <Image style={styles.avatar} source={require('../assets/landlord-icon.png')} /> :
-               <Image style={styles.avatar} source={{uri: `http://test-zzpengg.c9users.io:8080/images/avatar/landlord/${this.state.id}`+'/'+`${this.state.avatarSource}`}} />
+               <Image style={styles.avatar} source={{uri: `http://ncuerent.ddns.net:1337/images/avatar/landlord/${this.state.id}`+'/'+`${this.state.avatarSource}`}} />
              }
              </View>
              <Text style={{marginTop: 40, fontSize: 20, marginLeft: 20}}>個人圖片</Text>

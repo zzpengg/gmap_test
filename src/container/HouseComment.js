@@ -261,7 +261,7 @@ export default class HouseDetailStudent extends Component {
 
   loadComment = async () => {
     try {
-      const url = 'http://test-zzpengg.c9users.io:8080/comment/findHouseComment'
+      const url = 'http://ncuerent.ddns.net:1337/comment/findHouseComment'
       let res = await fetch(url,{
         method: 'POST',
         headers: {
@@ -304,7 +304,7 @@ export default class HouseDetailStudent extends Component {
       );
     }else{
       try {
-        let url = 'http://test-zzpengg.c9users.io:8080/comment/createMyComment'
+        let url = 'http://ncuerent.ddns.net:1337/comment/createMyComment'
         let response = await fetch(url, {
           method: 'POST',
           headers: {
@@ -375,7 +375,7 @@ export default class HouseDetailStudent extends Component {
       }
       else{
         console.log("commentId = " + commentId);
-        const url = 'http://test-zzpengg.c9users.io:8080/like/addLike'
+        const url = 'http://ncuerent.ddns.net:1337/like/addLike'
         let res = await fetch(url,{
           method: 'POST',
           headers: {
@@ -411,7 +411,7 @@ export default class HouseDetailStudent extends Component {
       }
       else {
         console.log("commentId = " + commentId);
-        const url = 'http://test-zzpengg.c9users.io:8080/like/addDislike'
+        const url = 'http://ncuerent.ddns.net:1337/like/addDislike'
         let res = await fetch(url,{
           method: 'POST',
           headers: {
@@ -663,7 +663,7 @@ export default class HouseDetailStudent extends Component {
 
   checkAuth = async(token) => {
     try{
-      let url = 'http://test-zzpengg.c9users.io:8080/student/islogin';
+      let url = 'http://ncuerent.ddns.net:1337/student/islogin';
       let response = await fetch(url, {
         method: 'GET',
         headers: {

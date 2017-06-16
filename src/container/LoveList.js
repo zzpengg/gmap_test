@@ -75,7 +75,7 @@ export default class HouseData extends Component {
 
   loadHouse = async () => {
     try {
-      const url = 'http://test-zzpengg.c9users.io:8080/love/findUserLove'
+      const url = 'http://ncuerent.ddns.net:1337/love/findUserLove'
       let res = await fetch(url, {
         method: 'GET',
         headers: {

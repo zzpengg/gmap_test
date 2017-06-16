@@ -74,7 +74,7 @@ export default class LandlordChooseRegister extends Component{
       console.log(response.picture.data.url);
 
       // fb login
-      let url2 = 'http://test-zzpengg.c9users.io:8080/user/FBRegister';
+      let url2 = 'http://ncuerent.ddns.net:1337/user/FBRegister';
       let response2 = await fetch(url2, {
         method: 'POST',
         headers: {

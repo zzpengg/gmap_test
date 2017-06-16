@@ -267,7 +267,7 @@ export default class CreateHouseData extends Component {
       else {
         await this.setState({visible:true});
          console.log("testtest");
-        let url = 'http://test-zzpengg.c9users.io:8080/house/createMyHouse'
+        let url = 'http://ncuerent.ddns.net:1337/house/createMyHouse'
         let res = await fetch(url, {
           method: 'POST',
           headers: {

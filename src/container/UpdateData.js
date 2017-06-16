@@ -76,9 +76,9 @@ export default class UpdateData extends Component {
     try {
       let url = '';
       if(this.props.identity == 'student')
-        url = 'http://test-zzpengg.c9users.io:8080/student/updateMyInfo'
+        url = 'http://ncuerent.ddns.net:1337/student/updateMyInfo'
       else
-        url = 'http://test-zzpengg.c9users.io:8080/user/updateMyName'
+        url = 'http://ncuerent.ddns.net:1337/user/updateMyName'
       let response = await fetch(url, {
         method: 'POST',
         headers: {
