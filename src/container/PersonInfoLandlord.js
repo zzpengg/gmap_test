@@ -46,6 +46,7 @@ import UserData from '../component/UserData.js';
 import PhonePage from './PhonePage.js';
 import UpdateAvatar from './UpdateAvatar.js';
 import UpdateData from './UpdateData.js';
+import IssueList from './IssueList.js';
 
 const ACCESS_TOKEN = 'access_token';
 
@@ -60,32 +61,32 @@ export default class PersonInfoLandlord extends Component {
       phone: '',
       accessToken: this.props.accessToken,
       error: "",
-      visiable:true,
-      upload:false,
-      avatarSource:null,
+      visiable: true,
+      upload: false,
+      avatarSource: null,
     }
     this.getMyInfo = this.getMyInfo.bind(this);
     this.getMyInfo();
   }
 
   prePage() {
-      const { navigator } = this.props;
-      this.props.callBack();
-      if(navigator) {
-          navigator.pop();
-      }
+    const { navigator } = this.props;
+    this.props.callBack();
+    if (navigator) {
+      navigator.pop();
+    }
   }
 
   async deleteToken() {
     try {
-        await AsyncStorage.removeItem(ACCESS_TOKEN)
-    } catch(error) {
-        console.log("Something went wrong");
+      await AsyncStorage.removeItem(ACCESS_TOKEN)
+    } catch (error) {
+      console.log("Something went wrong");
     }
   }
 
-  onLogout(){
-    FBLoginManager.logout( (data) => {console.log(data) });
+  onLogout() {
+    FBLoginManager.logout((data) => { console.log(data) });
     this.deleteToken();
     this.setState({
       error: 'logout'
@@ -96,7 +97,7 @@ export default class PersonInfoLandlord extends Component {
   }
 
   async getMyInfo(token) {
-    try{
+    try {
       let token = this.state.accessToken;
       let url = 'http://ncuerent.ddns.net:1337/user/getMyInfo';
       let response = await fetch(url, {
@@ -105,8 +106,8 @@ export default class PersonInfoLandlord extends Component {
           'Accept': 'application/json',
           'x-access-token': token,
         }
-      }).then( (data) => data.json() )
-      .catch( (err) => console.log(err) )
+      }).then((data) => data.json())
+        .catch((err) => console.log(err))
       console.log("getMyInfo");
       console.log("response");
       console.log(response);
@@ -121,13 +122,13 @@ export default class PersonInfoLandlord extends Component {
         visible: false,
       })
       return response.text;
-    }catch(error){
+    } catch (error) {
       console.log("catch error = " + error);
       return error;
     }
   }
 
-  updateMyInfo = async() => {
+  updateMyInfo = async () => {
     try {
       let url = 'http://ncuerent.ddns.net:1337/user/updateMyInfo';
       let response = await fetch(url, {
@@ -142,87 +143,88 @@ export default class PersonInfoLandlord extends Component {
           password: this.state.password,
           phone: this.state.phone,
         })
-      }).then( (data) => data.json() )
+      }).then((data) => data.json())
       console.log("pressed");
       console.log(response);
-      if(response.text === 'updateMyInfo success'){
+      if (response.text === 'updateMyInfo success') {
         //Handle success
         //On success we will store the access_token in the AsyncStorage
-        this.setState({error: 'success'});
+        this.setState({ error: 'success' });
         Alert.alert('訊息',
           '修改成功',
           [
-            {text:'我知道了', onPress:() => { this.prePage() }}
+            { text: '我知道了', onPress: () => { this.prePage() } }
           ]
         );
       } else {
-            //Handle error
-            let error = res;
-            throw error;
+        //Handle error
+        let error = res;
+        throw error;
       }
-    } catch(error){
-      let str=""+error;
+    } catch (error) {
+      let str = "" + error;
       Alert.alert('錯誤訊息',
-      str,
-      [
-        {text:'我知道了',onPress:()=>{}}
-      ]
-    );
+        str,
+        [
+          { text: '我知道了', onPress: () => { } }
+        ]
+      );
       console.log("error " + error);
     }
   }
 
   selectPhotoTapped() {
-   const options = {
-     title: '取得照片',
-     cancelButtonTitle: '取消',
-     takePhotoButtonTitle: '開啟相機',
-     chooseFromLibraryButtonTitle: '從圖片庫尋找',
-     quality: 1.0,
-     maxWidth: 500,
-     maxHeight: 500,
-     storageOptions: {
-       skipBackup: true
-     }
-   };
+    const options = {
+      title: '取得照片',
+      cancelButtonTitle: '取消',
+      takePhotoButtonTitle: '開啟相機',
+      chooseFromLibraryButtonTitle: '從圖片庫尋找',
+      quality: 1.0,
+      maxWidth: 500,
+      maxHeight: 500,
+      storageOptions: {
+        skipBackup: true
+      }
+    };
 
-   ImagePicker.showImagePicker(options, async (response) => {
-     console.log('Response = ', response);
+    ImagePicker.showImagePicker(options, async (response) => {
+      console.log('Response = ', response);
 
-     if (response.didCancel) {
-       console.log('User cancelled photo picker');
-     }
-     else if (response.error) {
-       console.log('ImagePicker Error: ', response.error);
-     }
-     else if (response.customButton) {
-       console.log('User tapped custom button: ', response.customButton);
-     }
-     else {
-       let source = { uri: response.uri };
-       console.log(response.type);
-       await this.setState({fileType:response.type});
-       // You can also display the image using data:
-       // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-       console.log(source);
-      this.setState({
-         avatarSource: source,
-      })
-    }});
+      if (response.didCancel) {
+        console.log('User cancelled photo picker');
+      }
+      else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      }
+      else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      }
+      else {
+        let source = { uri: response.uri };
+        console.log(response.type);
+        await this.setState({ fileType: response.type });
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        console.log(source);
+        this.setState({
+          avatarSource: source,
+        })
+      }
+    });
   }
 
-  upload = async() => {
-    if(this.state.fileType!="image/jpeg"){
-      Alert.alert("檔案型態錯誤","照片格式僅限jpg檔",[
-        {text:"我知道了",onPress:()=>{this.setState({avatarSource:null})}}
+  upload = async () => {
+    if (this.state.fileType != "image/jpeg") {
+      Alert.alert("檔案型態錯誤", "照片格式僅限jpg檔", [
+        { text: "我知道了", onPress: () => { this.setState({ avatarSource: null }) } }
       ]);
     }
-    else{
-      this.setState({upload:true})
+    else {
+      this.setState({ upload: true })
       let data = new FormData()
       let id = this.props.id;
       data.append('id', id);
-      data.append('avatar', {...this.state.avatarSource, type: 'image/jpeg', name: 'image.jpg',});
+      data.append('avatar', { ...this.state.avatarSource, type: 'image/jpeg', name: 'image.jpg', });
       let url = 'https://test-zzpengg.c9users.io:8080/user/upload';
       let check = 1;
       const response = await fetch(url, {
@@ -233,23 +235,23 @@ export default class PersonInfoLandlord extends Component {
           'x-access-token': this.state.accessToken
         },
         body: data
-      }).then( (res) => res.json() )
-      .catch( async(err) => {
-        console.log(err);
-        await this.setState({
-          upload: false,
-          avatarSource:null
+      }).then((res) => res.json())
+        .catch(async (err) => {
+          console.log(err);
+          await this.setState({
+            upload: false,
+            avatarSource: null
+          })
+          Alert.alert("上傳訊息", "上傳失敗", [{ text: "我知道了", onPress: () => { } }]);
+          check = 0;
         })
-        Alert.alert("上傳訊息","上傳失敗",[{text:"我知道了",onPress:()=>{}}]);
-        check = 0;
-      })
       console.log(response);
-      if(response.text === "success upload" && check == 1){
+      if (response.text === "success upload" && check == 1) {
         await this.setState({
           upload: false,
-          avatarSource:null
+          avatarSource: null
         })
-        Alert.alert("上傳訊息","上傳成功",[{text:"我知道了",onPress:()=>{}}]);
+        Alert.alert("上傳訊息", "上傳成功", [{ text: "我知道了", onPress: () => { } }]);
       }
       // await this.loadTheHouse();
       console.log(response);
@@ -295,57 +297,69 @@ export default class PersonInfoLandlord extends Component {
     });
   }
 
+  issuePage = () => {
+    const { navigator } = this.props;
+    console.log("issue page");
+    navigator.push({
+      name: 'IssueList',
+      component: IssueList,
+      params: {
+        accessToken: this.state.accessToken,
+      }
+    });
+  }
+
   render() {
-   return (
-     <View style={styles.container}>
-       <Modal
-       visible={this.state.visible}
-       animationType={"slide"}
-       onRequestClose={() => {}}
-       >
-         <View style={{flex: 1,  flexDirection: 'column',justifyContent: 'center',alignItems: 'center'}}>
-           <View >
-             <Text>載入中...</Text>
-             <Spinner color='blue'/>
-           </View>
-         </View>
-       </Modal>
-       <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
-         <Button transparent onPress={this.prePage.bind(this)}>
-           <Icon name='ios-arrow-back' />
-         </Button>
-         <Title>個人資料</Title>
-       </Header>
-       <Content style={{backgroundColor: '#DDDDDD'}}>
-         <TouchableOpacity onPress={this.updateAvatarPage}>
-           <View style={{flex: 1, flexDirection: 'row', backgroundColor: 'white'}}>
-             <View style={[styles.avatar, styles.avatarContainer, {marginBottom: 20}]}>
-             {
-               this.state.avatarSource == null ?
-               <Image style={styles.avatar} source={require('../assets/landlord-icon.png')} /> :
-               <Image style={styles.avatar} source={{uri: `http://ncuerent.ddns.net:1337/images/avatar/landlord/${this.state.id}`+'/'+`${this.state.avatarSource}`}} />
-             }
-             </View>
-             <Text style={{marginTop: 40, fontSize: 20, marginLeft: 20}}>個人圖片</Text>
-           </View>
-         </TouchableOpacity>
-         <View>
-           <Button style={{backgroundColor: '#FFFFFF', }} block >
-             <View style={{flex: 1, justifyContent: 'space-between', flexDirection: 'row'}}>
-               <Text style={{color: 'black', marginTop: 3}}>帳號</Text>
-               <View style={{flexDirection: 'row'}}>
-                 <Text style={{color: 'black', marginRight: 5, marginTop: 3}}>{this.state.account}</Text>
-               </View>
-             </View>
-           </Button>
-         </View>
-         <UserData title="暱稱" value={this.state.name} updateDataPage={this.updateDataPage} />
-         <UserData title="電話" value={this.state.phone} updateDataPage={this.phonePage} />
-         <UserData title="問題回報" value="" updateDataPage={this.issuePage} />
-         <Button style={styles.submitBtn} onPress={this.onLogout.bind(this)} block info> 登出 </Button>
-       </Content>
-     </View>
-   );
+    return (
+      <View style={styles.container}>
+        <Modal
+          visible={this.state.visible}
+          animationType={"slide"}
+          onRequestClose={() => { }}
+        >
+          <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+            <View >
+              <Text>載入中...</Text>
+              <Spinner color='blue' />
+            </View>
+          </View>
+        </Modal>
+        <Header style={{ backgroundColor: "rgb(122, 68, 37)" }}>
+          <Button transparent onPress={this.prePage.bind(this)}>
+            <Icon name='ios-arrow-back' />
+          </Button>
+          <Title>個人資料</Title>
+        </Header>
+        <Content style={{ backgroundColor: '#DDDDDD' }}>
+          <TouchableOpacity onPress={this.updateAvatarPage}>
+            <View style={{ flex: 1, flexDirection: 'row', backgroundColor: 'white' }}>
+              <View style={[styles.avatar, styles.avatarContainer, { marginBottom: 20 }]}>
+                {
+                  this.state.avatarSource == null ?
+                    <Image style={styles.avatar} source={require('../assets/landlord-icon.png')} /> :
+                    <Image style={styles.avatar} source={{ uri: `http://ncuerent.ddns.net:1337/images/avatar/landlord/${this.state.id}` + '/' + `${this.state.avatarSource}` }} />
+                }
+              </View>
+              <Text style={{ marginTop: 40, fontSize: 20, marginLeft: 20 }}>個人圖片</Text>
+            </View>
+          </TouchableOpacity>
+          <View>
+            <Button style={{ backgroundColor: '#FFFFFF', }} block >
+              <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'row' }}>
+                <Text style={{ color: 'black', marginTop: 3 }}>帳號</Text>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={{ color: 'black', marginRight: 5, marginTop: 3 }}>{this.state.account}</Text>
+                </View>
+              </View>
+            </Button>
+          </View>
+          <UserData title="暱稱" value={this.state.name} updateDataPage={this.updateDataPage} />
+          <UserData title="電話" value={this.state.phone} updateDataPage={this.phonePage} />
+          <UserData title="問題回報" value="" updateDataPage={this.issuePage} />
+          <Button style={styles.submitBtn} onPress={this.onLogout.bind(this)} block info> 登出 </Button>
+        </Content>
+      </View>
+    );
   }
 }
 
@@ -440,7 +454,7 @@ const styles = StyleSheet.create({
   orWrapper: {
     // backgroundColor: 'rgba(255, 255, 255, 0.54)',
     transform: [
-      {translateY: 23},
+      { translateY: 23 },
     ],
     width: 25,
     height: 25,
@@ -449,8 +463,8 @@ const styles = StyleSheet.create({
     paddingLeft: 4,
   },
   bgImg: {
-    width:38,
-    height:38,
+    width: 38,
+    height: 38,
     position: 'absolute',
     top: 0,
     left: 0,
@@ -471,10 +485,10 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   detailData: {
-    alignSelf:'flex-end',
+    alignSelf: 'flex-end',
     flexDirection: 'row',
     width: 220,
-    flex:1,
+    flex: 1,
     justifyContent: 'flex-end'
   },
   personImage: {
