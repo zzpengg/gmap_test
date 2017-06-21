@@ -316,6 +316,7 @@ export default class PersonInfoStudent extends Component {
       name: 'UpdateAvatar',
       component: UpdateAvatar,
       params: {
+        identity: 'student',
         accessToken: this.state.accessToken,
       }
     });
@@ -373,7 +374,7 @@ export default class PersonInfoStudent extends Component {
       let id = this.props.id;
       data.append('id', id);
       data.append('avatar', { ...this.state.avatarSource, type: 'image/jpeg', name: 'image.jpg', });
-      let url = 'https://test-zzpengg.c9users.io:8080/student/upload';
+      let url = 'http://ncuerent.ddns.net:1337/student/upload';
       let check = 1;
       const response = await fetch(url, {
         method: 'POST',

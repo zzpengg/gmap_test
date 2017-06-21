@@ -34,11 +34,11 @@ import {
 
 import HouseData from './HouseData.js';
 import LandlordRegistion from './LandlordRegistion.js';
-import FBLoginView from'../component/FBLoginView'
+import FBLoginView from '../component/FBLoginView'
 import LandlordChooseRegister from './LandlordChooseRegister.js'
 const ACCESS_TOKEN = 'access_token';
-import {FBLogin, FBLoginManager} from 'react-native-facebook-login';
-import {Loading} from '../component/Loading'
+import { FBLogin, FBLoginManager } from 'react-native-facebook-login';
+import { Loading } from '../component/Loading'
 import IconVec from 'react-native-vector-icons/FontAwesome';
 import PersonInfoLandlord from './PersonInfoLandlord.js';
 
@@ -53,8 +53,8 @@ export default class LandlordSignin extends Component {
       accessToken: "",
       error: "",
       avatar: '',
-      visible:true,
-      loginloading:false
+      visible: true,
+      loginloading: false
     }
   }
 
@@ -65,40 +65,40 @@ export default class LandlordSignin extends Component {
   async getToken() {
     try {
       let accessToken = await AsyncStorage.getItem(ACCESS_TOKEN);
-      if(!accessToken) {
-          console.log("not have token");
-          this.setState({
-            visible: false,
-            error: 'error',
-            accessToken: '',
-          });
+      if (!accessToken) {
+        console.log("not have token");
+        this.setState({
+          visible: false,
+          error: 'error',
+          accessToken: '',
+        });
       } else {
-          console.log("accessToken = " + accessToken);
-          let text = await this.checkAuth(accessToken);
-          console.log("TExt = " + text);
-          if(text==='check success'){
-            this.setState({accessToken: accessToken})
-            this.setState({error: 'success'});
-          }
-          else{
-            this.setState({error: text});
-          }
+        console.log("accessToken = " + accessToken);
+        let text = await this.checkAuth(accessToken);
+        console.log("TExt = " + text);
+        if (text === 'check success') {
+          this.setState({ accessToken: accessToken })
+          this.setState({ error: 'success' });
+        }
+        else {
+          this.setState({ error: text });
+        }
 
-          console.log("nextpage");
+        console.log("nextpage");
       }
-    } catch(error) {
-        console.log("catch error = " + error);
+    } catch (error) {
+      console.log("catch error = " + error);
     }
   }
 
-  nextPage(){
+  nextPage() {
     const { navigator } = this.props;
     navigator.push({
       name: 'HouseData',
       component: HouseData,
       params: {
         accessToken: this.state.accessToken,
-        account:this.state.account,
+        account: this.state.account,
         callBack: this.callback,
       }
     });
@@ -110,51 +110,51 @@ export default class LandlordSignin extends Component {
     //<Component {...route.params} navigator={navigator} />
     //这里传递了navigator作为props
     console.log("person page pressed");
-    if(navigator) {
-        navigator.push({
-            name: 'PersonInfoLandlord',
-            component: PersonInfoLandlord,
-            params: {
-              accessToken: this.state.accessToken,
-              callBack: this.callback,
-            }
-        })
+    if (navigator) {
+      navigator.push({
+        name: 'PersonInfoLandlord',
+        component: PersonInfoLandlord,
+        params: {
+          accessToken: this.state.accessToken,
+          callBack: this.callback,
+        }
+      })
     }
   }
 
-  callback = async() => {
+  callback = async () => {
     console.log('i am callback');
     await this.getToken();
   }
 
   prePage() {
-      const { navigator } = this.props;
-      if(navigator) {
-          navigator.pop();
-      }
+    const { navigator } = this.props;
+    if (navigator) {
+      navigator.pop();
+    }
   }
 
-  storeToken(responseData){
-    AsyncStorage.setItem(ACCESS_TOKEN, responseData, (err)=> {
-      if(err){
+  storeToken(responseData) {
+    AsyncStorage.setItem(ACCESS_TOKEN, responseData, (err) => {
+      if (err) {
         console.log("an error");
         throw err;
       }
       console.log("success");
-    }).catch((err)=> {
-        console.log("error is: " + err);
+    }).catch((err) => {
+      console.log("error is: " + err);
     });
   }
 
   async deleteToken() {
     try {
-        await AsyncStorage.removeItem(ACCESS_TOKEN)
-    } catch(error) {
-        console.log("Something went wrong");
+      await AsyncStorage.removeItem(ACCESS_TOKEN)
+    } catch (error) {
+      console.log("Something went wrong");
     }
   }
 
-  onLogout(){
+  onLogout() {
     this.deleteToken();
     this.setState({
       accessToken: ''
@@ -162,11 +162,11 @@ export default class LandlordSignin extends Component {
     this.setState({
       error: 'logout'
     })
-    FBLoginManager.logout( (data) => {console.log(data) });
+    FBLoginManager.logout((data) => { console.log(data) });
   }
 
   async checkAuth(token) {
-    try{
+    try {
       let url = 'http://ncuerent.ddns.net:1337/user/islogin';
       let response = await fetch(url, {
         method: 'GET',
@@ -174,7 +174,7 @@ export default class LandlordSignin extends Component {
           'Accept': 'application/json',
           'x-access-token': token,
         }
-      }).then( (data) => data.json() )
+      }).then((data) => data.json())
       console.log("checkAuth");
       console.log("response = " + response);
       console.log("name = " + response.name);
@@ -182,19 +182,19 @@ export default class LandlordSignin extends Component {
         name: response.name,
         avatar: response.avatar,
         account: response.account,
-        id:response.id
+        id: response.id
       })
-      this.setState({visible:false});
+      this.setState({ visible: false });
       return response.text;
-    }catch(error){
+    } catch (error) {
       console.log("catch error = " + error);
-      this.setState({visible:false});
+      this.setState({ visible: false });
       return error;
     }
   }
 
-  onLoginPressed = async() => {
-    await this.setState({loginloading:true});
+  onLoginPressed = async () => {
+    await this.setState({ loginloading: true });
     try {
       let url = 'http://ncuerent.ddns.net:1337/user/login';
       let response = await fetch(url, {
@@ -207,44 +207,44 @@ export default class LandlordSignin extends Component {
           account: this.state.account,
           password: this.state.password,
         })
-      }).then( (data) => data.json() )
+      }).then((data) => data.json())
       console.log("pressed");
       console.log(response);
       this.setState({
         status: 'pressed'
       })
-      if(response.text === 'login success'){
+      if (response.text === 'login success') {
         //Handle success
         let accessToken = response.token;
         console.log(accessToken);
         //On success we will store the access_token in the AsyncStorage
         this.storeToken(accessToken);
-        this.setState({accessToken: accessToken,loginloading:false})
-        this.setState({error: 'success'});
+        this.setState({ accessToken: accessToken, loginloading: false })
+        this.setState({ error: 'success' });
         this.nextPage();
       }
-      else if(response.text=== "validate error"){
-        this.setState({loginloading:false})
+      else if (response.text === "validate error") {
+        this.setState({ loginloading: false })
         Alert.alert('錯誤訊息',
           "信箱尚未驗證\n請至信箱驗證帳戶",
           [
-            {text:'我知道了',onPress:()=>{}}
+            { text: '我知道了', onPress: () => { } }
           ]
         );
       }
       else {
-            //Handle error
-            let error = res;
-            throw error;
+        //Handle error
+        let error = res;
+        throw error;
       }
-    } catch(error){
-      this.setState({loginloading:false})
+    } catch (error) {
+      this.setState({ loginloading: false })
       Alert.alert('錯誤訊息',
-      "帳號或密碼輸入錯誤",
-      [
-        {text:'我知道了',onPress:()=>{}}
-      ]
-    );
+        "帳號或密碼輸入錯誤",
+        [
+          { text: '我知道了', onPress: () => { } }
+        ]
+      );
       console.log("error " + error);
     }
   }
@@ -260,8 +260,8 @@ export default class LandlordSignin extends Component {
     });
   }
 
-  onFBLogin = async(data) => {
-    await this.setState({loginloading:true});
+  onFBLogin = async (data) => {
+    await this.setState({ loginloading: true });
     console.log("log in");
     console.log(data.credentials);
     const { token, userId } = data.credentials;
@@ -269,7 +269,7 @@ export default class LandlordSignin extends Component {
     console.log(userId);
     try {
       let url = `https://graph.facebook.com/v2.8/${userId}?access_token=${token}&fields=name,picture,gender,email`;
-      let response = await fetch(url).then( (data) => data.json() )
+      let response = await fetch(url).then((data) => data.json())
       console.log('response = ');
       console.log(response);
       console.log(response.name);
@@ -295,18 +295,18 @@ export default class LandlordSignin extends Component {
           password: token,
           avatar: response.picture.data.url
         })
-      }).then( (data) => data.json() );
+      }).then((data) => data.json());
       console.log(response2);
       let accessToken = response2.token;
       console.log(accessToken);
       //On success we will store the access_token in the AsyncStorage
       this.storeToken(accessToken);
-      this.setState({accessToken: accessToken,loginloading:false})
-      this.setState({error: 'success'});
+      this.setState({ accessToken: accessToken, loginloading: false })
+      this.setState({ error: 'success' });
       this.nextPage();
 
     }
-    catch(err){
+    catch (err) {
       console.log(err);
     }
   }
@@ -314,47 +314,48 @@ export default class LandlordSignin extends Component {
     // const { region } = this.props;
     //console.log(region);
 
-   return (
-     <View style={styles.container}>
-      <Loading label="載入中..." visible={this.state.visible}/>
-      <Loading label="登入中" visible={this.state.loginloading}/>
-       <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
-         <Button transparent onPress={this.prePage.bind(this)}>
-           <Icon name='ios-arrow-back' />
-         </Button>
-         <Title>房東登入</Title>
-         {
+    return (
+      <View style={styles.container}>
+        <Loading label="載入中..." visible={this.state.visible} />
+        <Loading label="登入中" visible={this.state.loginloading} />
+        <Header style={{ backgroundColor: "rgb(122, 68, 37)" }}>
+          <Button transparent onPress={this.prePage.bind(this)}>
+            <Icon name='ios-arrow-back' />
+          </Button>
+          <Title>房東登入</Title>
+          {
             this.state.accessToken.length != 0 ?
               <Button transparent onPress={this.personPage.bind(this)}>
-                <IconVec name="user-circle" style={{fontSize: 30}}/>
+                <IconVec name="user-circle" style={{ fontSize: 30 }} />
               </Button>
-            :
-            null
-         }
-       </Header>
-       {
+              :
+              null
+          }
+        </Header>
+        {
           (this.state.error != 'success') ?
-          <Content>
-          <List style={styles.form}>
-           <ListItem style={{ marginTop: 15 }}>
-             <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-               <Icon name="ios-person" />
-               <Input onChangeText={(account) => {this.setState({account})}} placeholder="帳號" />
-             </InputGroup>
-           </ListItem>
-           <ListItem style={{ marginTop: 10 }}>
-             <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
-               <Icon name="ios-unlock" />
-               <Input onChangeText={(password) => {this.setState({password})}} placeholder="密碼" secureTextEntry={true}/>
-             </InputGroup>
-           </ListItem>
-           {/*<Button onPress={this.nextPageRegister.bind(this)} style={styles.submitBtn} block warning> 註冊 </Button>
+            <Content>
+              <List style={styles.form}>
+                <ListItem style={{ marginTop: 15 }}>
+                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
+                    <Icon name="ios-person" />
+                    <Input onChangeText={(account) => { this.setState({ account }) }} placeholder="帳號" />
+                  </InputGroup>
+                </ListItem>
+                <ListItem style={{ marginTop: 10 }}>
+                  <InputGroup borderType="regular" style={{ borderRadius: 5 }} >
+                    <Icon name="ios-unlock" />
+                    <Input onChangeText={(password) => { this.setState({ password }) }} placeholder="密碼" secureTextEntry={true} />
+                  </InputGroup>
+                </ListItem>
+                {/*<Button onPress={this.nextPageRegister.bind(this)} style={styles.submitBtn} block warning> 註冊 </Button>
            <View style={{ alignItems: 'center' }}>
              <View style={styles.orWrapper}>
                <Text style={styles.orText}>or</Text>
              </View>
              <View style={styles.hr} />
            </View>*/}
+
            <Button style={styles.submitBtn} onPress={this.onLoginPressed.bind(this)} block info> 登入 </Button>
            <View style={{ alignItems: 'center' }}>
              <View style={styles.orWrapper}>
@@ -406,10 +407,11 @@ export default class LandlordSignin extends Component {
             </View>
           </View>
 
-         </Content>
-      }
+
+            </Content>
+        }
       </View>
-   );
+    );
   }
 }
 
@@ -515,7 +517,7 @@ const styles = StyleSheet.create({
   orWrapper: {
     // backgroundColor: 'rgba(255, 255, 255, 0.54)',
     transform: [
-      {translateY: 23},
+      { translateY: 23 },
     ],
     width: 25,
     height: 25,
@@ -524,8 +526,8 @@ const styles = StyleSheet.create({
     paddingLeft: 4,
   },
   bgImg: {
-    width:38,
-    height:38,
+    width: 38,
+    height: 38,
     position: 'absolute',
     top: 0,
     left: 0,
@@ -546,10 +548,10 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   detailData: {
-    alignSelf:'flex-end',
+    alignSelf: 'flex-end',
     flexDirection: 'row',
     width: 220,
-    flex:1,
+    flex: 1,
     justifyContent: 'flex-end'
   },
   personImage: {

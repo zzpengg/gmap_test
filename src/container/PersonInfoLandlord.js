@@ -278,6 +278,7 @@ export default class PersonInfoLandlord extends Component {
       name: 'UpdateAvatarlandlord',
       component: UpdateAvatarlandlord,
       params: {
+        identity: 'landlord',
         accessToken: this.state.accessToken,
       }
     });
