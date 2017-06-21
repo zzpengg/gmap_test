@@ -388,7 +388,7 @@ export default class LandlordSignin extends Component {
                <Image source={require('../assets/landlord-icon.png')} style={styles.personImage} />
                :
                this.state.avatar.length < 50 ?
-               <Image source={{uri: `https://test-zzpengg.c9users.io:8080/images/avatar/${this.state.id}/${this.state.avatar}`}} style={styles.personImage} />
+               <Image source={{uri: `http://ncuerent.ddns.net:1337/images/avatar/user/${this.state.id}/${this.state.avatar}`}} style={styles.personImage} />
                :
                <Image source={{uri: this.state.avatar}} style={styles.personImage} />
              }
