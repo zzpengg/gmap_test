@@ -355,56 +355,58 @@ export default class LandlordSignin extends Component {
              </View>
              <View style={styles.hr} />
            </View>*/}
-                <Button style={styles.submitBtn} onPress={this.onLoginPressed.bind(this)} block info> 登入 </Button>
-                <View style={{ alignItems: 'center' }}>
-                  <View style={styles.orWrapper}>
-                    <Text style={styles.orText}>or</Text>
-                  </View>
-                  <View style={styles.hr} />
-                </View>
-                <FBLogin
-                  loginText="Facebook 登入"
-                  style={styles.submitBtn}
-                  ref={(fbLogin) => { this.fbLogin = fbLogin }}
-                  loginBehavior={FBLoginManager.LoginBehaviors.Native}
-                  permissions={["public_profile", "email", "user_friends"]}
-                  onLogin={this.onFBLogin}
-                  onLoginFound={function (data) { console.log(data.credentials) }}
-                  onLoginNotFound={function (e) { console.log(e) }}
-                  onLogout={function (e) { console.log(e) }}
-                  onCancel={function (e) { console.log(e) }}
-                  onPermissionsMissing={function (e) { console.log(e) }} />
-                <TouchableOpacity onPress={this.nextPageRegister.bind(this)}>
-                  <Text style={{ marginTop: 15, textAlign: 'center', color: 'blue', fontSize: 15 }}>註冊新帳號</Text>
-                </TouchableOpacity>
-              </List>
-            </Content>
-            :
-            <Content>
-              <View style={styles.loginform}>
-                <View>
-                  {
-                    this.state.avatar == null ?
-                      <Image source={require('../assets/landlord-icon.png')} style={styles.personImage} />
-                      :
-                      this.state.avatar.length < 50 ?
-                        <Image source={{ uri: `http://ncuerent.ddns.net:1337/images/avatar/${this.state.id}/${this.state.avatar}` }} style={styles.personImage} />
-                        :
-                        <Image source={{ uri: this.state.avatar }} style={styles.personImage} />
-                  }
-                  <View style={{ alignSelf: 'center' }}>
-                    <Text style={{ fontSize: 32, }}>{this.state.name}</Text>
-                  </View>
-                  <Button onPress={this.nextPage.bind(this)} style={styles.submitBtn} block warning> 登入 </Button>
-                  <View style={{ alignItems: 'center' }}>
-                    <View style={styles.orWrapper}>
-                      <Text style={styles.orText}>or</Text>
-                    </View>
-                    <View style={styles.hr} />
-                  </View>
-                  <Button style={styles.submitBtn} onPress={this.onLogout.bind(this)} block info> 登出 </Button>
-                </View>
-              </View>
+
+           <Button style={styles.submitBtn} onPress={this.onLoginPressed.bind(this)} block info> 登入 </Button>
+           <View style={{ alignItems: 'center' }}>
+             <View style={styles.orWrapper}>
+               <Text style={styles.orText}>or</Text>
+             </View>
+             <View style={styles.hr} />
+           </View>
+           <FBLogin
+              loginText="Facebook 登入"
+              style={styles.submitBtn}
+              ref={(fbLogin) => { this.fbLogin = fbLogin }}
+              loginBehavior={FBLoginManager.LoginBehaviors.Native}
+              permissions={["public_profile","email","user_friends" ]}
+              onLogin={this.onFBLogin}
+              onLoginFound={function(data){console.log(data.credentials)}}
+              onLoginNotFound={function(e){console.log(e)}}
+              onLogout={function(e){console.log(e)}}
+              onCancel={function(e){console.log(e)}}
+              onPermissionsMissing={function(e){console.log(e)}}/>
+              <TouchableOpacity onPress={this.nextPageRegister.bind(this)}>  
+                <Text style={{marginTop:15,textAlign:'center',color:'blue',fontSize:15}}>註冊新帳號</Text>
+              </TouchableOpacity>
+         </List>
+         </Content>
+         :
+         <Content>
+         <View style={styles.loginform}>
+           <View>
+             {
+               this.state.avatar == null ?
+               <Image source={require('../assets/landlord-icon.png')} style={styles.personImage} />
+               :
+               this.state.avatar.length < 50 ?
+               <Image source={{uri: `http://ncuerent.ddns.net:1337/images/avatar/user/${this.state.id}/${this.state.avatar}`}} style={styles.personImage} />
+               :
+               <Image source={{uri: this.state.avatar}} style={styles.personImage} />
+             }
+             <View style={{alignSelf: 'center'}}>
+               <Text style={{fontSize: 32,}}>{this.state.name}</Text>
+             </View>
+             <Button onPress={this.nextPage.bind(this)} style={styles.submitBtn} block warning> 登入 </Button>
+             <View style={{ alignItems: 'center' }}>
+               <View style={styles.orWrapper}>
+                 <Text style={styles.orText}>or</Text>
+               </View>
+               <View style={styles.hr} />
+             </View>
+             <Button style={styles.submitBtn} onPress={this.onLogout.bind(this)} block info> 登出 </Button>
+            </View>
+          </View>
+
 
             </Content>
         }

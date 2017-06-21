@@ -44,7 +44,7 @@ import { FBLoginManager } from 'react-native-facebook-login';
 import { Loading } from '../component/Loading';
 import UserData from '../component/UserData.js';
 import PhonePage from './PhonePage.js';
-import UpdateAvatar from './UpdateAvatar.js';
+import UpdateAvatarlandlord from './UpdateAvatarlandlord.js';
 import UpdateData from './UpdateData.js';
 import IssueList from './IssueList.js';
 
@@ -119,6 +119,7 @@ export default class PersonInfoLandlord extends Component {
         password: response.data.password,
         phone: response.data.phone,
         avatar: response.data.avatar,
+        id:response.data.id,
         visible: false,
       })
       return response.text;
@@ -274,8 +275,8 @@ export default class PersonInfoLandlord extends Component {
   updateAvatarPage = () => {
     const { navigator } = this.props;
     navigator.push({
-      name: 'UpdateAvatar',
-      component: UpdateAvatar,
+      name: 'UpdateAvatarlandlord',
+      component: UpdateAvatarlandlord,
       params: {
         identity: 'landlord',
         accessToken: this.state.accessToken,
@@ -336,9 +337,9 @@ export default class PersonInfoLandlord extends Component {
             <View style={{ flex: 1, flexDirection: 'row', backgroundColor: 'white' }}>
               <View style={[styles.avatar, styles.avatarContainer, { marginBottom: 20 }]}>
                 {
-                  this.state.avatarSource == null ?
+                  this.state.avatar == null ?
                     <Image style={styles.avatar} source={require('../assets/landlord-icon.png')} /> :
-                    <Image style={styles.avatar} source={{ uri: `http://ncuerent.ddns.net:1337/images/avatar/landlord/${this.state.id}` + '/' + `${this.state.avatarSource}` }} />
+                    <Image style={styles.avatar} source={{ uri: `http://ncuerent.ddns.net:1337/images/avatar/user/${this.state.id}/${this.state.avatar}` }} />
                 }
               </View>
               <Text style={{ marginTop: 40, fontSize: 20, marginLeft: 20 }}>個人圖片</Text>
