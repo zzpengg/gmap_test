@@ -225,7 +225,7 @@ export default class PersonInfoLandlord extends Component {
       let id = this.props.id;
       data.append('id', id);
       data.append('avatar', { ...this.state.avatarSource, type: 'image/jpeg', name: 'image.jpg', });
-      let url = 'https://test-zzpengg.c9users.io:8080/user/upload';
+      let url = 'http://ncuerent.ddns.net:1337/user/upload';
       let check = 1;
       const response = await fetch(url, {
         method: 'POST',
@@ -277,6 +277,7 @@ export default class PersonInfoLandlord extends Component {
       name: 'UpdateAvatar',
       component: UpdateAvatar,
       params: {
+        identity: 'landlord',
         accessToken: this.state.accessToken,
       }
     });
