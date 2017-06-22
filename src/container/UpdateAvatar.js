@@ -252,11 +252,7 @@ export default class UpdateAvatar extends Component {
       let data = new FormData()
       let id = this.props.id;
       data.append('id', id);
-<<<<<<< HEAD
-      data.append('avatar', {...this.state.avatarSource, type: 'image/jpeg', name: 'image.jpg',});
-=======
       data.append('avatar', { ...this.state.avatarSource, type: 'image/jpeg', name: 'image.jpg', });
->>>>>>> upstream/master
       let url = 'http://ncuerent.ddns.net:1337/student/upload';
       let check = 1;
       const response = await fetch(url, {
