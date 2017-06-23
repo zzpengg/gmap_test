@@ -119,7 +119,7 @@ export default class PersonInfoLandlord extends Component {
         password: response.data.password,
         phone: response.data.phone,
         avatar: response.data.avatar,
-        id:response.data.id,
+        id: response.data.id,
         visible: false,
       })
       return response.text;
@@ -339,7 +339,9 @@ export default class PersonInfoLandlord extends Component {
                 {
                   this.state.avatar == null ?
                     <Image style={styles.avatar} source={require('../assets/landlord-icon.png')} /> :
-                    <Image style={styles.avatar} source={{ uri: `http://ncuerent.ddns.net:1337/images/avatar/user/${this.state.id}/${this.state.avatar}` }} />
+                    this.state.avatar.length > 50 ?
+                      <Image style={styles.avatar} source={{ uri: `${this.state.avatar}` }} /> :
+                      <Image style={styles.avatar} source={{ uri: `http://ncuerent.ddns.net:1337/images/avatar/user/${this.state.id}/${this.state.avatar}` }} />
                 }
               </View>
               <Text style={{ marginTop: 40, fontSize: 20, marginLeft: 20 }}>個人圖片</Text>
