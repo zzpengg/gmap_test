@@ -38,7 +38,7 @@ export default class HouseData extends Component {
       data: [],
       loading: true,
       accessToken: this.props.accessToken,
-      visible:true,
+      visible: true,
     }
     this.loadHouse = this.loadHouse.bind(this);
     this.loadHouse();
@@ -54,22 +54,22 @@ export default class HouseData extends Component {
     console.log(this.props.accessToken);
     console.log("heyhey");
     console.log("next page pressed");
-    if(navigator) {
-        navigator.push({
-            name: 'HouseDetailStudent',
-            component: HouseDetailStudent,
-            params: {
-              id: id,
-              accessToken: this.props.accessToken,
-            }
-        })
+    if (navigator) {
+      navigator.push({
+        name: 'HouseDetailStudent',
+        component: HouseDetailStudent,
+        params: {
+          id: id,
+          accessToken: this.props.accessToken,
+        }
+      })
     }
   }
 
   prePage() {
     const { navigator } = this.props;
-    if(navigator) {
-        navigator.pop();
+    if (navigator) {
+      navigator.pop();
     }
   }
 
@@ -89,7 +89,7 @@ export default class HouseData extends Component {
       this.setState({
         data: res.data,
         loading: false,
-        visible:false,
+        visible: false,
       })
 
     } catch (errors) {
@@ -126,7 +126,7 @@ export default class HouseData extends Component {
         );
       }
     }
-    if(rank == 0){
+    if (rank == 0) {
       return <Text>暫無評分</Text>
     }
     return star;
@@ -135,7 +135,7 @@ export default class HouseData extends Component {
   HouseDetailStudentPage = (id) => {
     const { navigator } = this.props;
     console.log("id = " + id);
-    if(navigator){
+    if (navigator) {
       navigator.push({
         name: 'HouseDetailStudent',
         component: HouseDetailStudent,
@@ -150,21 +150,21 @@ export default class HouseData extends Component {
   render() {
     // const { region } = this.props;
     //console.log(region);
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     const dataSource = ds.cloneWithRows(this.state.data);
     const { navigator } = this.props;
     return (
       <View>
-      <Loading label="載入中..." visible={this.state.visible}/>
+        <Loading label="載入中..." visible={this.state.visible} />
         <ScrollView>
-          <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
+          <Header style={{ backgroundColor: "rgb(122, 68, 37)" }}>
             <Button transparent onPress={this.prePage.bind(this)}>
               <Icon name='ios-arrow-back' />
             </Button>
             <Title>房屋資訊</Title>
           </Header>
-          <View style={{flex: 1,justifyContent: 'center',alignItems: 'center'}}>
-          <Text style={{marginLeft:10, marginTop:10}} >共{this.state.data.length}間房屋</Text>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ marginLeft: 10, marginTop: 10 }} >共{this.state.data.length}間房屋</Text>
             {
               /*this.state.data.map((val, index) => {
                 return (
@@ -193,9 +193,9 @@ export default class HouseData extends Component {
             <ListView
               initialListSize={1}
               dataSource={dataSource}
-              renderRow={(rowData,rowID)=>{
-                return(
-                  <HouseDataComponent val={rowData} index={rowID} nextPage={this.nextPage}/>
+              renderRow={(rowData, rowID) => {
+                return (
+                  <HouseDataComponent val={rowData} index={rowID} nextPage={this.nextPage} />
                 )
               }}
             />
@@ -208,12 +208,12 @@ export default class HouseData extends Component {
 
 const styles = StyleSheet.create({
   container: {
-   ...StyleSheet.absoluteFillObject,
-   height: 400,
-   width: 400,
-   justifyContent: 'flex-end',
-   alignItems: 'center',
- },
+    ...StyleSheet.absoluteFillObject,
+    height: 400,
+    width: 400,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
   modalcontainer: {
     flex: 1,
     justifyContent: 'center',
@@ -225,10 +225,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff', padding: 20
   },
- map: {
-   ...StyleSheet.absoluteFillObject,
- },
- center: {
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  center: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -281,10 +281,10 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   detailData: {
-    alignSelf:'flex-end',
+    alignSelf: 'flex-end',
     flexDirection: 'row',
     width: 220,
-    flex:1,
+    flex: 1,
     justifyContent: 'flex-end'
   }
 });

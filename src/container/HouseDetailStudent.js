@@ -48,22 +48,21 @@ import PersonInfoStudent from './PersonInfoStudent.js';
 const STUDENT_ACCESS_TOKEN = 'student_access_token';
 
 export default class HouseDetailStudent extends Component {
-  constructor(props)
-  {
+  constructor(props) {
     super(props);
     this.state = {
       selectedItem: undefined,
       results: {
-          items: []
+        items: []
       },
       accessToken: this.props.accessToken || '',
       houseId: this.props.id,
-      userId: this.props.userId||0,
+      userId: this.props.userId || 0,
       name: "develop",
       content: "",
       data: [],
       house: [],
-      path:[],
+      path: [],
       loading: true,
       comment: [],
       toggle: 'null',
@@ -75,26 +74,28 @@ export default class HouseDetailStudent extends Component {
     this.loadTheHouse = this.loadTheHouse.bind(this);
     this.loadTheHouse();
   }
-   LinkToPhotoUrl = async (url) =>{
-    Alert.alert("查看相片","是否查看",[
-      {text:"是",onPress:()=>{
-            Linking.canOpenURL(url).then(supported => {
-              if (supported) {
-                Linking.openURL(url);
-              }
-            });
-      }},
-      {text:"否",onPress:()=>{}}
+  LinkToPhotoUrl = async (url) => {
+    Alert.alert("查看相片", "是否查看", [
+      {
+        text: "是", onPress: () => {
+          Linking.canOpenURL(url).then(supported => {
+            if (supported) {
+              Linking.openURL(url);
+            }
+          });
+        }
+      },
+      { text: "否", onPress: () => { } }
     ])
   }
   loadLove = async () => {
     console.log('****loadLove****');
     console.log(this.state.accessToken);
-    if(this.state.accessToken.length != 0){
+    if (this.state.accessToken.length != 0) {
       try {
         console.log("loading Love");
         const url = 'http://ncuerent.ddns.net:1337/love/findLove'
-        let res = await fetch(url,{
+        let res = await fetch(url, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -104,7 +105,7 @@ export default class HouseDetailStudent extends Component {
           body: JSON.stringify({
             houseId: this.state.houseId,
           })
-        }).then( (data) => data.json() )
+        }).then((data) => data.json())
           .catch((e) => console.log(e));
 
         console.log(res);
@@ -115,7 +116,7 @@ export default class HouseDetailStudent extends Component {
       } catch (errors) {
         console.log(errors);
       }
-    }else{
+    } else {
 
     }
 
@@ -125,7 +126,7 @@ export default class HouseDetailStudent extends Component {
     try {
       console.log('****loadBestComment****');
       const url = 'http://ncuerent.ddns.net:1337/comment/findBestComment'
-      let res = await fetch(url,{
+      let res = await fetch(url, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -134,7 +135,7 @@ export default class HouseDetailStudent extends Component {
         body: JSON.stringify({
           houseId: this.state.houseId,
         })
-      }).then( (data) => data.json() )
+      }).then((data) => data.json())
         .catch((e) => console.log(e));
 
       console.log(res);
@@ -148,20 +149,20 @@ export default class HouseDetailStudent extends Component {
     }
   }
 
-  getToken = async() => {
+  getToken = async () => {
     try {
       let accessToken = await AsyncStorage.getItem(STUDENT_ACCESS_TOKEN);
-      if(!accessToken) {
-          console.log("not have token");
+      if (!accessToken) {
+        console.log("not have token");
       } else {
-          console.log("accessToken = " + accessToken);
-          await this.setState({accessToken: accessToken});
-          this.setState({error: 'success'});
-          this.setState({isLogin: 1});
-          this.setState({loadingisLogin: false});
+        console.log("accessToken = " + accessToken);
+        await this.setState({ accessToken: accessToken });
+        this.setState({ error: 'success' });
+        this.setState({ isLogin: 1 });
+        this.setState({ loadingisLogin: false });
       }
-    } catch(error) {
-        console.log("catch error = " + error);
+    } catch (error) {
+      console.log("catch error = " + error);
     }
   }
 
@@ -169,7 +170,7 @@ export default class HouseDetailStudent extends Component {
     console.log("***load the house***");
     try {
       const url = 'http://ncuerent.ddns.net:1337/house/findTheHouse'
-      let res = await fetch(url,{
+      let res = await fetch(url, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -178,14 +179,14 @@ export default class HouseDetailStudent extends Component {
         body: JSON.stringify({
           houseId: this.state.houseId,
         })
-      }).then( (data) => data.json() )
+      }).then((data) => data.json())
         .catch((e) => console.log(e));
 
       console.log(res);
-      console.log("path="+res.data.path)
+      console.log("path=" + res.data.path)
       await this.setState({
         house: res.data,
-        path:res.data.path || ''
+        path: res.data.path || ''
       });
       this.loadLove();
     } catch (errors) {
@@ -195,17 +196,17 @@ export default class HouseDetailStudent extends Component {
 
   prePage() {
     const { navigator } = this.props;
-    if(navigator) {
-        navigator.pop();
+    if (navigator) {
+      navigator.pop();
     }
   }
-  callback = async() => {
+  callback = async () => {
     await this.loadBestComment();
   }
 
   commentPage = () => {
     const { navigator } = this.props;
-    if(navigator) {
+    if (navigator) {
       navigator.push({
         name: 'HouseComment',
         component: HouseComment,
@@ -217,45 +218,48 @@ export default class HouseDetailStudent extends Component {
       });
     }
   }
-  callLandLord = (phone) =>{
-    Alert.alert('打給房東',`${phone}`, [
-        {
-          text: '是',onPress:()=>{
-            const url = `tel:${phone}`;
-            Linking.canOpenURL(url).then(supported => {
-              if (supported) {
-                Linking.openURL(url);
-              }
-            });
-          }},
-      { text: '否', onPress: () => {} },
+  callLandLord = (phone) => {
+    Alert.alert('打給房東', `${phone}`, [
+      {
+        text: '是', onPress: () => {
+          const url = `tel:${phone}`;
+          Linking.canOpenURL(url).then(supported => {
+            if (supported) {
+              Linking.openURL(url);
+            }
+          });
+        }
+      },
+      { text: '否', onPress: () => { } },
     ]);
   }
   navigate = () => {
-    Alert.alert('導航',`${this.state.house.address}`, [
-        {
-          text: '前往',onPress:()=>{
-            const url = `http://maps.google.com/maps/?daddr=${this.state.house.address}`;
-            Linking.canOpenURL(url).then(supported => {
-              if (supported) {
-                Linking.openURL(url);
-              }
-            });
-          }},
-      { text: '取消', onPress: () => {} },
+    Alert.alert('導航', `${this.state.house.address}`, [
+      {
+        text: '前往', onPress: () => {
+          const url = `http://maps.google.com/maps/?daddr=${this.state.house.address}`;
+          Linking.canOpenURL(url).then(supported => {
+            if (supported) {
+              Linking.openURL(url);
+            }
+          });
+        }
+      },
+      { text: '取消', onPress: () => { } },
     ]);
   }
 
   gmap = () => {
-    const imgWidth = parseInt(windowSize.width/5*4);
+    const imgWidth = parseInt(windowSize.width / 5 * 4);
     const imgHeight = parseInt(imgWidth / 16.0 * 9.0, 10);
 
     return (
-      <TouchableOpacity  style={{flex: 1, paddingTop: 20,alignItems:'center' }} onPress={this.navigate}>
+      <TouchableOpacity style={{ flex: 1, paddingTop: 20, alignItems: 'center' }} onPress={this.navigate}>
         <Image
           resizeMode="cover"
           source={{
-            uri: `https://maps.googleapis.com/maps/api/staticmap?center=${this.state.house.address}&zoom=16.85&size=${imgWidth}x${imgHeight}&scale=8&language=zh-tw&markers=size:mid%7Ccolor:blue%7C${this.state.house.address}&key=AIzaSyBiwSQUTr6brsJoPHcliZ3TVFYgYf7ulbw` }}
+            uri: `https://maps.googleapis.com/maps/api/staticmap?center=${this.state.house.address}&zoom=16.85&size=${imgWidth}x${imgHeight}&scale=8&language=zh-tw&markers=size:mid%7Ccolor:blue%7C${this.state.house.address}&key=AIzaSyBiwSQUTr6brsJoPHcliZ3TVFYgYf7ulbw`
+          }}
           style={{
             width: imgWidth,
             height: imgHeight,
@@ -269,56 +273,56 @@ export default class HouseDetailStudent extends Component {
     const { checkwater, checkele, checknet } = this.state.house;
     let text = "";
     let check = 0;
-    if(checkwater){
+    if (checkwater) {
       text += "水費";
       check += 1;
     }
-    if(checkele){
-      if(check == 1){
+    if (checkele) {
+      if (check == 1) {
         text += "、電費";
-      }else{
+      } else {
         text += "電費";
       }
       check += 1;
     }
-    if(checknet){
-      if(check == 2){
+    if (checknet) {
+      if (check == 2) {
         text += "、網路費";
-      }else {
+      } else {
         text += "網路費";
       }
       check += 1;
     }
 
-    if(check > 0){
+    if (check > 0) {
       temp = "含" + text;
-    }else{
+    } else {
       temp = null;
     }
-    if(temp) {
+    if (temp) {
       return (
         <Text style={styles.detailText}>({temp})</Text>
       )
-    }else {
+    } else {
       return null
     }
   }
 
-  thumbs_up = async(commentId) => {
+  thumbs_up = async (commentId) => {
     try {
-      if(!this.state.accessToken){
+      if (!this.state.accessToken) {
         Alert.alert(
           '錯誤訊息',
           '尚未登入',
           [
-            {text:'我知道了',onPress:()=>{}}
+            { text: '我知道了', onPress: () => { } }
           ]
         );
       }
-      else{
+      else {
         console.log("commentId = " + commentId);
         const url = 'http://ncuerent.ddns.net:1337/like/addLike'
-        let res = await fetch(url,{
+        let res = await fetch(url, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -328,7 +332,7 @@ export default class HouseDetailStudent extends Component {
           body: JSON.stringify({
             commentId: commentId,
           })
-        }).then( (data) => data.json() )
+        }).then((data) => data.json())
           .catch((e) => console.log(e));
 
         console.log(res);
@@ -340,21 +344,21 @@ export default class HouseDetailStudent extends Component {
     }
   }
 
-  thumbs_down = async(commentId) => {
+  thumbs_down = async (commentId) => {
     try {
-      if(!this.state.accessToken){
+      if (!this.state.accessToken) {
         Alert.alert(
           '錯誤訊息',
           '尚未登入',
           [
-            {text:'我知道了',onPress:()=>{}}
+            { text: '我知道了', onPress: () => { } }
           ]
         );
       }
-      else{
+      else {
         console.log("commentId = " + commentId);
         const url = 'http://ncuerent.ddns.net:1337/like/'
-        let res = await fetch(url,{
+        let res = await fetch(url, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -364,7 +368,7 @@ export default class HouseDetailStudent extends Component {
           body: JSON.stringify({
             commentId: commentId,
           })
-        }).then( (data) => data.json() )
+        }).then((data) => data.json())
           .catch((e) => console.log(e));
 
         console.log(res);
@@ -401,7 +405,7 @@ export default class HouseDetailStudent extends Component {
         );
       }
     }
-    if(rank == 0){
+    if (rank == 0) {
       return <Text>暫無評分</Text>
     }
     return star;
@@ -410,7 +414,7 @@ export default class HouseDetailStudent extends Component {
   personInfoPage = () => {
     const { navigator } = this.props;
     console.log("going to personInfoPage");
-    if(navigator) {
+    if (navigator) {
       navigator.push({
         name: 'PersonInfoStudent',
         component: PersonInfoStudent,
@@ -418,17 +422,17 @@ export default class HouseDetailStudent extends Component {
     }
   }
 
-  toggleLove = async() => {
-    try{
-      if(!this.state.accessToken){
-        Alert.alert('發生錯誤',`尚未登入`, [
-          { text: '登入', onPress: () => {this.personInfoPage()} },
-          { text: '取消', onPress: () => {} },
+  toggleLove = async () => {
+    try {
+      if (!this.state.accessToken) {
+        Alert.alert('發生錯誤', `尚未登入`, [
+          { text: '登入', onPress: () => { this.personInfoPage() } },
+          { text: '取消', onPress: () => { } },
         ]);
-      }else {
+      } else {
         console.log("toggleLove");
         const url = 'http://ncuerent.ddns.net:1337/love/addLove'
-        let res = await fetch(url,{
+        let res = await fetch(url, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -438,21 +442,21 @@ export default class HouseDetailStudent extends Component {
           body: JSON.stringify({
             houseId: this.state.houseId
           })
-        }).then( (data) => data.json() )
+        }).then((data) => data.json())
           .catch((e) => console.log(e));
-          console.log(res);
-        if(this.state.toggle == 'null'){
+        console.log(res);
+        if (this.state.toggle == 'null') {
           this.setState({
             toggle: 'love'
           })
-        }else{
+        } else {
           this.setState({
             toggle: 'null'
           })
         }
       }
     }
-    catch(e){
+    catch (e) {
       console.log(e);
     }
 
@@ -461,106 +465,106 @@ export default class HouseDetailStudent extends Component {
   render() {
     // const { region } = this.props;
     //console.log(region);
-   const { title, area, address, vacancy, rent, type, checkwater, checkele, checknet, score, phone,landlordId,remark} = this.state.house;
-   let url=`http://ncuerent.ddns.net:1337/images/house/${landlordId}/${this.state.houseId}/`;
-   return (
-     <ScrollView>
-       <Header style={{backgroundColor: "rgb(122, 68, 37)"}}>
-         <Button transparent onPress={this.prePage.bind(this)}>
-           <Icon name='ios-arrow-back' />
-         </Button>
-         <Title>房屋資訊</Title>
-         {
-           this.state.toggle == 'love' ?
-             <Button transparent onPress={this.toggleLove.bind(this)}>
-               <IconVec name="heart" style={{fontSize: 30}} color= 'red' />
-             </Button>
-           :
-             <Button transparent onPress={this.toggleLove.bind(this)}>
-               <IconVec name="heart-o" style={{fontSize: 30}} />
-             </Button>
-         }
-       </Header>
-       <View>
-          {(this.state.path.length>0)&&
-          (<Swiper style={styles.wrapper} height={250}>
-            {
-              (this.state.path.map((val)=>{
-                return(
-                        <View style={styles.slide}>
-                          <TouchableOpacity onPress={()=>{this.LinkToPhotoUrl(url+val)}}style={styles.image} >
-                            <Image resizeMode='contain' style={{width:windowSize.width,height:250}}source={{uri:url+val}}/>
-                          </TouchableOpacity>
-                        </View>
-                )
-              }))
-            }
+    const { title, area, address, vacancy, rent, type, checkwater, checkele, checknet, score, phone, landlordId, remark } = this.state.house;
+    let url = `http://ncuerent.ddns.net:1337/images/house/${landlordId}/${this.state.houseId}/`;
+    return (
+      <ScrollView>
+        <Header style={{ backgroundColor: "rgb(122, 68, 37)" }}>
+          <Button transparent onPress={this.prePage.bind(this)}>
+            <Icon name='ios-arrow-back' />
+          </Button>
+          <Title>房屋資訊</Title>
+          {
+            this.state.toggle == 'love' ?
+              <Button transparent onPress={this.toggleLove.bind(this)}>
+                <IconVec name="heart" style={{ fontSize: 30 }} color='red' />
+              </Button>
+              :
+              <Button transparent onPress={this.toggleLove.bind(this)}>
+                <IconVec name="heart-o" style={{ fontSize: 30 }} />
+              </Button>
+          }
+        </Header>
+        <View>
+          {(this.state.path.length > 0) &&
+            (<Swiper style={styles.wrapper} height={250}>
+              {
+                (this.state.path.map((val) => {
+                  return (
+                    <View style={styles.slide}>
+                      <TouchableOpacity onPress={() => { this.LinkToPhotoUrl(url + val) }} style={styles.image} >
+                        <Image resizeMode='contain' style={{ width: windowSize.width, height: 250 }} source={{ uri: url + val }} />
+                      </TouchableOpacity>
+                    </View>
+                  )
+                }))
+              }
 
-        </Swiper>)
+            </Swiper>)
           }
           {/*<Image
            source={require('../assets/house.jpg')}
            style={{width:300, height:100, marginTop: 10, alignSelf: 'center' }}
          />*/}
-         <Text style={styles.detailText}>房屋名稱: {title}</Text>
-         <Text style={styles.detailText}>所在區域: {area}</Text>
-         <View style={{flexDirection: 'row'}}>
-           <Text style={styles.detailText}>租金:  {rent}/月</Text>
-           {this.extra()}
-         </View>
-         <Text style={styles.detailText}>地址:  {address}</Text>
-         <Text style={styles.detailText}>類型:  {type}</Text>
-         {this.gmap()}
-         <Text style={styles.detailText}>評價: {this.rankStar(score)}{score ? <Text>({score})</Text> : null}</Text>
-         <Button style={styles.detailText} info={true} onPress={()=>{this.callLandLord(phone)}}>連絡房東: {phone}</Button>
-         <Text style={styles.detailText}>備註:</Text>
-         <View style={{flex:1,alignSelf:'center',width:windowSize.width/5*4,backgroundColor:'#ccc'}}>
-            <ScrollView style={{height:windowSize.height/6}}>
+          <Text style={styles.detailText}>房屋名稱: {title}</Text>
+          <Text style={styles.detailText}>所在區域: {area}</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={styles.detailText}>租金:  {rent}/月</Text>
+            {this.extra()}
+          </View>
+          <Text style={styles.detailText}>地址:  {address}</Text>
+          <Text style={styles.detailText}>類型:  {type}</Text>
+          {this.gmap()}
+          <Text style={styles.detailText}>評價: {this.rankStar(score)}{score ? <Text>({score})</Text> : null}</Text>
+          <Button style={styles.detailText} info={true} onPress={() => { this.callLandLord(phone) }}>連絡房東: {phone}</Button>
+          <Text style={styles.detailText}>備註:</Text>
+          <View style={{ flex: 1, alignSelf: 'center', width: windowSize.width / 5 * 4, backgroundColor: '#ccc' }}>
+            <ScrollView style={{ height: windowSize.height / 6 }}>
               <Text
-              style={{alignSelf:'center',width:windowSize.width/5*4,color:'#2d85ca'}}
-              editable = {false}
-              multiline = {true}
-              maxLength = {100}>
-              {remark}
+                style={{ alignSelf: 'center', width: windowSize.width / 5 * 4, color: '#2d85ca' }}
+                editable={false}
+                multiline={true}
+                maxLength={100}>
+                {remark}
               </Text>
             </ScrollView>
-         </View>
-         <TouchableOpacity onPress={ this.commentPage }>
-           <Text style={{marginLeft: 33, fontSize: 18, marginTop: 10}}>最佳留言 <IconVec name='chevron-right' /></Text>
-         </TouchableOpacity>
-         {
-           this.state.loading ?
-             <ActivityIndicator
-               animating={this.state.loading}
-               color="rgb(213, 179, 36)"
-             /> :
-           (this.state.comment.length != 0) ?
-           this.state.comment.map((val, index) => {
-             return (
-               <View key={index}>
-                 <Comment {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)} />
-               </View>
-             )
-           }) : <Text style={{alignSelf: 'center'}}>暫無留言</Text>
-         }
-       </View>
-     </ScrollView>
-   );
+          </View>
+          <TouchableOpacity onPress={this.commentPage}>
+            <Text style={{ marginLeft: 33, fontSize: 18, marginTop: 10 }}>最佳留言 <IconVec name='chevron-right' /></Text>
+          </TouchableOpacity>
+          {
+            this.state.loading ?
+              <ActivityIndicator
+                animating={this.state.loading}
+                color="rgb(213, 179, 36)"
+              /> :
+              (this.state.comment.length != 0) ?
+                this.state.comment.map((val, index) => {
+                  return (
+                    <View key={index}>
+                      <Comment {...val} thumbs_up={() => this.thumbs_up(val.id)} thumbs_down={() => this.thumbs_down(val.id)} />
+                    </View>
+                  )
+                }) : <Text style={{ alignSelf: 'center' }}>暫無留言</Text>
+          }
+        </View>
+      </ScrollView>
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-   ...StyleSheet.absoluteFillObject,
-   height: 400,
-   width: 400,
-   justifyContent: 'flex-end',
-   alignItems: 'center',
- },
- map: {
-   ...StyleSheet.absoluteFillObject,
- },
- center: {
+    ...StyleSheet.absoluteFillObject,
+    height: 400,
+    width: 400,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  center: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -572,10 +576,10 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FBFAFA',
   },
- map: {
-   ...StyleSheet.absoluteFillObject,
- },
- center: {
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  center: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -584,8 +588,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   bgImg: {
-    width:150,
-    height:150,
+    width: 150,
+    height: 150,
   },
   footerItem: {
     flex: 1,
@@ -659,7 +663,7 @@ const styles = StyleSheet.create({
   orWrapper: {
     // backgroundColor: 'rgba(255, 255, 255, 0.54)',
     transform: [
-      {translateY: 23},
+      { translateY: 23 },
     ],
     width: 25,
     height: 25,
@@ -668,7 +672,7 @@ const styles = StyleSheet.create({
     paddingLeft: 4,
   },
   houseTitle: {
-    paddingTop:10,
+    paddingTop: 10,
     paddingLeft: 30,
     fontSize: 15,
     color: '#7b7d85'
@@ -682,28 +686,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   areaText: {
-    paddingTop:20,
+    paddingTop: 20,
     paddingLeft: 30,
     fontSize: 15,
     color: '#7b7d85'
   },
   addrText: {
-    paddingTop:10,
+    paddingTop: 10,
     paddingLeft: 30,
     fontSize: 15,
     color: '#7b7d85'
   },
   container: {
-   ...StyleSheet.absoluteFillObject,
-   height: 400,
-   width: 400,
-   justifyContent: 'flex-end',
-   alignItems: 'center',
- },
- map: {
-   ...StyleSheet.absoluteFillObject,
- },
- center: {
+    ...StyleSheet.absoluteFillObject,
+    height: 400,
+    width: 400,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  center: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -721,12 +725,12 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     alignSelf: 'center'
   },
-    slide: {
+  slide: {
     flex: 1,
     justifyContent: 'center',
     backgroundColor: 'transparent'
   },
-  image:{
-    flex:1
+  image: {
+    flex: 1
   },
 });

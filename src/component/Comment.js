@@ -73,10 +73,10 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   detailData: {
-    alignSelf:'flex-end',
+    alignSelf: 'flex-end',
     flexDirection: 'row',
     width: 220,
-    flex:1,
+    flex: 1,
     justifyContent: 'flex-end'
   },
   personImage: {
@@ -130,7 +130,7 @@ rankStar = (rank) => {
       );
     }
   }
-  if(rank == 0){
+  if (rank == 0) {
     return <Text>暫無評分</Text>
   }
   return star;
@@ -140,41 +140,44 @@ const Comment = (props) => (
 
   <View style={styles.commentView}>
     <View style={styles.hr}></View>
-    <View style={{flexDirection: 'row'}}>
+    <View style={{ flexDirection: 'row' }}>
       {
-        (props.avatar == null && props.star == null ) ?
-        <Image source={require('../assets/landlord-icon.png')} style={styles.personImage} />
-        :
-        (props.avatar == null && props.star != null ) ?
-        <Image source={require('../assets/student-icon.png')} style={styles.personImage} />
-        :
-        props.avatar.length < 50 ?
-        <Image source={{uri: `https://test-zzpengg.c9users.io:8080/images/${props.avatar}`}} style={styles.personImage} />
-        :
-        <Image source={{uri: props.avatar}} style={styles.personImage} />
+        (props.avatar == null && props.star == null) ?
+          <Image source={require('../assets/landlord-icon.png')} style={styles.personImage} />
+          :
+          (props.avatar == null && props.star != null) ?
+            <Image source={require('../assets/student-icon.png')} style={styles.personImage} />
+            :
+            (props.avatar.length < 50 && props.star != null) ?
+              <Image source={{ uri: `http://ncuerent.ddns.net:1337/images/avatar/student/${props.userId}/${props.avatar}` }} style={styles.personImage} />
+              :
+              (props.avatar.length < 50 && props.star == null) ?
+                <Image source={{ uri: `http://ncuerent.ddns.net:1337/images/avatar/user/${props.userId}/${props.avatar}` }} style={styles.personImage} />
+                :
+                <Image source={{ uri: props.avatar }} style={styles.personImage} />
       }
-      <View style={{width: 300}}>
-        <View style={{flexDirection: 'row'}}>
-          <Text style={{fontWeight: 'bold', color: 'black'}}>{props.name}  </Text>
+      <View style={{ width: 300 }}>
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={{ fontWeight: 'bold', color: 'black' }}>{props.name}  </Text>
           <Text>{props.time}</Text>
         </View>
         {
           props.star != null ?
-          <Text>評分: {this.rankStar(props.star)}</Text>
-          :
-          <Text>房東回復</Text>
+            <Text>評分: {this.rankStar(props.star)}</Text>
+            :
+            <Text>房東回復</Text>
         }
-        <Text style={{fontWeight: 'bold', color: 'black'}}>{props.content}</Text>
-        <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginTop: 10}}>
+        <Text style={{ fontWeight: 'bold', color: 'black' }}>{props.content}</Text>
+        <View style={{ flexDirection: 'row', alignSelf: 'flex-end', marginTop: 10 }}>
           <TouchableOpacity onPress={props.thumbs_up}>
-            <View style={{flexDirection: 'row', marginRight: 10, backgroundColor: '#DDDDDD', height: 23}}>
-              <Icon name="thumbs-up" style={{fontSize: 17, marginRight: 5}} color= {'#AAAAAA'}/>
+            <View style={{ flexDirection: 'row', marginRight: 10, backgroundColor: '#DDDDDD', height: 23 }}>
+              <Icon name="thumbs-up" style={{ fontSize: 17, marginRight: 5 }} color={'#AAAAAA'} />
               <Text>{props.like}</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={props.thumbs_down}>
-            <View style={{flexDirection: 'row', backgroundColor: '#DDDDDD', height: 23}}>
-              <Icon name="thumbs-down" style={{fontSize: 17, marginRight: 5}} color={'#AAAAAA'}/>
+            <View style={{ flexDirection: 'row', backgroundColor: '#DDDDDD', height: 23 }}>
+              <Icon name="thumbs-down" style={{ fontSize: 17, marginRight: 5 }} color={'#AAAAAA'} />
               <Text>{props.dislike}</Text>
             </View>
           </TouchableOpacity>
