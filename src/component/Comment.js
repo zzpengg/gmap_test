@@ -12,6 +12,8 @@ import {
 } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import Config from '../../config.json';
+
 const defaultProps = {
   Comment: [],
 };
@@ -149,10 +151,10 @@ const Comment = (props) => (
             <Image source={require('../assets/student-icon.png')} style={styles.personImage} />
             :
             (props.avatar.length < 50 && props.star != null) ?
-              <Image source={{ uri: `http://ncuerent.ddns.net:1337/images/avatar/student/${props.userId}/${props.avatar}` }} style={styles.personImage} />
+              <Image source={{ uri: `${Config.backend_url}images/avatar/student/${props.userId}/${props.avatar}` }} style={styles.personImage} />
               :
               (props.avatar.length < 50 && props.star == null) ?
-                <Image source={{ uri: `http://ncuerent.ddns.net:1337/images/avatar/user/${props.userId}/${props.avatar}` }} style={styles.personImage} />
+                <Image source={{ uri: `${Config.backend_url}images/avatar/user/${props.userId}/${props.avatar}` }} style={styles.personImage} />
                 :
                 <Image source={{ uri: props.avatar }} style={styles.personImage} />
       }

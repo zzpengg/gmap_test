@@ -25,6 +25,7 @@ import {
   Title,
 } from 'native-base';
 import Comment from '../component/Comment.js';
+import Config from '../../config.json';
 
 export default class Comments extends Component {
 
@@ -51,7 +52,7 @@ export default class Comments extends Component {
 
   loadComment = async () => {
     try {
-      const url = 'http://ncuerent.ddns.net:1337/comment'
+      const url = Config.backend_url + 'comment';
       let res = await fetch(url,{
       method: 'GET',
     }).then((data) => data.json())
@@ -69,7 +70,7 @@ export default class Comments extends Component {
 
   async onCommentPressed () {
     try {
-      let url = 'http://ncuerent.ddns.net:1337/comment'
+      let url = Config.backend_url + 'comment';
       let response = await fetch(url, {
         method: 'POST',
         headers: {

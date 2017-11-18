@@ -123,7 +123,8 @@ export default class StudentRegister extends Component {
           )
         }
         else {
-          let response = await fetch('http://ncuerent.ddns.net:1337/student/register', {
+          let url = Config.backend_url + 'student/register';
+          let response = await fetch(url, {
                   method: 'POST',
                   body: JSON.stringify({
                         name: this.state.name,

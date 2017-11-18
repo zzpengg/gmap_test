@@ -41,6 +41,7 @@ import { FBLogin, FBLoginManager } from 'react-native-facebook-login';
 import { Loading } from '../component/Loading'
 import IconVec from 'react-native-vector-icons/FontAwesome';
 import PersonInfoLandlord from './PersonInfoLandlord.js';
+import Config from '../../config.json';
 
 export default class LandlordSignin extends Component {
   constructor(props) {
@@ -167,7 +168,7 @@ export default class LandlordSignin extends Component {
 
   async checkAuth(token) {
     try {
-      let url = 'http://ncuerent.ddns.net:1337/user/islogin';
+      let url = Config.backend_url + 'user/islogin';
       let response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -196,7 +197,7 @@ export default class LandlordSignin extends Component {
   onLoginPressed = async () => {
     await this.setState({ loginloading: true });
     try {
-      let url = 'http://ncuerent.ddns.net:1337/user/login';
+      let url = Config.backend_url + 'user/login';
       let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -277,7 +278,7 @@ export default class LandlordSignin extends Component {
       console.log(response.picture.data.url);
 
       // fb login
-      let url2 = 'http://ncuerent.ddns.net:1337/user/FBLogin';
+      let url2 = Config.backend_url + 'user/FBLogin';
       let response2 = await fetch(url2, {
         method: 'POST',
         headers: {
@@ -389,7 +390,7 @@ export default class LandlordSignin extends Component {
                <Image source={require('../assets/landlord-icon.png')} style={styles.personImage} />
                :
                this.state.avatar.length < 50 ?
-               <Image source={{uri: `http://ncuerent.ddns.net:1337/images/avatar/user/${this.state.id}/${this.state.avatar}`}} style={styles.personImage} />
+               <Image source={{uri: `${Config.backend_url}images/avatar/user/${this.state.id}/${this.state.avatar}`}} style={styles.personImage} />
                :
                <Image source={{uri: this.state.avatar}} style={styles.personImage} />
              }

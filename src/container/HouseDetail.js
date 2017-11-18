@@ -152,20 +152,20 @@ export default class HouseDetail extends Component {
   }
   deletephoto = async(path) =>{
     try{
-          let url ='http://ncuerent.ddns.net:1337/house/deletehousephoto';
-          const res = await fetch(url,{
-            method :'POST',
-            headers:{
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'x-access-token': this.state.accessToken,
-            },
-            body:JSON.stringify({
-              'id':this.props.id,
-              'path':path
-            })
+        let url = Config.backend_url + 'house/deletehousephoto';
+        const res = await fetch(url,{
+          method :'POST',
+          headers:{
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'x-access-token': this.state.accessToken,
+          },
+          body:JSON.stringify({
+            'id':this.props.id,
+            'path':path
           })
-          await this.loadTheHouse();
+        })
+        await this.loadTheHouse();
     }
     catch(err){
       console.log("err="+err);
@@ -188,7 +188,7 @@ export default class HouseDetail extends Component {
     let id = this.props.id;
     data.append('id', id);
     data.append('house', {...this.state.houseSource, type: 'image/jpeg', name: 'image.jpg',});
-    let url = 'http://ncuerent.ddns.net:1337/house/uploadhousephoto';
+    let url = Config.backend_url + 'house/uploadhousephoto';
     let check = 1;
     const response = await fetch(url, {
       method: 'POST',
@@ -223,7 +223,7 @@ export default class HouseDetail extends Component {
 
   loadTheHouse = async () => {
     try {
-      const url = 'http://ncuerent.ddns.net:1337/house/findTheUserHouse'
+      const url = Config.backend_url + 'house/findTheUserHouse';
       let res = await fetch(url,{
         method: 'POST',
         headers: {
@@ -284,7 +284,7 @@ export default class HouseDetail extends Component {
 
   loadComment = async () => {
     try {
-      const url = 'http://ncuerent.ddns.net:1337/comment/findHouseComment'
+      const url = Config.backend_url + 'comment/findHouseComment';
       let res = await fetch(url,{
         method: 'POST',
         headers: {
@@ -313,7 +313,7 @@ export default class HouseDetail extends Component {
         Alert.alert("長度錯誤","內容不可為空",{text:"我知道了",onPress:()=>{}})
       }
       else{
-         let url = 'http://ncuerent.ddns.net:1337/comment/createLandlordComment'
+         let url = Config.backend_url + 'comment/createLandlordComment';
       let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -356,7 +356,7 @@ export default class HouseDetail extends Component {
   updateHousePressed = async() => {
     try {
       this.setState({updatevisible:true})
-      let url = 'http://ncuerent.ddns.net:1337/house/updateMyHouse'
+      let url = Config.backend_url + 'house/updateMyHouse';
       let res = await fetch(url, {
         method: 'POST',
         headers: {
@@ -466,7 +466,7 @@ export default class HouseDetail extends Component {
       }
       else{
         console.log("commentId = " + commentId);
-        const url = 'http://ncuerent.ddns.net:1337/like/addLike'
+        const url = Config.backend_url + 'like/addLike';
         let res = await fetch(url,{
           method: 'POST',
           headers: {
@@ -502,7 +502,7 @@ export default class HouseDetail extends Component {
       }
       else{
         console.log("commentId = " + commentId);
-        const url = 'http://ncuerent.ddns.net:1337/like/addDislike'
+        const url = Config.backend_url + 'like/addDislike';
         let res = await fetch(url,{
           method: 'POST',
           headers: {
@@ -598,7 +598,7 @@ export default class HouseDetail extends Component {
   dataContent = tab => {
     const { title, area, address, vacancy, rent, type, score, phone, checkwater, checkele, checknet } = this.state;
     if(tab==1){
-       let url=`http://ncuerent.ddns.net:1337/images/house/${this.state.landlordId}/${this.state.houseId}/`;
+       let url=`${Config.backend_url}images/house/${this.state.landlordId}/${this.state.houseId}/`;
       return (
         <View>
           {(this.state.path.length>0)&&
@@ -803,7 +803,7 @@ export default class HouseDetail extends Component {
 
   success = async() => {
     try{
-      const url = 'http://ncuerent.ddns.net:1337/house/deleteMyHouse'
+      const url = Config.backend_url + 'house/deleteMyHouse';
       let res = await fetch(url,{
         method: 'POST',
         headers: {

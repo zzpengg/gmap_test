@@ -30,6 +30,8 @@ import CreateHouseData from './CreateHouseData.js';
 
 import HouseDataComponent from '../component/HouseDataComponent.js';
 
+import Config from '../../config.json';
+
 export default class HouseData extends Component {
 
   constructor(props) {
@@ -75,7 +77,7 @@ export default class HouseData extends Component {
 
   loadHouse = async () => {
     try {
-      const url = 'http://ncuerent.ddns.net:1337/love/findUserLove'
+      const url = Config.backend_url + 'love/findUserLove'
       let res = await fetch(url, {
         method: 'GET',
         headers: {

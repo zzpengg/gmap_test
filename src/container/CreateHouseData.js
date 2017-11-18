@@ -37,7 +37,8 @@ import {
 import CheckBox from 'react-native-checkbox';
 import HouseData from './HouseData.js';
 import ImagePicker from 'react-native-image-picker';
-import {Loading} from'../component/Loading'
+import {Loading} from'../component/Loading';
+import Config from '../../config.json';
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FBFAFA',
@@ -267,7 +268,7 @@ export default class CreateHouseData extends Component {
       else {
         await this.setState({visible:true});
          console.log("testtest");
-        let url = 'http://ncuerent.ddns.net:1337/house/createMyHouse'
+        let url = Config.backend_url + 'house/createMyHouse';
         let res = await fetch(url, {
           method: 'POST',
           headers: {

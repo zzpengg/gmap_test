@@ -43,6 +43,7 @@ import LoveList from './LoveList.js';
 import IssueList from './IssueList.js';
 import UpdateAvatar from './UpdateAvatar.js';
 import UserData from '../component/UserData.js';
+import Config from '../../config.json';
 
 const STUDENT_ACCESS_TOKEN = 'student_access_token';
 
@@ -119,7 +120,7 @@ export default class PersonInfoStudent extends Component {
       console.log(response.picture.data.url);
 
       // fb login
-      let url2 = 'http://ncuerent.ddns.net:1337/student/FBLogin';
+      let url2 = Config.backend_url + 'student/FBLogin';
       let response2 = await fetch(url2, {
         method: 'POST',
         headers: {
@@ -182,7 +183,7 @@ export default class PersonInfoStudent extends Component {
 
   async getMyInfo(token) {
     try {
-      let url = 'http://ncuerent.ddns.net:1337/student/getMyInfo';
+      let url = Config.backend_url + 'student/getMyInfo';
       let response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -211,7 +212,7 @@ export default class PersonInfoStudent extends Component {
 
   onLoginPressed = async () => {
     try {
-      let url = 'http://ncuerent.ddns.net:1337/student/login';
+      let url = Config.backend_url + 'student/login';
       let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -374,7 +375,7 @@ export default class PersonInfoStudent extends Component {
       let id = this.props.id;
       data.append('id', id);
       data.append('avatar', { ...this.state.avatarSource, type: 'image/jpeg', name: 'image.jpg', });
-      let url = 'http://ncuerent.ddns.net:1337/student/upload';
+      let url = Config.backend_url + 'student/upload';
       let check = 1;
       const response = await fetch(url, {
         method: 'POST',
@@ -468,7 +469,7 @@ export default class PersonInfoStudent extends Component {
                         <Image style={styles.avatar} source={require('../assets/student-icon.png')} /> :
                         this.state.avatarSource.length > 50 ?
                           <Image style={styles.avatar} source={{ uri: `${this.state.avatarSource}` }} /> :
-                          <Image style={styles.avatar} source={{ uri: `http://ncuerent.ddns.net:1337/images/avatar/student/${this.state.id}` + '/' + `${this.state.avatarSource}` }} />
+                          <Image style={styles.avatar} source={{ uri: `${Config.backend_url}images/avatar/student/${this.state.id}` + '/' + `${this.state.avatarSource}` }} />
                     }
 
                   </View>

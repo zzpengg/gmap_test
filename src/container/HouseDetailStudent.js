@@ -44,6 +44,7 @@ import StudentSignin from './StudentSignin.js';
 import HouseComment from './HouseComment.js';
 
 import PersonInfoStudent from './PersonInfoStudent.js';
+import Config from '../../config.json';
 
 const STUDENT_ACCESS_TOKEN = 'student_access_token';
 
@@ -94,7 +95,7 @@ export default class HouseDetailStudent extends Component {
     if (this.state.accessToken.length != 0) {
       try {
         console.log("loading Love");
-        const url = 'http://ncuerent.ddns.net:1337/love/findLove'
+        const url = Config.backend_url + 'love/findLove';
         let res = await fetch(url, {
           method: 'POST',
           headers: {
@@ -125,7 +126,7 @@ export default class HouseDetailStudent extends Component {
   loadBestComment = async () => {
     try {
       console.log('****loadBestComment****');
-      const url = 'http://ncuerent.ddns.net:1337/comment/findBestComment'
+      const url = Config.backend_url + 'comment/findBestComment';
       let res = await fetch(url, {
         method: 'POST',
         headers: {
@@ -169,7 +170,7 @@ export default class HouseDetailStudent extends Component {
   loadTheHouse = async () => {
     console.log("***load the house***");
     try {
-      const url = 'http://ncuerent.ddns.net:1337/house/findTheHouse'
+      const url = Config.backend_url + 'house/findTheHouse';
       let res = await fetch(url, {
         method: 'POST',
         headers: {
@@ -321,7 +322,7 @@ export default class HouseDetailStudent extends Component {
       }
       else {
         console.log("commentId = " + commentId);
-        const url = 'http://ncuerent.ddns.net:1337/like/addLike'
+        const url = Config.backend_url + 'like/addLike';
         let res = await fetch(url, {
           method: 'POST',
           headers: {
@@ -357,7 +358,7 @@ export default class HouseDetailStudent extends Component {
       }
       else {
         console.log("commentId = " + commentId);
-        const url = 'http://ncuerent.ddns.net:1337/like/'
+        const url = Config.backend_url + 'like/';
         let res = await fetch(url, {
           method: 'POST',
           headers: {
@@ -431,7 +432,7 @@ export default class HouseDetailStudent extends Component {
         ]);
       } else {
         console.log("toggleLove");
-        const url = 'http://ncuerent.ddns.net:1337/love/addLove'
+        const url = Config.backend_url + 'love/addLove';
         let res = await fetch(url, {
           method: 'POST',
           headers: {
@@ -466,7 +467,7 @@ export default class HouseDetailStudent extends Component {
     // const { region } = this.props;
     //console.log(region);
     const { title, area, address, vacancy, rent, type, checkwater, checkele, checknet, score, phone, landlordId, remark } = this.state.house;
-    let url = `http://ncuerent.ddns.net:1337/images/house/${landlordId}/${this.state.houseId}/`;
+    let url = `${Config.backend_url}images/house/${landlordId}/${this.state.houseId}/`;
     return (
       <ScrollView>
         <Header style={{ backgroundColor: "rgb(122, 68, 37)" }}>

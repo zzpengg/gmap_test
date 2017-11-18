@@ -43,6 +43,8 @@ import PersonInfoStudent from './PersonInfoStudent.js';
 
 import HouseDataComponent from '../component/HouseDataComponent.js';
 
+import Config from '../../config.json';
+
 const STUDENT_ACCESS_TOKEN = 'student_access_token';
 
 export default class HouseData extends Component {
@@ -119,7 +121,7 @@ export default class HouseData extends Component {
   loadHouse = async () => {
     try {
       console.log("***loadHouse***");
-      const url = 'http://ncuerent.ddns.net:1337/house/findHouseData'
+      const url = Config.backend_url + 'house/findHouseData';
       let res = await fetch(url)
         .then((data) => data.json())
         .catch((e) => console.log(e));

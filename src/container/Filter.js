@@ -24,6 +24,7 @@ import {
 
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 import HouseDataStudent from './HouseDataStudent.js';
+import Config from '../../config.json';
 
 export default class LandlordRegistion extends Component {
 
@@ -60,7 +61,8 @@ export default class LandlordRegistion extends Component {
 
     async onFilter () {
       try {
-          var data = await fetch('http://ncuerent.ddns.net:1337/house');
+          let url = Config.backend_url + 'house';
+          var data = await fetch(url);
           this.nextPage();
 
         }catch (errors) {

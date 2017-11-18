@@ -12,6 +12,8 @@ import {
   Button,
 } from 'native-base';
 
+import Config from '../../config.json';
+
 var {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -146,7 +148,7 @@ const HouseDataComponent = (props) => (
         props.val.picture == null ?
         <Image source={require('../assets/house-icon.png')} style={{width:100, height:100, marginTop:10, marginLeft:5, marginBottom: 5 }} />
         :
-        <Image source={{uri: `http://ncuerent.ddns.net:1337/images/house/${props.val.landlordId}/${props.val.id}/${props.val.picture}`}} style={{width:100, height:100, marginTop:10, marginLeft:5, marginBottom: 5 }} />
+        <Image source={{uri: `${Config.backend_url}images/house/${props.val.landlordId}/${props.val.id}/${props.val.picture}`}} style={{width:100, height:100, marginTop:10, marginLeft:5, marginBottom: 5 }} />
       }
     </View>
 

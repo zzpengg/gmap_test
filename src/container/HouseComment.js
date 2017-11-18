@@ -44,6 +44,7 @@ import CreateHouseData from './CreateHouseData.js';
 import StudentSignin from './StudentSignin.js';
 
 import Swiper from 'react-native-swiper';
+import Config from '../../config.json';
 
 const STUDENT_ACCESS_TOKEN = 'student_access_token';
 
@@ -261,7 +262,7 @@ export default class HouseDetailStudent extends Component {
 
   loadComment = async () => {
     try {
-      const url = 'http://ncuerent.ddns.net:1337/comment/findHouseComment'
+      const url = Config.backend_url + 'comment/findHouseComment';
       let res = await fetch(url,{
         method: 'POST',
         headers: {
@@ -304,7 +305,7 @@ export default class HouseDetailStudent extends Component {
       );
     }else{
       try {
-        let url = 'http://ncuerent.ddns.net:1337/comment/createMyComment'
+        let url = Config.backend_url + 'comment/createMyComment';
         let response = await fetch(url, {
           method: 'POST',
           headers: {
@@ -375,7 +376,7 @@ export default class HouseDetailStudent extends Component {
       }
       else{
         console.log("commentId = " + commentId);
-        const url = 'http://ncuerent.ddns.net:1337/like/addLike'
+        const url = Config.backend_url + 'like/addLike';
         let res = await fetch(url,{
           method: 'POST',
           headers: {
@@ -411,7 +412,7 @@ export default class HouseDetailStudent extends Component {
       }
       else {
         console.log("commentId = " + commentId);
-        const url = 'http://ncuerent.ddns.net:1337/like/addDislike'
+        const url = Config.backend_url + 'like/addDislike';
         let res = await fetch(url,{
           method: 'POST',
           headers: {
@@ -663,7 +664,7 @@ export default class HouseDetailStudent extends Component {
 
   checkAuth = async(token) => {
     try{
-      let url = 'http://ncuerent.ddns.net:1337/student/islogin';
+      let url = Config.backend_url + 'student/islogin';
       let response = await fetch(url, {
         method: 'GET',
         headers: {

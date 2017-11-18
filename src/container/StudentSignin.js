@@ -280,7 +280,7 @@ export default class StudentSignin extends Component {
 
   async checkAuth(token) {
     try{
-      let url = 'http://ncuerent.ddns.net:1337/student/islogin';
+      let url = Config.backend_url + 'student/islogin';
       let response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -304,7 +304,7 @@ export default class StudentSignin extends Component {
   onLoginPressed = async() => {
 
     try {
-      let url = 'http://ncuerent.ddns.net:1337/student/login';
+      let url = Config.backend_url + 'student/login';
       let response = await fetch(url, {
         method: 'POST',
         headers: {

@@ -69,7 +69,7 @@ export default class UpdateAvatar extends Component {
 
   async getMyInfo(token) {
     try {
-      let url = 'http://ncuerent.ddns.net:1337/student/getMyInfo';
+      let url = Config.backend_url + 'student/getMyInfo';
       let response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -96,7 +96,7 @@ export default class UpdateAvatar extends Component {
 
   onLoginPressed = async () => {
     try {
-      let url = 'http://ncuerent.ddns.net:1337/student/login';
+      let url = Config.backend_url + 'student/login';
       let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -159,7 +159,7 @@ export default class UpdateAvatar extends Component {
 
   updateMyInfo = async () => {
     try {
-      let url = 'http://ncuerent.ddns.net:1337/student/updateMyInfo';
+      let url = Config.backend_url + 'student/updateMyInfo';
       let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -253,7 +253,7 @@ export default class UpdateAvatar extends Component {
       let id = this.props.id;
       data.append('id', id);
       data.append('avatar', { ...this.state.avatarSource, type: 'image/jpeg', name: 'image.jpg', });
-      let url = 'http://ncuerent.ddns.net:1337/student/upload';
+      let url = Config.backend_url + 'student/upload';
       let check = 1;
       const response = await fetch(url, {
         method: 'POST',
@@ -298,7 +298,7 @@ export default class UpdateAvatar extends Component {
       let id = this.props.id;
       data.append('id', id);
       data.append('avatar', { ...this.state.avatarSource, type: 'image/jpeg', name: 'image.jpg', });
-      let url = 'http://ncuerent.ddns.net:1337/user/upload';
+      let url = Config.backend_url + 'user/upload';
       let check = 1;
       const response = await fetch(url, {
         method: 'POST',

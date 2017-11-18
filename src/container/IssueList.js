@@ -30,6 +30,7 @@ import {
 } from 'native-base';
 import { Loading } from '../component/Loading'
 
+import Config from '../../config.json';
 import Dimensions from 'Dimensions';
 const windowSize = Dimensions.get('window');
 
@@ -61,7 +62,7 @@ export default class IssueList extends Component {
           ]
         );
       }else{
-        let url = 'http://ncuerent.ddns.net:1337/issue/addIssue';
+        let url = Config.backend_url + 'issue/addIssue';
         let response = await fetch(url, {
           method: 'POST',
           headers: {

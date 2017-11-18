@@ -99,7 +99,7 @@ export default class PersonInfoLandlord extends Component {
   async getMyInfo(token) {
     try {
       let token = this.state.accessToken;
-      let url = 'http://ncuerent.ddns.net:1337/user/getMyInfo';
+      let url = Config.backend_url + 'user/getMyInfo';
       let response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -131,7 +131,7 @@ export default class PersonInfoLandlord extends Component {
 
   updateMyInfo = async () => {
     try {
-      let url = 'http://ncuerent.ddns.net:1337/user/updateMyInfo';
+      let url = Config.backend_url + 'user/updateMyInfo';
       let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -226,7 +226,7 @@ export default class PersonInfoLandlord extends Component {
       let id = this.props.id;
       data.append('id', id);
       data.append('avatar', { ...this.state.avatarSource, type: 'image/jpeg', name: 'image.jpg', });
-      let url = 'http://ncuerent.ddns.net:1337/user/upload';
+      let url = Config.backend_url + 'user/upload';
       let check = 1;
       const response = await fetch(url, {
         method: 'POST',
@@ -341,7 +341,7 @@ export default class PersonInfoLandlord extends Component {
                     <Image style={styles.avatar} source={require('../assets/landlord-icon.png')} /> :
                     this.state.avatar.length > 50 ?
                       <Image style={styles.avatar} source={{ uri: `${this.state.avatar}` }} /> :
-                      <Image style={styles.avatar} source={{ uri: `http://ncuerent.ddns.net:1337/images/avatar/user/${this.state.id}/${this.state.avatar}` }} />
+                      <Image style={styles.avatar} source={{ uri: `${Config.backend_url}images/avatar/user/${this.state.id}/${this.state.avatar}` }} />
                 }
               </View>
               <Text style={{ marginTop: 40, fontSize: 20, marginLeft: 20 }}>個人圖片</Text>
