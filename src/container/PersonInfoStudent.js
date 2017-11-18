@@ -119,8 +119,11 @@ export default class PersonInfoStudent extends Component {
       console.log(response.gender);
       console.log(response.picture.data.url);
 
+      console.log("aa");
+
       // fb login
       let url2 = Config.backend_url + 'student/FBLogin';
+      console.log("url2", url2);
       let response2 = await fetch(url2, {
         method: 'POST',
         headers: {
@@ -137,14 +140,14 @@ export default class PersonInfoStudent extends Component {
           avatar: response.picture.data.url
         })
       }).then((data) => data.json());
-      console.log(response2);
+      console.log("wwwwwwww", response2);
       let accessToken = response2.token;
       console.log(accessToken);
       //On success we will store the access_token in the AsyncStorage
-      this.storeToken(accessToken);
-      this.setState({ accessToken: accessToken, loginloading: false })
-      this.setState({ error: 'success' });
-      this.getToken(accessToken);
+      await this.storeToken(accessToken);
+      await this.setState({ accessToken: accessToken, loginloading: false })
+      await this.setState({ error: 'success' });
+      await this.getToken(accessToken);
 
     }
     catch (err) {

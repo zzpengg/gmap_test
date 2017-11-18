@@ -43,6 +43,7 @@ const windowSize = Dimensions.get('window');
 import Comment from '../component/Comment.js';
 import {Loading} from '../component/Loading';
 import CreateHouseData from './CreateHouseData.js';
+import Config from '../../config.json';
 
 export default class HouseDetail extends Component {
   constructor(props)
@@ -678,9 +679,11 @@ export default class HouseDetail extends Component {
              <Input style={styles.houseTitleInput} onChangeText={ (title) => this.setState({ title: title }) } value={title} ></Input>
            </View>
            <View style={styles.viewFlexRow}>
+           </View>
+           <View style={styles.viewFlexRow}>
              <Text style={styles.areaText}>所在區域</Text>
              <Picker
-                style={{ width: 120, marginLeft: 50, marginTop: 6}}
+                style={{width: 120, marginLeft: 50, marginTop: 6}}
                 iosHeader="Select one"
                 mode="dropdown"
                 selectedValue={area}
@@ -693,24 +696,30 @@ export default class HouseDetail extends Component {
 
           <View style={styles.viewFlexRow}>
             <Text style={styles.addrText} >彰化縣彰化市</Text>
-            <Input style={{borderColor: 'red', borderWidth: 5}} onChangeText={ (address) => this.setState({ address: `彰化縣彰化市${address}` }) } value={address.slice(6,address.length)}></Input>
+            <Input style={{borderColor: 'black', borderWidth: 0.5, borderRadius: 5}} onChangeText={ (address) => this.setState({ address: `彰化縣彰化市${address}` }) } value={address.slice(6,address.length)}></Input>
           </View>
+          <View style = {{marginTop: 4, marginBottom: 4}}>
+           </View>
 
           <View style={styles.viewFlexRow}>
             <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>剩餘空房</Text>
-            <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}} onChangeText={ (vacancy) => this.setState({ vacancy: vacancy }) } value={vacancy}></Input>
+            <Input style={{borderColor: 'black', borderWidth: 0.5, borderRadius:5, marginLeft: 15}} onChangeText={ (vacancy) => this.setState({ vacancy: vacancy }) } value={vacancy}></Input>
           </View>
+          <View style = {{marginTop: 4, marginBottom: 4}}>
+           </View>
 
           <View style={styles.viewFlexRow}>
             <Text style={{paddingTop:16, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>租金</Text>
-            <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15 ,marginRight: 5}} onChangeText={ (rent) => this.setState({ rent: rent }) } value={rent}></Input>
+            <Input style={{borderColor: 'black', borderWidth: 0.5, borderRadius:5, marginLeft: 15 ,marginRight: 5}} onChangeText={ (rent) => this.setState({ rent: rent }) } value={rent}></Input>
             <Text style={{paddingTop:10, fontSize: 15, color: '#7b7d85'}} >/月</Text>
           </View>
+          <View style = {{marginTop: 4, marginBottom: 4}}>
+           </View>
 
            <View style={styles.viewFlexRow}>
-             <Text style={{paddingTop:11, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>類型</Text>
+             <Text style={{paddingTop: 11, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>類型</Text>
              <Picker
-                style={{ width: 120, marginLeft: 50, height: 45}}
+                style={{borderColor: 'black', borderRadius: 5, borderWidth: 0.5,  width: 120, marginLeft: 50, height: 45}}
                 iosHeader="Select one"
                 mode="dropdown"
                 selectedValue={type}
@@ -1020,12 +1029,13 @@ const styles = StyleSheet.create({
     color: '#7b7d85'
   },
   houseTitleInput: {
-    borderColor: 'red',
-    borderWidth: 5,
+    borderColor: 'black',
+    borderWidth: 0.5,
+    borderRadius: 5,
     marginLeft: 15,
   },
   viewFlexRow: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   areaText: {
     paddingTop:20,

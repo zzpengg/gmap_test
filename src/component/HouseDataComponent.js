@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
   },
   detailText: {
     marginTop: 5,
+    width: '80%'
   },
   detailData: {
     alignSelf:'flex-end',
@@ -153,10 +154,10 @@ const HouseDataComponent = (props) => (
     </View>
 
     <View style={{marginTop:10, marginLeft: 10}} >
-      <Text style={styles.detailText}>房屋名稱: {props.val.title}</Text>
       <Text style={styles.detailText}>所在區域: {props.val.area}</Text>
       <Text style={styles.detailText}>租金: {props.val.rent} /月</Text>
       <Text style={styles.detailText}>評分: {this.rankStar(props.val.score)}{props.val.score ? <Text>({props.val.score})</Text> : null}</Text>
+      <Text style={styles.detailText}>地址: {props.val.address}</Text>
     </View>
   </View>
   </TouchableOpacity>

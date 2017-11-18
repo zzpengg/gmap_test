@@ -35,6 +35,7 @@ import StudentRegister from './StudentRegister.js'
 import Dimensions from 'Dimensions';
 import HouseData from './HouseData.js'
 import IconVec from 'react-native-vector-icons/FontAwesome';
+import Config from '../../config.json';
 const windowSize = Dimensions.get('window');
 const ACCESS_TOKEN = 'access_token';
 export default class StudentChooseRegister extends Component{

@@ -34,6 +34,7 @@ import {
 import HouseDetailStudent from './HouseDetailStudent.js';
 import StudentRegister from './StudentRegister.js';
 import HouseComment from './HouseComment.js';
+import Config from '../../config.json';
 
 const styles = StyleSheet.create({
   container: {

@@ -47,6 +47,7 @@ import PhonePage from './PhonePage.js';
 import UpdateAvatarlandlord from './UpdateAvatarlandlord.js';
 import UpdateData from './UpdateData.js';
 import IssueList from './IssueList.js';
+import Config from '../../config.json';
 
 const ACCESS_TOKEN = 'access_token';
 

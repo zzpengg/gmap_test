@@ -79,7 +79,7 @@ export default class HouseData extends Component {
   loadHouse = async () => {
     try {
       console.log("***loadHouse***");
-      const url = Config.backend_ur +  'house/findMyHouse';
+      const url = Config.backend_url +  'house/findMyHouse';
       let res = await fetch(url, {
         method: 'GET',
         headers: {
