@@ -41,6 +41,7 @@ import ImagePicker from 'react-native-image-picker';
 import { FBLoginManager } from 'react-native-facebook-login';
 import LoveList from './LoveList.js';
 import IssueList from './IssueList.js';
+import Config from '../../config.json';
 
 const STUDENT_ACCESS_TOKEN = 'student_access_token';
 

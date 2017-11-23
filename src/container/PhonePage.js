@@ -28,7 +28,7 @@ import {
   Item,
 } from 'native-base';
 import { Loading } from '../component/Loading'
-
+import Config from '../../config.json';
 
 export default class PhonePage extends Component {
 

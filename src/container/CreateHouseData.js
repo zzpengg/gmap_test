@@ -145,9 +145,10 @@ const styles = StyleSheet.create({
     color: '#7b7d85'
   },
   houseTitleInput: {
-    borderColor: 'red',
-    borderWidth: 5,
+    borderColor: 'black',
+    borderWidth: 0.5,
     marginLeft: 15,
+    borderRadius : 5
   },
   viewFlexRow: {
     flexDirection: 'row'
@@ -347,12 +348,12 @@ export default class CreateHouseData extends Component {
 
             <View style={styles.viewFlexRow}>
               <Text style={styles.addrText} >彰化縣彰化市</Text>
-              <Input style={{borderColor: 'red', borderWidth: 5}} onChangeText={ (address) => this.setState({ address: address }) }></Input>
+              <Input style={{borderColor: 'black', borderWidth: 0.5, borderRadius : 5}} onChangeText={ (address) => this.setState({ address: address }) }></Input>
             </View>
 
             <View style={styles.viewFlexRow}>
               <Text style={{paddingTop:13, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>剩餘空房</Text>
-              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15}}
+              <Input style={{borderColor: 'black', borderWidth: 0.5, marginLeft: 15, borderRadius : 5, marginTop: 5}}
                 keyboardType={'phone-pad'}
                 onChangeText={ (vacancy) => {
                   if(isNaN(vacancy)){
@@ -367,7 +368,7 @@ export default class CreateHouseData extends Component {
 
             <View style={styles.viewFlexRow}>
               <Text style={{paddingTop:16, paddingLeft: 30, fontSize: 15, color: '#7b7d85'}}>租金</Text>
-              <Input style={{borderColor: 'red', borderWidth: 5, marginLeft: 15,marginRight: 5}}
+              <Input style={{borderColor: 'black', borderWidth: 0.5, marginLeft: 15,marginRight: 5, borderRadius : 5, marginTop: 5}}
                 keyboardType={'phone-pad'}
 
                 onChangeText={ (rent) => {
